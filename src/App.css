@@ -646,6 +646,14 @@ button {
 .view-work-btn:hover {
   background: #ff6b00;
 }
+.nav-button-link {
+  text-decoration: none;
+}
+.nav-logo-link {
+  text-decoration: none;
+  color: #172033;
+}
+
 
 /* ================= TABLET ================= */
 

@@ -4,12 +4,21 @@ import jobs from "../data/jobs";
 import "./NearbyJobs.css";
 
 function NearbyJobs() {
+  const postedJobs =
+  JSON.parse(localStorage.getItem("kaamonPostedJobs")) || [];
+
+const allJobs = [...postedJobs, ...jobs];
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("ALL");
 
-  const categories = ["ALL", "DRIVER", "SHOP HELPER", "PAINTER"];
+  const categories = [
+  "ALL",
+  ...new Set(
+    allJobs.map((job) => job.category)
+  ),
+];
 
-  const filteredJobs = jobs.filter((job) => {
+  const filteredJobs = allJobs.filter((job) => {
     const searchText = search.toLowerCase();
 
     const matchesSearch =

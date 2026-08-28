@@ -9,6 +9,11 @@ import Categories from "./components/Categories.jsx";
 import NearbyJobs from "./components/NearbyJobs.jsx";
 
 import JobDetails from "./pages/JobDetails.jsx";
+import Login from "./pages/Login.jsx";
+import Signup from "./pages/Signup.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
+import PostWork from "./pages/PostWork.jsx";
+
 
 function App() {
   return (
@@ -36,6 +41,24 @@ function App() {
           path="/jobs/:jobId"
           element={<JobDetails />}
         />
+        <Route
+            path="/login"
+            element={<Login />}
+         />
+
+         <Route
+            path="/signup"
+            element={<Signup />}
+         />
+
+          <Route
+              path="/dashboard"
+              element={<Dashboard />}
+          />
+          <Route
+              path="/post-work"
+              element={<PostWork />}
+          />
 
       </Routes>
 
