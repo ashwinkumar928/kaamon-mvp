@@ -1,0 +1,172 @@
+/* ===== KAAMON JOB SEARCH TOOLBAR ===== */
+
+.nearby-jobs .job-toolbar {
+  max-width: 900px;
+  margin: 0 auto 28px;
+  padding: 14px;
+
+  background: #f8fafc;
+  border: 1px solid #e5eaf0;
+  border-radius: 16px;
+}
+
+
+/* SEARCH BAR */
+
+.nearby-jobs .job-search-box {
+  width: 100%;
+  height: 50px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 0 15px;
+
+  background: white;
+  border: 1px solid #dde3eb;
+  border-radius: 11px;
+
+  transition: 0.2s ease;
+}
+
+.nearby-jobs .job-search-box:focus-within {
+  border-color: #ff6b00;
+  box-shadow: 0 0 0 4px rgba(255, 107, 0, 0.08);
+}
+
+.nearby-jobs .search-icon {
+  font-size: 18px;
+}
+
+.nearby-jobs .job-search-box input {
+  flex: 1;
+
+  width: 100%;
+  height: 100%;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #172033;
+  font-size: 15px;
+}
+
+.nearby-jobs .job-search-box input::placeholder {
+  color: #9aa4b2;
+}
+
+
+/* CLEAR SEARCH */
+
+.nearby-jobs .clear-search {
+  width: 32px;
+  height: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #f1f4f7;
+  color: #667085;
+
+  cursor: pointer;
+}
+
+.nearby-jobs .clear-search:hover {
+  background: #fff0e5;
+  color: #ff6b00;
+}
+
+
+/* FILTER ROW */
+
+.nearby-jobs .filter-row {
+  margin-top: 15px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+}
+
+
+/* FILTER BUTTONS */
+
+.nearby-jobs .job-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.nearby-jobs .filter-btn {
+  padding: 8px 14px;
+
+  border: 1px solid #dde3eb;
+  border-radius: 25px;
+
+  background: white;
+  color: #687386;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.nearby-jobs .filter-btn:hover {
+  color: #ff6b00;
+  border-color: #ff9e59;
+}
+
+.nearby-jobs .filter-btn.active-filter {
+  background: #172033;
+  color: white;
+  border-color: #172033;
+
+  box-shadow: 0 5px 14px rgba(23, 32, 51, 0.14);
+}
+
+
+/* RESULTS BADGE */
+
+.nearby-jobs .results-count {
+  white-space: nowrap;
+
+  padding: 7px 12px;
+
+  background: #fff0e5;
+  color: #d95b00;
+
+  border-radius: 20px;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 650px) {
+
+  .nearby-jobs .job-toolbar {
+    padding: 13px;
+  }
+
+  .nearby-jobs .filter-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nearby-jobs .results-count {
+    align-self: flex-start;
+  }
+}

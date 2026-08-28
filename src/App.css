@@ -90,8 +90,6 @@ button {
   cursor: pointer;
 }
 
-
-
 /* ================= HERO ================= */
 
 .hero {
@@ -102,15 +100,11 @@ button {
   gap: 60px;
   padding: 75px 8%;
   overflow: hidden;
-
   background:
     radial-gradient(circle at 10% 20%, #fff0e5 0, transparent 28%),
     radial-gradient(circle at 90% 70%, #edf4ff 0, transparent 30%),
     #ffffff;
 }
-
-
-/* LEFT SIDE */
 
 .hero-left {
   max-width: 650px;
@@ -204,7 +198,6 @@ button {
   font-weight: bold;
 }
 
-
 .quick-categories {
   margin-top: 38px;
   display: flex;
@@ -227,7 +220,6 @@ button {
   font-size: 13px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
 }
-
 
 /* ================= HERO RIGHT ================= */
 
@@ -256,14 +248,12 @@ button {
   background: #ffe2cd;
 }
 
-
 .job-card {
   position: relative;
   z-index: 5;
   background: white;
   width: 390px;
-  padding: 26px;
-  padding-bottom: 32px;
+  padding: 26px 26px 32px;
   border-radius: 22px;
   box-shadow: 0 25px 70px rgba(34, 46, 70, 0.14);
   border: 1px solid #edf0f5;
@@ -343,7 +333,6 @@ button {
   cursor: pointer;
 }
 
-
 /* FLOATING CARDS */
 
 .small-card {
@@ -418,7 +407,6 @@ button {
   font-size: 11px;
 }
 
-
 /* ================= STATS ================= */
 
 .stats {
@@ -483,7 +471,6 @@ button {
 .categories-grid {
   max-width: 1150px;
   margin: 0 auto;
-
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
@@ -494,7 +481,6 @@ button {
   border: 1px solid #e5eaf0;
   border-radius: 16px;
   padding: 27px;
-
   cursor: pointer;
   transition: 0.2s ease;
 }
@@ -508,14 +494,11 @@ button {
 .category-emoji {
   width: 50px;
   height: 50px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   background: #fff1e7;
   border-radius: 13px;
-
   font-size: 25px;
   margin-bottom: 18px;
 }
@@ -541,15 +524,15 @@ button {
 }
 
 .jobs-grid {
-  max-width: 1150px;
+  max-width: 950px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 22px;
+  gap: 16px;
 }
 
 .nearby-job-card {
-  padding: 20px;
+  padding: 18px;
   background: white;
   border: 1px solid #e5eaf0;
   border-radius: 18px;
@@ -568,14 +551,14 @@ button {
 }
 
 .nearby-job-icon {
-  width: 52px;
-  height: 52px;
+  width: 46px;
+  height: 46px;
   display: flex;
   justify-content: center;
   align-items: center;
   background: #fff1e7;
   border-radius: 14px;
-  font-size: 24px;
+  font-size: 21px;
 }
 
 .job-type {
@@ -587,38 +570,37 @@ button {
 
 .nearby-job-top h3 {
   margin: 5px 0 0;
-  font-size: 17px;
+  font-size: 16px;
   color: #172033;
 }
 
 .nearby-job-description {
   color: #707b8c;
-  font-size: 13px;
+  font-size: 12px;
   line-height: 1.6;
-  margin: 20px 0;
+  margin: 14px 0;
 }
 
 .job-details-row {
   display: flex;
   justify-content: space-between;
   gap: 10px;
-  margin: 12px 0;
-  font-size: 12px;
+  margin: 8px 0;
+  font-size: 11px;
   color: #687386;
 }
 
 .job-bottom {
-  margin-top: 22px;
-  padding-top: 18px;
+  margin-top: 18px;
+  padding-top: 15px;
   border-top: 1px solid #edf0f4;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
 .job-bottom strong {
-  font-size: 21px;
+  font-size: 19px;
   color: #172033;
 }
 
@@ -626,7 +608,7 @@ button {
   background: #172033;
   color: white;
   border: none;
-  padding: 10px 14px;
+  padding: 9px 12px;
   border-radius: 9px;
   font-weight: 700;
   cursor: pointer;
@@ -651,11 +633,9 @@ button {
   cursor: pointer;
 }
 
-
 /* ================= TABLET ================= */
 
 @media (max-width: 900px) {
-
   .nav-links {
     display: none;
   }
@@ -701,11 +681,9 @@ button {
   }
 }
 
-
 /* ================= MOBILE ================= */
 
 @media (max-width: 550px) {
-
   .navbar {
     padding: 0 5%;
   }
@@ -749,27 +727,4 @@ button {
   .categories-grid {
     grid-template-columns: 1fr;
   }
-  /* ===== Compact Nearby Job Cards ===== */
-
-.jobs-grid {
-  max-width: 1050px;
-  gap: 18px;
-}
-
-.nearby-job-card {
-  padding: 20px;
-}
-
-.nearby-job-description {
-  margin: 16px 0;
-}
-
-.job-details-row {
-  margin: 10px 0;
-}
-
-.job-bottom {
-  margin-top: 18px;
-  padding-top: 15px;
-}
 }
