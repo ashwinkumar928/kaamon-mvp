@@ -1,0 +1,40 @@
+const jobs = [
+  {
+    id: 1,
+    icon: "🚗",
+    category: "DRIVER",
+    title: "Driver Needed for One Day",
+    description: "Need an experienced driver for local travel during the day.",
+    location: "Patna",
+    date: "Tomorrow",
+    time: "9 AM – 6 PM",
+    distance: "2.4 km away",
+    payment: "₹1,000",
+  },
+  {
+    id: 2,
+    icon: "🏪",
+    category: "SHOP HELPER",
+    title: "Helper Needed at Store",
+    description: "Need someone to help with customers and arranging products.",
+    location: "Danapur",
+    date: "Today",
+    time: "10 AM – 7 PM",
+    distance: "3.1 km away",
+    payment: "₹700",
+  },
+  {
+    id: 3,
+    icon: "🎨",
+    category: "PAINTER",
+    title: "Painter Required",
+    description: "Painter required for painting one room at a residential house.",
+    location: "Patna",
+    date: "Saturday",
+    time: "Full Day",
+    distance: "4.5 km away",
+    payment: "₹1,200",
+  },
+];
+
+export default jobs;
