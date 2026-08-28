@@ -533,6 +533,124 @@ button {
   line-height: 1.5;
 }
 
+/* ================= NEARBY JOBS ================= */
+
+.nearby-jobs {
+  padding: 90px 8%;
+  background: #ffffff;
+}
+
+.jobs-grid {
+  max-width: 1150px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.nearby-job-card {
+  padding: 20px;
+  background: white;
+  border: 1px solid #e5eaf0;
+  border-radius: 18px;
+  transition: 0.2s ease;
+}
+
+.nearby-job-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 35px rgba(24, 35, 57, 0.08);
+}
+
+.nearby-job-top {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.nearby-job-icon {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fff1e7;
+  border-radius: 14px;
+  font-size: 24px;
+}
+
+.job-type {
+  color: #ff6b00;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.nearby-job-top h3 {
+  margin: 5px 0 0;
+  font-size: 17px;
+  color: #172033;
+}
+
+.nearby-job-description {
+  color: #707b8c;
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 20px 0;
+}
+
+.job-details-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 12px 0;
+  font-size: 12px;
+  color: #687386;
+}
+
+.job-bottom {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid #edf0f4;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.job-bottom strong {
+  font-size: 21px;
+  color: #172033;
+}
+
+.job-bottom button {
+  background: #172033;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 9px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.job-bottom button:hover {
+  background: #ff6b00;
+}
+
+.view-all-jobs {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.view-all-jobs button {
+  padding: 13px 22px;
+  background: white;
+  color: #172033;
+  border: 1px solid #dce2e9;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 
 /* ================= TABLET ================= */
 
@@ -576,6 +694,10 @@ button {
 
   .categories-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .jobs-grid {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -627,4 +749,27 @@ button {
   .categories-grid {
     grid-template-columns: 1fr;
   }
+  /* ===== Compact Nearby Job Cards ===== */
+
+.jobs-grid {
+  max-width: 1050px;
+  gap: 18px;
+}
+
+.nearby-job-card {
+  padding: 20px;
+}
+
+.nearby-job-description {
+  margin: 16px 0;
+}
+
+.job-details-row {
+  margin: 10px 0;
+}
+
+.job-bottom {
+  margin-top: 18px;
+  padding-top: 15px;
+}
 }

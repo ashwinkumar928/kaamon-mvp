@@ -239,6 +239,128 @@ function App() {
 
 </section>
 
+{/* NEARBY JOBS SECTION */}
+<section className="nearby-jobs" id="jobs">
+
+  <div className="section-title">
+    <span>WORK NEAR YOU</span>
+    <h2>Nearby Opportunities</h2>
+    <p>
+      Discover short-term work opportunities available around you.
+    </p>
+  </div>
+
+  <div className="jobs-grid">
+
+    {/* JOB 1 */}
+    <div className="nearby-job-card">
+
+      <div className="nearby-job-top">
+        <div className="nearby-job-icon">🚗</div>
+
+        <div>
+          <span className="job-type">DRIVER</span>
+          <h3>Driver Needed for One Day</h3>
+        </div>
+      </div>
+
+      <p className="nearby-job-description">
+        Need an experienced driver for local travel during the day.
+      </p>
+
+      <div className="job-details-row">
+        <span>📍 Patna</span>
+        <span>📅 Tomorrow</span>
+      </div>
+
+      <div className="job-details-row">
+        <span>🕘 9 AM – 6 PM</span>
+        <span>📏 2.4 km away</span>
+      </div>
+
+      <div className="job-bottom">
+        <strong>₹1,000</strong>
+        <button>View Work →</button>
+      </div>
+
+    </div>
+
+
+    {/* JOB 2 */}
+    <div className="nearby-job-card">
+
+      <div className="nearby-job-top">
+        <div className="nearby-job-icon">🏪</div>
+
+        <div>
+          <span className="job-type">SHOP HELPER</span>
+          <h3>Helper Needed at Store</h3>
+        </div>
+      </div>
+
+      <p className="nearby-job-description">
+        Need someone to help with customers and arranging products.
+      </p>
+
+      <div className="job-details-row">
+        <span>📍 Danapur</span>
+        <span>📅 Today</span>
+      </div>
+
+      <div className="job-details-row">
+        <span>🕘 10 AM – 7 PM</span>
+        <span>📏 3.1 km away</span>
+      </div>
+
+      <div className="job-bottom">
+        <strong>₹700</strong>
+        <button>View Work →</button>
+      </div>
+
+    </div>
+
+
+    {/* JOB 3 */}
+    <div className="nearby-job-card">
+
+      <div className="nearby-job-top">
+        <div className="nearby-job-icon">🎨</div>
+
+        <div>
+          <span className="job-type">PAINTER</span>
+          <h3>Painter Required</h3>
+        </div>
+      </div>
+
+      <p className="nearby-job-description">
+        Painter required for painting one room at a residential house.
+      </p>
+
+      <div className="job-details-row">
+        <span>📍 Patna</span>
+        <span>📅 Saturday</span>
+      </div>
+
+      <div className="job-details-row">
+        <span>🕘 Full Day</span>
+        <span>📏 4.5 km away</span>
+      </div>
+
+      <div className="job-bottom">
+        <strong>₹1,200</strong>
+        <button>View Work →</button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div className="view-all-jobs">
+    <button>View All Work Opportunities →</button>
+  </div>
+
+</section>
+
 </div>
 );
 }
