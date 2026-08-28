@@ -632,6 +632,20 @@ button {
   font-weight: 700;
   cursor: pointer;
 }
+.view-work-btn {
+  background: #172033;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.view-work-btn:hover {
+  background: #ff6b00;
+}
 
 /* ================= TABLET ================= */
 

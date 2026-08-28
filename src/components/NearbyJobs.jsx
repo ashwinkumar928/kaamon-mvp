@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import jobs from "../data/jobs";
 import "./NearbyJobs.css";
 
@@ -123,7 +124,12 @@ function NearbyJobs() {
 
               <div className="job-bottom">
                 <strong>{job.payment}</strong>
-                <button>View Work →</button>
+                <Link
+                    to={`/jobs/${job.id}`}
+                    className="view-work-btn"
+                >
+                   View Work →
+                </Link>
               </div>
 
             </div>

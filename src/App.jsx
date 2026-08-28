@@ -1,9 +1,14 @@
 import "./App.css";
-import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
+
+import { Routes, Route } from "react-router-dom";
+
+import Navbar from "./components/Navbar.jsx";
+import Hero from "./components/Hero.jsx";
 import Stats from "./components/Stats.jsx";
-import Categories from "./components/Categories";
-import NearbyJobs from "./components/NearbyJobs";
+import Categories from "./components/Categories.jsx";
+import NearbyJobs from "./components/NearbyJobs.jsx";
+
+import JobDetails from "./pages/JobDetails.jsx";
 
 function App() {
   return (
@@ -11,39 +16,31 @@ function App() {
 
       <Navbar />
 
-       <Hero />
+      <Routes>
 
-    {/* STATS */}
-<section className="stats">
+        {/* HOME PAGE */}
+        <Route
+          path="/"
+          element={
+            <>
+              <Hero />
+              <Stats />
+              <Categories />
+              <NearbyJobs />
+            </>
+          }
+        />
 
-  <div>
-    <strong>Local</strong>
-    <span>Nearby opportunities</span>
-  </div>
+        {/* JOB DETAILS PAGE */}
+        <Route
+          path="/jobs/:jobId"
+          element={<JobDetails />}
+        />
 
-  <div>
-    <strong>Flexible</strong>
-    <span>Hourly & daily work</span>
-  </div>
+      </Routes>
 
-  <div>
-    <strong>Two-Way</strong>
-    <span>Hire & work</span>
-  </div>
-
-  <div>
-    <strong>Trusted</strong>
-    <span>Profiles & reviews</span>
-  </div>
-
-</section>
-
-<Categories />
-
-<NearbyJobs />
-
-</div>
-);
+    </div>
+  );
 }
 
 export default App;
