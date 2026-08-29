@@ -45,60 +45,67 @@ function PostWork() {
     });
   }
 
-  function handleSubmit(event) {
-    event.preventDefault();
+  async function handleSubmit(event) {
+  event.preventDefault();
 
-    if (
-      !formData.title ||
-      !formData.description ||
-      !formData.location ||
-      !formData.date ||
-      !formData.time ||
-      !formData.payment
-    ) {
-      setMessage("Please fill all fields.");
-      return;
-    }
+  if (
+    !formData.title ||
+    !formData.description ||
+    !formData.location ||
+    !formData.date ||
+    !formData.time ||
+    !formData.payment
+  ) {
+    setMessage("Please fill all fields.");
+    return;
+  }
 
-    const newJob = {
-      id: Date.now(),
+  const newJob = {
+    title: formData.title,
+    category: formData.category,
+    description: formData.description,
+    location: formData.location,
+    date: formData.date,
+    time: formData.time,
+    payment: Number(formData.payment),
 
-      icon: categoryIcons[formData.category],
+    postedBy: {
+      id: currentUser.id,
+      name: currentUser.name,
+    },
+  };
 
-      category: formData.category,
+  try {
+    const response = await fetch(
+      "http://localhost:5000/api/jobs",
+      {
+        method: "POST",
 
-      title: formData.title,
+        headers: {
+          "Content-Type": "application/json",
+        },
 
-      description: formData.description,
-
-      location: formData.location,
-
-      date: formData.date,
-
-      time: formData.time,
-
-      distance: "Nearby",
-
-      payment: `₹${formData.payment}`,
-
-      postedBy: {
-        id: currentUser.id,
-        name: currentUser.name,
-      },
-    };
-
-    const existingJobs =
-      JSON.parse(localStorage.getItem("kaamonPostedJobs")) || [];
-
-    const updatedJobs = [newJob, ...existingJobs];
-
-    localStorage.setItem(
-      "kaamonPostedJobs",
-      JSON.stringify(updatedJobs)
+        body: JSON.stringify(newJob),
+      }
     );
 
+    if (!response.ok) {
+      throw new Error("Could not post work");
+    }
+
+    const savedJob = await response.json();
+
+    console.log("Job saved:", savedJob);
+
     navigate("/");
+  } catch (error) {
+    console.error(error);
+
+    setMessage(
+      "Could not post work. Please check the backend server."
+    );
   }
+}
 
   return (
     <main className="post-work-page">

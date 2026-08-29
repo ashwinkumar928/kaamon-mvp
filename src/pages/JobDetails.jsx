@@ -1,35 +1,65 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import jobs from "../data/jobs";
 import "./JobDetails.css";
 
 function JobDetails() {
   const { jobId } = useParams();
 
+  const [job, setJob] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [applied, setApplied] = useState(false);
 
-  const job = jobs.find(
-    (job) => job.id === Number(jobId)
-  );
+  useEffect(() => {
+    async function loadJob() {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/jobs/${jobId}`
+        );
+
+        if (!response.ok) {
+          setJob(null);
+          return;
+        }
+
+        const data = await response.json();
+
+        setJob(data);
+      } catch (error) {
+        console.error("Could not load job:", error);
+        setJob(null);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadJob();
+  }, [jobId]);
+
+  if (loading) {
+    return (
+      <main className="job-details-page">
+        <h2>Loading job...</h2>
+      </main>
+    );
+  }
 
   if (!job) {
     return (
-      <div className="job-details-page">
+      <main className="job-details-page">
         <h2>Job not found</h2>
 
         <Link to="/" className="back-link">
           ← Back to Home
         </Link>
-      </div>
+      </main>
     );
   }
 
   return (
     <main className="job-details-page">
-
       <div className="job-details-container">
 
-        <Link to="/#jobs" className="back-link">
+        <Link to="/" className="back-link">
           ← Back to Opportunities
         </Link>
 
@@ -104,13 +134,17 @@ function JobDetails() {
           <div className="posted-by">
 
             <div className="poster-avatar">
-              AK
+              {job.postedBy?.name
+                ? job.postedBy.name.charAt(0).toUpperCase()
+                : "AK"}
             </div>
 
             <div>
               <small>Posted by</small>
 
-              <strong>Amit Kumar</strong>
+              <strong>
+                {job.postedBy?.name || "Amit Kumar"}
+              </strong>
 
               <p>
                 ⭐ 4.7 &nbsp; • &nbsp; ✓ Phone Verified
@@ -124,9 +158,11 @@ function JobDetails() {
 
             <div>
               <small>Payment</small>
-              <h2>{job.payment}</h2>
-            </div>
 
+              <h2>
+                ₹{Number(job.payment).toLocaleString("en-IN")}
+              </h2>
+            </div>
 
             <button
               className={
@@ -145,9 +181,7 @@ function JobDetails() {
           </div>
 
         </div>
-
       </div>
-
     </main>
   );
 }

@@ -1,22 +1,36 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import jobs from "../data/jobs";
 import "./NearbyJobs.css";
 
 function NearbyJobs() {
-  const postedJobs =
-  JSON.parse(localStorage.getItem("kaamonPostedJobs")) || [];
-
-const allJobs = [...postedJobs, ...jobs];
+  const [allJobs, setAllJobs] = useState([]);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("ALL");
 
+  useEffect(() => {
+    async function loadJobs() {
+      try {
+        const response = await fetch(
+          "http://localhost:5000/api/jobs"
+        );
+
+        const data = await response.json();
+
+        setAllJobs(data);
+      } catch (error) {
+        console.error("Could not load jobs:", error);
+      }
+    }
+
+    loadJobs();
+  }, []);
+
   const categories = [
-  "ALL",
-  ...new Set(
-    allJobs.map((job) => job.category)
-  ),
-];
+    "ALL",
+    ...new Set(
+      allJobs.map((job) => job.category)
+    ),
+  ];
 
   const filteredJobs = allJobs.filter((job) => {
     const searchText = search.toLowerCase();
@@ -132,7 +146,9 @@ const allJobs = [...postedJobs, ...jobs];
               </div>
 
               <div className="job-bottom">
-                <strong>{job.payment}</strong>
+                <strong>
+                     ₹{Number(job.payment).toLocaleString("en-IN")}
+                </strong>
                 <Link
                     to={`/jobs/${job.id}`}
                     className="view-work-btn"
