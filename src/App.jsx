@@ -36,29 +36,40 @@ function App() {
           }
         />
 
+
         {/* JOB DETAILS PAGE */}
         <Route
           path="/jobs/:jobId"
           element={<JobDetails />}
         />
+
+
+        {/* LOGIN */}
         <Route
-            path="/login"
-            element={<Login />}
-         />
+          path="/login"
+          element={<Login />}
+        />
 
-         <Route
-            path="/signup"
-            element={<Signup />}
-         />
 
-          <Route
-              path="/dashboard"
-              element={<Dashboard />}
-          />
-          <Route
-              path="/post-work"
-              element={<PostWork />}
-          />
+        {/* SIGNUP */}
+        <Route
+          path="/signup"
+          element={<Signup />}
+        />
+
+
+        {/* DASHBOARD */}
+        <Route
+          path="/dashboard"
+          element={<Dashboard />}
+        />
+
+
+        {/* POST WORK */}
+        <Route
+          path="/post-work"
+          element={<PostWork />}
+        />
 
       </Routes>
 

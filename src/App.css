@@ -750,3 +750,222 @@ button {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* ================= DARK MODE BUTTON ================= */
+
+.theme-toggle {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #ffffff;
+
+  border: 1px solid #dfe5ec;
+  border-radius: 50%;
+
+  font-size: 18px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-2px);
+  border-color: #ff6b00;
+}
+
+
+/* ================= DARK MODE ================= */
+
+body.dark-mode,
+body.dark-mode .app {
+  background: #0f172a !important;
+  color: #f8fafc;
+}
+
+
+/* NAVBAR */
+
+body.dark-mode .navbar {
+  background: #111827 !important;
+  border-bottom-color: #263244;
+}
+
+body.dark-mode .navbar a {
+  color: #e5e7eb !important;
+}
+
+body.dark-mode .nav-logo-link {
+  color: #ffffff !important;
+}
+
+body.dark-mode .theme-toggle {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+
+/* HERO */
+
+body.dark-mode .hero {
+  background:
+    radial-gradient(circle at 10% 20%, #291b16 0, transparent 28%),
+    radial-gradient(circle at 90% 70%, #15223a 0, transparent 30%),
+    #0f172a !important;
+}
+
+body.dark-mode .hero h1 {
+  color: #f8fafc;
+}
+
+body.dark-mode .hero-description,
+body.dark-mode .one-account,
+body.dark-mode .quick-categories p {
+  color: #94a3b8;
+}
+
+body.dark-mode .quick-categories span,
+body.dark-mode .secondary-btn {
+  background: #1e293b;
+  color: #e5e7eb;
+  border-color: #334155;
+}
+
+
+/* HERO JOB CARD */
+
+body.dark-mode .job-card,
+body.dark-mode .small-card {
+  background: #111827;
+  border-color: #263244;
+}
+
+body.dark-mode .job-card h3,
+body.dark-mode .small-card strong {
+  color: #f8fafc;
+}
+
+body.dark-mode .job-info {
+  background: #1e293b;
+}
+
+
+/* CATEGORIES */
+
+body.dark-mode .categories-section {
+  background: #0f172a;
+}
+
+body.dark-mode .section-title h2 {
+  color: #f8fafc;
+}
+
+body.dark-mode .section-title p {
+  color: #94a3b8;
+}
+
+body.dark-mode .category-box {
+  background: #111827;
+  border-color: #263244;
+}
+
+body.dark-mode .category-box h3 {
+  color: #f8fafc;
+}
+
+body.dark-mode .category-box p {
+  color: #94a3b8;
+}
+
+
+/* NEARBY JOBS */
+
+body.dark-mode .nearby-jobs {
+  background: #0f172a;
+}
+
+body.dark-mode .nearby-job-card {
+  background: #111827;
+  border-color: #263244;
+}
+
+body.dark-mode .nearby-job-top h3,
+body.dark-mode .job-bottom strong {
+  color: #f8fafc;
+}
+
+body.dark-mode .nearby-job-description,
+body.dark-mode .job-details-row {
+  color: #94a3b8;
+}
+
+body.dark-mode .job-bottom {
+  border-top-color: #263244;
+}
+
+
+/* LOGIN / SIGNUP / DASHBOARD / POST WORK / JOB DETAILS */
+
+body.dark-mode .auth-page,
+body.dark-mode .dashboard-page,
+body.dark-mode .post-work-page,
+body.dark-mode .job-details-page {
+  background: #0f172a !important;
+}
+
+body.dark-mode .auth-card,
+body.dark-mode .dashboard-action-card,
+body.dark-mode .post-work-form,
+body.dark-mode .job-details-card,
+body.dark-mode .posted-by {
+  background: #111827;
+  border-color: #263244;
+}
+
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode strong {
+  color: #f8fafc;
+}
+
+body.dark-mode p,
+body.dark-mode small {
+  color: #94a3b8;
+}
+
+
+/* FORM FIELDS */
+
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select {
+  background: #1e293b;
+  color: #ffffff;
+  border-color: #334155;
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+  color: #94a3b8;
+}
+
+
+/* JOB DETAILS */
+
+body.dark-mode .detail-item {
+  background: #1e293b;
+}
+
+body.dark-mode .detail-item strong {
+  color: #f8fafc;
+}

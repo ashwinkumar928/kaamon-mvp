@@ -1,6 +1,24 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 function Navbar() {
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("kaamonTheme") === "dark";
+  });
+
+  useEffect(() => {
+    document.body.classList.toggle("dark-mode", darkMode);
+
+    localStorage.setItem(
+      "kaamonTheme",
+      darkMode ? "dark" : "light"
+    );
+  }, [darkMode]);
+
+  function handleThemeChange() {
+    setDarkMode((currentMode) => !currentMode);
+  }
+
   return (
     <nav className="navbar">
 
@@ -16,6 +34,15 @@ function Navbar() {
       </div>
 
       <div className="nav-actions">
+
+        <button
+          type="button"
+          className="theme-toggle"
+          onClick={handleThemeChange}
+          title="Change theme"
+        >
+          {darkMode ? "☀️" : "🌙"}
+        </button>
 
         <Link
           to="/login"
