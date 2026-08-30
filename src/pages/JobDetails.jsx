@@ -1,20 +1,36 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
+
 import "./JobDetails.css";
 import API_URL from "../api";
 
 function JobDetails() {
   const { jobId } = useParams();
+  const navigate = useNavigate();
 
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
+
   const [applied, setApplied] = useState(false);
+  const [applying, setApplying] = useState(false);
+  const [applicationMessage, setApplicationMessage] =
+    useState("");
+
+
+  // ==============================
+  // LOAD JOB
+  // ==============================
 
   useEffect(() => {
     async function loadJob() {
       try {
         const response = await fetch(
-  `             ${API_URL}/api/jobs/${jobId}`);
+          `${API_URL}/api/jobs/${jobId}`
+        );
 
         if (!response.ok) {
           setJob(null);
@@ -24,16 +40,110 @@ function JobDetails() {
         const data = await response.json();
 
         setJob(data);
+
       } catch (error) {
-        console.error("Could not load job:", error);
+        console.error(
+          "Could not load job:",
+          error
+        );
+
         setJob(null);
+
       } finally {
         setLoading(false);
       }
     }
 
     loadJob();
+
   }, [jobId]);
+
+
+  // ==============================
+  // APPLY FOR JOB
+  // ==============================
+
+  async function handleApply() {
+    const token =
+      localStorage.getItem("kaamonToken");
+
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+    try {
+      setApplying(true);
+      setApplicationMessage("");
+
+      const response = await fetch(
+        `${API_URL}/api/jobs/${jobId}/apply`,
+        {
+          method: "POST",
+
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.status === 401) {
+        localStorage.removeItem("kaamonToken");
+        localStorage.removeItem(
+          "kaamonCurrentUser"
+        );
+
+        navigate("/login");
+        return;
+      }
+
+      if (response.status === 409) {
+        setApplied(true);
+
+        setApplicationMessage(
+          "You already applied for this job."
+        );
+
+        return;
+      }
+
+      if (!response.ok) {
+        setApplicationMessage(
+          data.message ||
+            "Could not send application."
+        );
+
+        return;
+      }
+
+      setApplied(true);
+
+      setApplicationMessage(
+        "Application sent successfully."
+      );
+
+    } catch (error) {
+      console.error(
+        "Apply error:",
+        error
+      );
+
+      setApplicationMessage(
+        "Could not connect to KaamON server."
+      );
+
+    } finally {
+      setApplying(false);
+    }
+  }
+
+
+  // ==============================
+  // LOADING
+  // ==============================
 
   if (loading) {
     return (
@@ -43,25 +153,41 @@ function JobDetails() {
     );
   }
 
+
+  // ==============================
+  // JOB NOT FOUND
+  // ==============================
+
   if (!job) {
     return (
       <main className="job-details-page">
+
         <h2>Job not found</h2>
 
-        <Link to="/" className="back-link">
+        <Link
+          to="/"
+          className="back-link"
+        >
           ← Back to Home
         </Link>
+
       </main>
     );
   }
 
+
   return (
     <main className="job-details-page">
+
       <div className="job-details-container">
 
-        <Link to="/" className="back-link">
+        <Link
+          to="/"
+          className="back-link"
+        >
           ← Back to Opportunities
         </Link>
+
 
         <div className="job-details-card">
 
@@ -72,11 +198,15 @@ function JobDetails() {
             </div>
 
             <div>
+
               <span className="details-category">
                 {job.category}
               </span>
 
-              <h1>{job.title}</h1>
+              <h1>
+                {job.title}
+              </h1>
+
             </div>
 
           </div>
@@ -94,7 +224,9 @@ function JobDetails() {
 
               <div>
                 <small>Location</small>
-                <strong>{job.location}</strong>
+                <strong>
+                  {job.location}
+                </strong>
               </div>
             </div>
 
@@ -104,7 +236,9 @@ function JobDetails() {
 
               <div>
                 <small>Date</small>
-                <strong>{job.date}</strong>
+                <strong>
+                  {job.date}
+                </strong>
               </div>
             </div>
 
@@ -114,7 +248,9 @@ function JobDetails() {
 
               <div>
                 <small>Timing</small>
-                <strong>{job.time}</strong>
+                <strong>
+                  {job.time}
+                </strong>
               </div>
             </div>
 
@@ -124,7 +260,9 @@ function JobDetails() {
 
               <div>
                 <small>Distance</small>
-                <strong>{job.distance}</strong>
+                <strong>
+                  {job.distance}
+                </strong>
               </div>
             </div>
 
@@ -134,21 +272,31 @@ function JobDetails() {
           <div className="posted-by">
 
             <div className="poster-avatar">
+
               {job.postedBy?.name
-                ? job.postedBy.name.charAt(0).toUpperCase()
+                ? job.postedBy.name
+                    .charAt(0)
+                    .toUpperCase()
                 : "AK"}
+
             </div>
 
             <div>
-              <small>Posted by</small>
+
+              <small>
+                Posted by
+              </small>
 
               <strong>
-                {job.postedBy?.name || "Amit Kumar"}
+                {job.postedBy?.name ||
+                  "Amit Kumar"}
               </strong>
 
               <p>
-                ⭐ 4.7 &nbsp; • &nbsp; ✓ Phone Verified
+                ⭐ 4.7 &nbsp; • &nbsp;
+                ✓ Phone Verified
               </p>
+
             </div>
 
           </div>
@@ -157,12 +305,20 @@ function JobDetails() {
           <div className="apply-section">
 
             <div>
-              <small>Payment</small>
+
+              <small>
+                Payment
+              </small>
 
               <h2>
-                ₹{Number(job.payment).toLocaleString("en-IN")}
+                ₹
+                {Number(
+                  job.payment
+                ).toLocaleString("en-IN")}
               </h2>
+
             </div>
+
 
             <button
               className={
@@ -170,18 +326,33 @@ function JobDetails() {
                   ? "apply-job-btn applied"
                   : "apply-job-btn"
               }
-              onClick={() => setApplied(true)}
-              disabled={applied}
+              onClick={handleApply}
+              disabled={
+                applied || applying
+              }
             >
-              {applied
+
+              {applying
+                ? "Sending..."
+                : applied
                 ? "✓ Application Sent"
                 : "Apply for Work"}
+
             </button>
 
           </div>
 
+
+          {applicationMessage && (
+            <p className="application-message">
+              {applicationMessage}
+            </p>
+          )}
+
         </div>
+
       </div>
+
     </main>
   );
 }
