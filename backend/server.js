@@ -14,6 +14,40 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader) {
+    return res.status(401).json({
+      message: "Please login first.",
+    });
+  }
+
+  const token = authHeader.split(" ")[1];
+
+  if (!token) {
+    return res.status(401).json({
+      message: "Invalid login token.",
+    });
+  }
+
+  try {
+    const user = jwt.verify(
+      token,
+      process.env.JWT_SECRET
+    );
+
+    req.user = user;
+
+    next();
+
+  } catch (error) {
+    return res.status(401).json({
+      message: "Session expired. Please login again.",
+    });
+  }
+}
+
 
 // ==============================
 // HOME
@@ -388,6 +422,82 @@ app.post("/api/auth/login", async (req, res) => {
     });
   }
 });
+
+app.post(
+  "/api/jobs/:id/apply",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const jobId = req.params.id;
+      const applicantId = req.user.id;
+
+      const jobResult = await pool.query(
+        "SELECT * FROM jobs WHERE id = $1",
+        [jobId]
+      );
+
+      if (jobResult.rows.length === 0) {
+        return res.status(404).json({
+          message: "Job not found.",
+        });
+      }
+
+      const job = jobResult.rows[0];
+
+      if (
+        String(job.posted_by_id) ===
+        String(applicantId)
+      ) {
+        return res.status(400).json({
+          message: "You cannot apply to your own job.",
+        });
+      }
+
+      const existingApplication =
+        await pool.query(
+          `
+          SELECT id
+          FROM applications
+          WHERE job_id = $1
+          AND applicant_id = $2
+          `,
+          [jobId, applicantId]
+        );
+
+      if (existingApplication.rows.length > 0) {
+        return res.status(409).json({
+          message: "You already applied for this job.",
+        });
+      }
+
+      const result = await pool.query(
+        `
+        INSERT INTO applications
+        (
+          job_id,
+          applicant_id,
+          status
+        )
+        VALUES ($1, $2, 'pending')
+        RETURNING *
+        `,
+        [jobId, applicantId]
+      );
+
+      res.status(201).json({
+        message: "Application sent successfully.",
+        application: result.rows[0],
+      });
+
+    } catch (error) {
+      console.error("Apply job error:", error);
+
+      res.status(500).json({
+        message: "Could not send application.",
+      });
+    }
+  }
+);
 
 
 // ==============================

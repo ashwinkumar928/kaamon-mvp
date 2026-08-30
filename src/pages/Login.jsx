@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import API_URL from "../api";
 import "./Auth.css";
 
 function Login() {
@@ -9,35 +10,61 @@ function Login() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
-  function handleLogin(event) {
+  async function handleLogin(event) {
     event.preventDefault();
 
-    const users =
-      JSON.parse(localStorage.getItem("kaamonUsers")) || [];
-
-    const user = users.find(
-      (user) =>
-        user.email === email &&
-        user.password === password
-    );
-
-    if (!user) {
-      setMessage("Invalid email or password.");
+    if (!email || !password) {
+      setMessage("Please enter email and password.");
       return;
     }
 
-    const loggedInUser = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-    };
+    try {
+      const response = await fetch(
+        `${API_URL}/api/auth/login`,
+        {
+          method: "POST",
 
-    localStorage.setItem(
-      "kaamonCurrentUser",
-      JSON.stringify(loggedInUser)
-    );
+          headers: {
+            "Content-Type": "application/json",
+          },
 
-    navigate("/dashboard");
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setMessage(
+          data.message || "Invalid email or password."
+        );
+        return;
+      }
+
+      localStorage.setItem(
+        "kaamonToken",
+        data.token
+      );
+
+      localStorage.setItem(
+        "kaamonCurrentUser",
+        JSON.stringify(data.user)
+      );
+
+      setMessage("");
+
+      navigate("/dashboard");
+
+    } catch (error) {
+      console.error("Login error:", error);
+
+      setMessage(
+        "Could not connect to KaamON server."
+      );
+    }
   }
 
   return (
