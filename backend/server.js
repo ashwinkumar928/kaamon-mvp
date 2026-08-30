@@ -499,6 +499,126 @@ app.post(
   }
 );
 
+// ==============================
+// GET MY POSTED JOBS
+// ==============================
+
+app.get(
+  "/api/my-jobs",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const userId = req.user.id;
+
+      const result = await pool.query(
+        `
+        SELECT
+          jobs.*,
+          COUNT(applications.id)::int AS applicant_count
+        FROM jobs
+
+        LEFT JOIN applications
+          ON applications.job_id = jobs.id
+
+        WHERE jobs.posted_by_id = $1::text
+
+        GROUP BY jobs.id
+
+        ORDER BY jobs.created_at DESC
+        `,
+        [userId]
+      );
+
+      res.json(result.rows);
+
+    } catch (error) {
+      console.error("My jobs error:", error);
+
+      res.status(500).json({
+        message: "Could not load your jobs.",
+      });
+    }
+  }
+);
+
+// ==============================
+// VIEW APPLICANTS FOR A JOB
+// ==============================
+
+app.get(
+  "/api/jobs/:id/applicants",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const jobId = req.params.id;
+      const userId = req.user.id;
+
+      // Check job belongs to logged-in user
+      const jobResult = await pool.query(
+        `
+        SELECT *
+        FROM jobs
+        WHERE id = $1
+        `,
+        [jobId]
+      );
+
+      if (jobResult.rows.length === 0) {
+        return res.status(404).json({
+          message: "Job not found.",
+        });
+      }
+
+      const job = jobResult.rows[0];
+
+      if (
+        String(job.posted_by_id) !==
+        String(userId)
+      ) {
+        return res.status(403).json({
+          message:
+            "You cannot view applicants for this job.",
+        });
+      }
+
+      const result = await pool.query(
+        `
+        SELECT
+          applications.id AS application_id,
+          applications.status,
+          applications.created_at,
+
+          users.id AS applicant_id,
+          users.name,
+          users.email
+
+        FROM applications
+
+        JOIN users
+          ON users.id = applications.applicant_id
+
+        WHERE applications.job_id = $1
+
+        ORDER BY applications.created_at DESC
+        `,
+        [jobId]
+      );
+
+      res.json(result.rows);
+
+    } catch (error) {
+      console.error(
+        "Applicants error:",
+        error
+      );
+
+      res.status(500).json({
+        message:
+          "Could not load applicants.",
+      });
+    }
+  }
+);
 
 // ==============================
 // START SERVER
