@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Auth.css";
+import API_URL from "../api";
 
 function Signup() {
   const navigate = useNavigate();
@@ -22,50 +23,65 @@ function Signup() {
     });
   }
 
-  function handleSubmit(event) {
-    event.preventDefault();
+    async function handleSubmit(event) {
+  event.preventDefault();
 
-    if (!formData.name || !formData.email || !formData.password) {
-      setMessage("Please fill all fields.");
-      return;
-    }
+  if (
+    !formData.name ||
+    !formData.email ||
+    !formData.password
+  ) {
+    setMessage("Please fill all fields.");
+    return;
+  }
 
-    if (formData.password.length < 6) {
-      setMessage("Password must be at least 6 characters.");
-      return;
-    }
+  if (formData.password.length < 6) {
+    setMessage(
+      "Password must be at least 6 characters."
+    );
+    return;
+  }
 
-    const existingUsers =
-      JSON.parse(localStorage.getItem("kaamonUsers")) || [];
+  try {
+    const response = await fetch(
+      `${API_URL}/api/auth/register`,
+      {
+        method: "POST",
 
-    const alreadyExists = existingUsers.find(
-      (user) => user.email === formData.email
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        }),
+      }
     );
 
-    if (alreadyExists) {
-      setMessage("An account with this email already exists.");
+    const data = await response.json();
+
+    if (!response.ok) {
+      setMessage(
+        data.message || "Could not create account."
+      );
       return;
     }
-
-    const newUser = {
-      id: Date.now(),
-      name: formData.name,
-      email: formData.email,
-      password: formData.password,
-    };
-
-    const updatedUsers = [...existingUsers, newUser];
-
-    localStorage.setItem(
-      "kaamonUsers",
-      JSON.stringify(updatedUsers)
-    );
 
     setMessage("");
 
     navigate("/login");
-  }
 
+  } catch (error) {
+    console.error("Signup error:", error);
+
+    setMessage(
+      "Could not connect to KaamON server."
+    );
+  }
+}
+  
   return (
     <main className="auth-page">
 

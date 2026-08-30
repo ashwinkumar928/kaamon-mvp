@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
+import API_URL from "../api";
 import "./Dashboard.css";
 
 function Dashboard() {
@@ -6,9 +8,46 @@ function Dashboard() {
     localStorage.getItem("kaamonCurrentUser")
   );
 
+  const [jobsPosted, setJobsPosted] = useState(0);
+
+  useEffect(() => {
+    async function loadDashboardData() {
+      if (!currentUser) {
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `${API_URL}/api/jobs`
+        );
+
+        const jobs = await response.json();
+
+        const myJobs = jobs.filter((job) => {
+          return (
+            String(job.postedBy?.id) ===
+            String(currentUser.id)
+          );
+        });
+
+        setJobsPosted(myJobs.length);
+
+      } catch (error) {
+        console.error(
+          "Could not load dashboard data:",
+          error
+        );
+      }
+    }
+
+    loadDashboardData();
+  }, [currentUser?.id]);
+
+
   if (!currentUser) {
     return <Navigate to="/login" />;
   }
+
 
   return (
     <main className="dashboard-page">
@@ -44,7 +83,7 @@ function Dashboard() {
             </p>
 
             <Link to="/post-work">
-               Post Work →
+              Post Work →
             </Link>
 
           </div>
@@ -75,7 +114,7 @@ function Dashboard() {
         <div className="dashboard-info">
 
           <div>
-            <strong>0</strong>
+            <strong>{jobsPosted}</strong>
             <span>Jobs Posted</span>
           </div>
 
