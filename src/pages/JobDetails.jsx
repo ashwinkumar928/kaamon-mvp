@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import "./JobDetails.css";
+import API_URL from "../api";
 
 function JobDetails() {
   const { jobId } = useParams();
@@ -13,8 +14,7 @@ function JobDetails() {
     async function loadJob() {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/jobs/${jobId}`
-        );
+  `             ${API_URL}/api/jobs/${jobId}`);
 
         if (!response.ok) {
           setJob(null);

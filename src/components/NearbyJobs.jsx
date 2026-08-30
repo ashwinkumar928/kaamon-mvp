@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./NearbyJobs.css";
+import API_URL from "../api";
 
 function NearbyJobs() {
   const [allJobs, setAllJobs] = useState([]);
@@ -10,9 +11,7 @@ function NearbyJobs() {
   useEffect(() => {
     async function loadJobs() {
       try {
-        const response = await fetch(
-          "http://localhost:5000/api/jobs"
-        );
+        const response = await fetch(`${API_URL}/api/jobs`);
 
         const data = await response.json();
 

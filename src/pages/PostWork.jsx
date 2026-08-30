@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import "./PostWork.css";
+import API_URL from "../api";
 
 function PostWork() {
   const navigate = useNavigate();
@@ -77,7 +78,7 @@ function PostWork() {
 
   try {
     const response = await fetch(
-      "http://localhost:5000/api/jobs",
+      `${API_URL}/api/jobs`,
       {
         method: "POST",
 
