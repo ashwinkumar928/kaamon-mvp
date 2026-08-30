@@ -13,6 +13,7 @@ import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import PostWork from "./pages/PostWork.jsx";
+import MyJobs from "./pages/MyJobs.jsx";
 
 
 function App() {
@@ -69,6 +70,11 @@ function App() {
         <Route
           path="/post-work"
           element={<PostWork />}
+        />
+
+        <Route
+            path="/my-jobs"
+             element={<MyJobs />}
         />
 
       </Routes>

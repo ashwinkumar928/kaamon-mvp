@@ -86,6 +86,12 @@ function Dashboard() {
               Post Work →
             </Link>
 
+            <Link to="/my-jobs"
+                style={{ marginLeft: "10px" }}
+              >
+                My Posted Jobs
+             </Link>
+
           </div>
 
 
