@@ -1,0 +1,169 @@
+import { useEffect, useState } from "react";
+import { Link, Navigate, useParams } from "react-router-dom";
+import API_URL from "../api";
+import "./Applicants.css";
+
+function Applicants() {
+  const { jobId } = useParams();
+
+  const token = localStorage.getItem("kaamonToken");
+
+  const [applicants, setApplicants] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    async function loadApplicants() {
+      try {
+        const response = await fetch(
+          `${API_URL}/api/jobs/${jobId}/applicants`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          setError(
+            data.message || "Could not load applicants."
+          );
+          return;
+        }
+
+        setApplicants(data);
+
+      } catch (error) {
+        console.error("Applicants error:", error);
+
+        setError(
+          "Could not connect to KaamON server."
+        );
+
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (token) {
+      loadApplicants();
+    } else {
+      setLoading(false);
+    }
+
+  }, [jobId, token]);
+
+
+  if (!token) {
+    return <Navigate to="/login" />;
+  }
+
+
+  if (loading) {
+    return (
+      <main className="applicants-page">
+        <div className="applicants-container">
+          <h2>Loading applicants...</h2>
+        </div>
+      </main>
+    );
+  }
+
+
+  return (
+    <main className="applicants-page">
+
+      <div className="applicants-container">
+
+        <Link
+          to="/my-jobs"
+          className="applicants-back"
+        >
+          ← Back to My Posted Jobs
+        </Link>
+
+
+        <div className="applicants-heading">
+          <span>JOB APPLICANTS</span>
+
+          <h1>Applicants</h1>
+
+          <p>
+            Review people who applied for this work.
+          </p>
+        </div>
+
+
+        {error && (
+          <p className="applicants-error">
+            {error}
+          </p>
+        )}
+
+
+        {!error && applicants.length === 0 && (
+          <div className="no-applicants">
+            <h2>No applicants yet</h2>
+
+            <p>
+              Nobody has applied for this job yet.
+            </p>
+          </div>
+        )}
+
+
+        <div className="applicants-list">
+
+          {applicants.map((applicant) => (
+
+            <div
+              className="applicant-card"
+              key={applicant.application_id}
+            >
+
+              <div className="applicant-profile">
+
+                <div className="applicant-avatar">
+                  {applicant.name
+                    ?.charAt(0)
+                    .toUpperCase()}
+                </div>
+
+                <div>
+                  <h2>
+                    {applicant.name}
+                  </h2>
+
+                  <p>
+                    {applicant.email}
+                  </p>
+                </div>
+
+              </div>
+
+
+              <div className="applicant-status">
+
+                <span
+                  className={`status-${applicant.status}`}
+                >
+                  {applicant.status}
+                </span>
+
+              </div>
+
+            </div>
+
+          ))}
+
+        </div>
+
+      </div>
+
+    </main>
+  );
+}
+
+export default Applicants;
