@@ -619,6 +619,92 @@ app.get(
     }
   }
 );
+ // ==============================
+// ACCEPT / REJECT APPLICATION
+// ==============================
+
+app.patch(
+  "/api/applications/:id/status",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const applicationId = req.params.id;
+      const userId = req.user.id;
+      const { status } = req.body;
+
+      if (!["accepted", "rejected"].includes(status)) {
+        return res.status(400).json({
+          message: "Invalid application status.",
+        });
+      }
+
+      // Find application and its job
+      const applicationResult = await pool.query(
+        `
+        SELECT
+          applications.*,
+          jobs.posted_by_id
+        FROM applications
+
+        JOIN jobs
+          ON jobs.id = applications.job_id
+
+        WHERE applications.id = $1
+        `,
+        [applicationId]
+      );
+
+      if (applicationResult.rows.length === 0) {
+        return res.status(404).json({
+          message: "Application not found.",
+        });
+      }
+
+      const application =
+        applicationResult.rows[0];
+
+      // Only job owner can accept/reject
+      if (
+        String(application.posted_by_id) !==
+        String(userId)
+      ) {
+        return res.status(403).json({
+          message:
+            "You cannot update this application.",
+        });
+      }
+
+      const result = await pool.query(
+        `
+        UPDATE applications
+
+        SET status = $1
+
+        WHERE id = $2
+
+        RETURNING *
+        `,
+        [status, applicationId]
+      );
+
+      res.json({
+        message: `Application ${status} successfully.`,
+        application: result.rows[0],
+      });
+
+    } catch (error) {
+      console.error(
+        "Update application error:",
+        error
+      );
+
+      res.status(500).json({
+        message:
+          "Could not update application.",
+      });
+    }
+  }
+);
 
 // ==============================
 // START SERVER
