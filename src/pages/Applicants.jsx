@@ -55,6 +55,60 @@ function Applicants() {
 
   }, [jobId, token]);
 
+  async function handleStatusChange(
+  applicationId,
+  newStatus
+) {
+  try {
+    const response = await fetch(
+      `${API_URL}/api/applications/${applicationId}/status`,
+      {
+        method: "PATCH",
+
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          status: newStatus,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      alert(
+        data.message ||
+          "Could not update application."
+      );
+      return;
+    }
+
+    setApplicants((currentApplicants) =>
+      currentApplicants.map((applicant) =>
+        applicant.application_id === applicationId
+          ? {
+              ...applicant,
+              status: newStatus,
+            }
+          : applicant
+      )
+    );
+
+  } catch (error) {
+    console.error(
+      "Status update error:",
+      error
+    );
+
+    alert(
+      "Could not connect to KaamON server."
+    );
+  }
+}
+
 
   if (!token) {
     return <Navigate to="/login" />;
@@ -144,15 +198,46 @@ function Applicants() {
               </div>
 
 
-              <div className="applicant-status">
+             <div className="applicant-status">
 
-                <span
-                  className={`status-${applicant.status}`}
-                >
-                  {applicant.status}
-                </span>
+  <span
+    className={`status-${applicant.status}`}
+  >
+    {applicant.status}
+  </span>
 
-              </div>
+
+  {applicant.status === "pending" && (
+    <div className="applicant-actions">
+
+      <button
+        className="accept-btn"
+        onClick={() =>
+          handleStatusChange(
+            applicant.application_id,
+            "accepted"
+          )
+        }
+      >
+        ✓ Accept
+      </button>
+
+      <button
+        className="reject-btn"
+        onClick={() =>
+          handleStatusChange(
+            applicant.application_id,
+            "rejected"
+          )
+        }
+      >
+        ✕ Reject
+      </button>
+
+    </div>
+  )}
+
+</div>
 
             </div>
 

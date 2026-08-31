@@ -135,3 +135,59 @@
 
   border-radius: 9px;
 }
+.applicant-status {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.applicant-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.accept-btn,
+.reject-btn {
+  padding: 9px 13px;
+
+  border: none;
+  border-radius: 8px;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.accept-btn {
+  background: #e8f7ef;
+  color: #149155;
+}
+
+.accept-btn:hover {
+  background: #149155;
+  color: white;
+}
+
+.reject-btn {
+  background: #ffecec;
+  color: #c93636;
+}
+
+.reject-btn:hover {
+  background: #c93636;
+  color: white;
+}
+
+@media (max-width: 650px) {
+  .applicant-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+  }
+
+  .applicant-status {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

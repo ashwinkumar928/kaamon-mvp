@@ -707,6 +707,63 @@ app.patch(
 );
 
 // ==============================
+// GET MY APPLICATIONS
+// ==============================
+
+app.get(
+  "/api/my-applications",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const userId = req.user.id;
+
+      const result = await pool.query(
+        `
+        SELECT
+          applications.id AS application_id,
+          applications.status,
+          applications.created_at,
+
+          jobs.id AS job_id,
+          jobs.title,
+          jobs.category,
+          jobs.description,
+          jobs.location,
+          jobs.work_date,
+          jobs.work_time,
+          jobs.payment,
+          jobs.icon
+
+        FROM applications
+
+        JOIN jobs
+          ON jobs.id = applications.job_id
+
+        WHERE applications.applicant_id = $1
+
+        ORDER BY applications.created_at DESC
+        `,
+        [userId]
+      );
+
+      res.json(result.rows);
+
+    } catch (error) {
+      console.error(
+        "My applications error:",
+        error
+      );
+
+      res.status(500).json({
+        message:
+          "Could not load your applications.",
+      });
+    }
+  }
+);
+
+
+// ==============================
 // START SERVER
 // ==============================
 

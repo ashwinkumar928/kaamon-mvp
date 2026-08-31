@@ -1,0 +1,214 @@
+.my-applications-page {
+  min-height: calc(100vh - 76px);
+  padding: 55px 8%;
+  background: #f8fafc;
+}
+
+.my-applications-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.my-applications-back {
+  display: inline-block;
+  margin-bottom: 30px;
+
+  color: #667085;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.my-applications-heading {
+  margin-bottom: 30px;
+}
+
+.my-applications-heading span {
+  color: #ff6b00;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  letter-spacing: 2px;
+}
+
+.my-applications-heading h1 {
+  margin: 8px 0;
+
+  color: #172033;
+
+  font-size: 36px;
+}
+
+.my-applications-heading p {
+  color: #7a8495;
+}
+
+.applications-list {
+  display: grid;
+  gap: 16px;
+}
+
+.application-card {
+  padding: 22px;
+
+  background: white;
+
+  border: 1px solid #e5eaf0;
+  border-radius: 16px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 20px;
+}
+
+.application-main {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.application-icon {
+  width: 52px;
+  height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #fff1e7;
+
+  border-radius: 13px;
+
+  font-size: 23px;
+}
+
+.application-category {
+  color: #ff6b00;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 1px;
+}
+
+.application-main h2 {
+  margin: 5px 0;
+
+  color: #172033;
+
+  font-size: 19px;
+}
+
+.application-main p {
+  margin: 0;
+
+  color: #7a8495;
+
+  font-size: 13px;
+}
+
+.application-info {
+  display: flex;
+  align-items: center;
+  gap: 35px;
+}
+
+.application-info small {
+  display: block;
+
+  color: #8a94a5;
+
+  margin-bottom: 5px;
+}
+
+.application-info strong {
+  color: #172033;
+
+  font-size: 19px;
+}
+
+.application-status-area {
+  min-width: 90px;
+}
+
+.application-status {
+  display: inline-block;
+
+  padding: 7px 12px;
+
+  border-radius: 20px;
+
+  text-transform: capitalize;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.status-pending {
+  background: #fff1e7;
+  color: #d95b00;
+}
+
+.status-accepted {
+  background: #e8f7ef;
+  color: #149155;
+}
+
+.status-rejected {
+  background: #ffecec;
+  color: #c93636;
+}
+
+.no-applications {
+  padding: 45px;
+
+  text-align: center;
+
+  background: white;
+
+  border: 1px solid #e5eaf0;
+  border-radius: 16px;
+}
+
+.no-applications a {
+  display: inline-block;
+
+  margin-top: 10px;
+
+  padding: 11px 17px;
+
+  background: #172033;
+  color: white;
+
+  border-radius: 9px;
+
+  text-decoration: none;
+
+  font-weight: 700;
+}
+
+.my-applications-error {
+  padding: 13px;
+
+  background: #ffecec;
+  color: #c93636;
+
+  border-radius: 9px;
+}
+
+@media (max-width: 650px) {
+  .application-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .application-info {
+    width: 100%;
+
+    justify-content: space-between;
+
+    gap: 15px;
+  }
+}
