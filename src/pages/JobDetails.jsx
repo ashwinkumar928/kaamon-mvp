@@ -16,6 +16,7 @@ function JobDetails() {
   const [loading, setLoading] = useState(true);
 
   const [applied, setApplied] = useState(false);
+  const [applicationStatus, setApplicationStatus] = useState("");
   const [applying, setApplying] = useState(false);
   const [applicationMessage, setApplicationMessage] =
     useState("");
@@ -57,6 +58,55 @@ function JobDetails() {
     loadJob();
 
   }, [jobId]);
+
+  // ==============================
+// CHECK EXISTING APPLICATION
+// ==============================
+
+useEffect(() => {
+  async function checkApplication() {
+    const token =
+      localStorage.getItem("kaamonToken");
+
+    if (!token) {
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `${API_URL}/api/jobs/${jobId}/my-application`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        return;
+      }
+
+      const data = await response.json();
+
+      if (data.applied) {
+        setApplied(true);
+
+        setApplicationStatus(
+          data.application.status
+        );
+      }
+
+    } catch (error) {
+      console.error(
+        "Could not check application:",
+        error
+      );
+    }
+  }
+
+  checkApplication();
+
+}, [jobId]);
 
 
   // ==============================
@@ -102,6 +152,7 @@ function JobDetails() {
 
       if (response.status === 409) {
         setApplied(true);
+        setApplicationStatus("pending");
 
         setApplicationMessage(
           "You already applied for this job."
@@ -332,8 +383,12 @@ function JobDetails() {
               }
             >
 
-              {applying
+             {applying
                 ? "Sending..."
+                : applicationStatus === "accepted"
+                ? "✓ Application Accepted"
+                : applicationStatus === "rejected"
+                ? "Application Rejected"
                 : applied
                 ? "✓ Application Sent"
                 : "Apply for Work"}
@@ -343,11 +398,21 @@ function JobDetails() {
           </div>
 
 
-          {applicationMessage && (
+          {applied && !applicationMessage && (
             <p className="application-message">
-              {applicationMessage}
-            </p>
+               {applicationStatus === "accepted"
+                 ? "Your application has been accepted."
+                 : applicationStatus === "rejected"
+                 ? "Your application was not selected."
+                 : "You have already applied for this job."}
+                </p>
           )}
+
+               {applicationMessage && (
+             <p className="application-message">
+              {applicationMessage}
+               </p>
+            )}
 
         </div>
 
