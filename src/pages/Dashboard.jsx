@@ -112,6 +112,13 @@ function Dashboard() {
               Find Work →
             </Link>
 
+            <Link
+               to="/my-applications"
+               style={{ marginLeft: "10px" }}
+            >
+              My Applications
+            </Link>
+
           </div>
 
         </div>

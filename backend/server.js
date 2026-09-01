@@ -717,6 +717,11 @@ app.get(
     try {
       const userId = req.user.id;
 
+      console.log(
+        "My applications user ID:",
+        userId
+      );
+
       const result = await pool.query(
         `
         SELECT
@@ -746,6 +751,11 @@ app.get(
         [userId]
       );
 
+      console.log(
+        "Applications found:",
+        result.rows.length
+      );
+
       res.json(result.rows);
 
     } catch (error) {
@@ -757,6 +767,55 @@ app.get(
       res.status(500).json({
         message:
           "Could not load your applications.",
+      });
+    }
+  }
+);
+
+// ==============================
+// CHECK MY APPLICATION FOR A JOB
+// ==============================
+
+app.get(
+  "/api/jobs/:id/my-application",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const jobId = req.params.id;
+      const userId = req.user.id;
+
+      const result = await pool.query(
+        `
+        SELECT
+          id AS application_id,
+          status
+        FROM applications
+        WHERE job_id = $1
+        AND applicant_id = $2
+        `,
+        [jobId, userId]
+      );
+
+      if (result.rows.length === 0) {
+        return res.json({
+          applied: false,
+        });
+      }
+
+      res.json({
+        applied: true,
+        application: result.rows[0],
+      });
+
+    } catch (error) {
+      console.error(
+        "Check application error:",
+        error
+      );
+
+      res.status(500).json({
+        message:
+          "Could not check application.",
       });
     }
   }
