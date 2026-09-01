@@ -821,6 +821,119 @@ app.get(
   }
 );
 
+// ==============================
+// GET MY PROFILE
+// ==============================
+
+app.get(
+  "/api/profile",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const userId = req.user.id;
+
+      const result = await pool.query(
+        `
+        SELECT
+          id,
+          name,
+          email,
+          phone,
+          location,
+          skills
+        FROM users
+        WHERE id = $1
+        `,
+        [userId]
+      );
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({
+          message: "User not found.",
+        });
+      }
+
+      res.json(result.rows[0]);
+
+    } catch (error) {
+      console.error("Profile error:", error);
+
+      res.status(500).json({
+        message: "Could not load profile.",
+      });
+    }
+  }
+);
+
+
+// ==============================
+// UPDATE MY PROFILE
+// ==============================
+
+app.put(
+  "/api/profile",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const userId = req.user.id;
+
+      const {
+        phone,
+        location,
+        skills,
+      } = req.body;
+
+      const result = await pool.query(
+        `
+        UPDATE users
+
+        SET
+          phone = $1,
+          location = $2,
+          skills = $3
+
+        WHERE id = $4
+
+        RETURNING
+          id,
+          name,
+          email,
+          phone,
+          location,
+          skills
+        `,
+        [
+          phone || null,
+          location || null,
+          skills || null,
+          userId,
+        ]
+      );
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({
+          message: "User not found.",
+        });
+      }
+
+      res.json({
+        message: "Profile updated successfully.",
+        user: result.rows[0],
+      });
+
+    } catch (error) {
+      console.error(
+        "Update profile error:",
+        error
+      );
+
+      res.status(500).json({
+        message: "Could not update profile.",
+      });
+    }
+  }
+);
+
 
 // ==============================
 // START SERVER
