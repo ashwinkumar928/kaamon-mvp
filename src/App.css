@@ -969,3 +969,44 @@ body.dark-mode .detail-item {
 body.dark-mode .detail-item strong {
   color: #f8fafc;
 }
+
+.logged-user {
+  text-decoration: none;
+  color: #172033;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.logged-user:hover {
+  color: #ff6b00;
+}
+
+.logout-btn {
+  padding: 11px 16px;
+
+  border: 1px solid #d8dee7;
+  border-radius: 9px;
+
+  background: white;
+  color: #172033;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  border-color: #ff6b00;
+  color: #ff6b00;
+}
+
+body.dark-mode .logged-user {
+  color: #f8fafc;
+}
+
+body.dark-mode .logout-btn {
+  background: #1e293b;
+  color: #f8fafc;
+  border-color: #334155;
+}

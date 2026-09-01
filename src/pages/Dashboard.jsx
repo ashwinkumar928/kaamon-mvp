@@ -9,6 +9,8 @@ function Dashboard() {
   );
 
   const [jobsPosted, setJobsPosted] = useState(0);
+  const [applicationsCount, setApplicationsCount] = useState(0);
+const [acceptedWork, setAcceptedWork] = useState(0);
 
   useEffect(() => {
     async function loadDashboardData() {
@@ -30,6 +32,35 @@ function Dashboard() {
           );
         });
 
+        const token =
+  localStorage.getItem("kaamonToken");
+
+const applicationsResponse = await fetch(
+  `${API_URL}/api/my-applications`,
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+);
+
+if (applicationsResponse.ok) {
+  const applications =
+    await applicationsResponse.json();
+
+  setApplicationsCount(
+    applications.length
+  );
+
+  const accepted = applications.filter(
+    (application) =>
+      application.status === "accepted"
+  );
+
+  setAcceptedWork(
+    accepted.length
+  );
+}
         setJobsPosted(myJobs.length);
 
       } catch (error) {
@@ -131,15 +162,15 @@ function Dashboard() {
             <span>Jobs Posted</span>
           </div>
 
-          <div>
-            <strong>0</strong>
+         <div>
+            <strong>{applicationsCount}</strong>
             <span>Applications</span>
           </div>
 
           <div>
-            <strong>0</strong>
-            <span>Completed Work</span>
-          </div>
+              <strong>{acceptedWork}</strong>
+              <span>Accepted Work</span>
+            </div>
 
         </div>
 

@@ -1,0 +1,97 @@
+.how-it-works {
+  padding: 55px 24px;
+  background: #f8fafc;
+  scroll-margin-top: 80px;
+}
+
+.how-container {
+  max-width: 1200px;
+  margin: auto;
+}
+
+.how-heading {
+  text-align: center;
+  max-width: 650px;
+  margin: 0 auto 30px;
+}
+
+.how-heading span {
+  color: #ff6b00;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 3px;
+}
+
+.how-heading h2 {
+  color: #172033;
+  font-size: 40px;
+  margin: 10px 0 12px;
+}
+
+.how-heading p {
+  color: #64748b;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.how-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.how-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 28px 24px;
+  text-align: center;
+  transition: 0.25s ease;
+}
+
+.how-card:hover {
+  transform: translateY(-5px);
+  border-color: #ff6b00;
+  box-shadow: 0 15px 35px rgba(23, 32, 51, 0.08);
+}
+
+.how-number {
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #fff1e8;
+  color: #ff6b00;
+
+  border-radius: 14px;
+
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.how-card h3 {
+  color: #172033;
+  font-size: 20px;
+  margin: 0 0 12px;
+}
+
+.how-card p {
+  color: #64748b;
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+@media (max-width: 800px) {
+  .how-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .how-heading h2 {
+    font-size: 32px;
+  }
+}

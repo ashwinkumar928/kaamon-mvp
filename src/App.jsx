@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar.jsx";
 import Hero from "./components/Hero.jsx";
 import Stats from "./components/Stats.jsx";
 import Categories from "./components/Categories.jsx";
+import HowItWorks from "./components/HowItWorks.jsx";
 import NearbyJobs from "./components/NearbyJobs.jsx";
 
 import JobDetails from "./pages/JobDetails.jsx";
@@ -16,6 +17,7 @@ import PostWork from "./pages/PostWork.jsx";
 import MyJobs from "./pages/MyJobs.jsx";
 import Applicants from "./pages/Applicants.jsx";
 import MyApplications from "./pages/MyApplications.jsx";
+import Profile from "./pages/Profile.jsx";
 
 
 function App() {
@@ -34,6 +36,7 @@ function App() {
               <Hero />
               <Stats />
               <Categories />
+              <HowItWorks />
               <NearbyJobs />
             </>
           }
@@ -91,6 +94,11 @@ function App() {
               path="/my-applications"
                element={<MyApplications />}
         />
+         <Route
+               path="/profile"
+               element={<Profile />}
+        />
+        
 
       </Routes>
 

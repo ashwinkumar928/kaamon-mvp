@@ -54,6 +54,10 @@ function Login() {
         JSON.stringify(data.user)
       );
 
+      window.dispatchEvent(
+  new Event("kaamonAuthChanged")
+);
+
       setMessage("");
 
       navigate("/dashboard");
