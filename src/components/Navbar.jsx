@@ -81,11 +81,18 @@ function handleLogout() {
 
 
       <div className="nav-links">
-        <Link to="/">Home</Link>
+      <Link to="/">Home</Link>
         <a href="/#jobs">Find Work</a>
         <a href="/#how">How It Works</a>
         <a href="/#categories">Categories</a>
-      </div>
+
+        {currentUser && (
+      <>
+         <Link to="/dashboard">Dashboard</Link>
+         <Link to="/my-jobs">My Jobs</Link>
+      </>
+    )}
+       </div>
 
 
       <div className="nav-actions">

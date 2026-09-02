@@ -1,5 +1,31 @@
+import { useNavigate } from "react-router-dom";
+
 function Hero() {
+  const navigate = useNavigate();
+
+  function handleNeedSomeone() {
+    const token = localStorage.getItem("kaamonToken");
+
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+     navigate("/dashboard");
+  }
+
+  function handleWantToWork() {
+    const jobsSection = document.getElementById("jobs");
+
+    if (jobsSection) {
+      jobsSection.scrollIntoView({
+        behavior: "smooth",
+      });
+    }
+  }
+
   return (
+
     <section className="hero" id="home">
       <div className="hero-left">
 
@@ -18,14 +44,20 @@ function Hero() {
         </p>
 
         <div className="hero-buttons">
-          <button className="primary-btn">
-            👤 I Need Someone
-          </button>
+          <button
+                className="primary-btn"
+                onClick={handleNeedSomeone}
+             >
+              👤 I Need Someone
+            </button>
 
-          <button className="secondary-btn">
-            💼 I Want to Work
-          </button>
-        </div>
+           <button
+               className="secondary-btn"
+               onClick={handleWantToWork}
+            >
+               💼 I Want to Work
+            </button>
+            </div>
 
         <div className="one-account">
           <span>✓</span>

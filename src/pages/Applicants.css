@@ -204,3 +204,17 @@
 .view-profile-btn:hover {
   text-decoration: underline;
 }
+.complete-btn {
+  padding: 9px 14px;
+  border: none;
+  border-radius: 8px;
+  background: #172033;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.complete-btn:hover {
+  opacity: 0.9;
+}

@@ -244,6 +244,24 @@ function Applicants() {
     </div>
   )}
 
+  {applicant.status === "accepted" && (
+  <div className="applicant-actions">
+
+    <button
+      className="complete-btn"
+      onClick={() =>
+        handleStatusChange(
+          applicant.application_id,
+          "completed"
+        )
+      }
+    >
+      ✓ Mark as Completed
+    </button>
+
+  </div>
+)}
+
 </div>
 
             </div>
