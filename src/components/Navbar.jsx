@@ -89,7 +89,7 @@ function handleLogout() {
         {currentUser && (
       <>
          <Link to="/dashboard">Dashboard</Link>
-         <Link to="/my-jobs">My Jobs</Link>
+         <Link to="/my-jobs">My Posted Jobs</Link>
       </>
     )}
        </div>
