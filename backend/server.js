@@ -934,6 +934,48 @@ app.put(
   }
 );
 
+// ==============================
+// GET USER PUBLIC PROFILE
+// ==============================
+app.get(
+  "/api/users/:id/profile",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const userId = req.params.id;
+
+      const result = await pool.query(
+        `
+        SELECT
+          id,
+          name,
+          email,
+          phone,
+          location,
+          skills
+        FROM users
+        WHERE id = $1
+        `,
+        [userId]
+      );
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({
+          message: "User not found.",
+        });
+      }
+
+      res.json(result.rows[0]);
+    } catch (error) {
+      console.error("Public profile error:", error);
+
+      res.status(500).json({
+        message: "Could not load user profile.",
+      });
+    }
+  }
+);
+
 
 // ==============================
 // START SERVER
