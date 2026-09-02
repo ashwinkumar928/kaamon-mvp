@@ -394,3 +394,23 @@ body.dark-mode .profile-edit-form input {
     grid-column: auto;
   }
 }
+.profile-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.profile-info-item span {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.profile-info-item strong {
+  color: #172033;
+  font-size: 15px;
+  font-weight: 700;
+}
+.profile-info-item {
+  margin-bottom: 12px;
+}

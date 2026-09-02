@@ -193,6 +193,13 @@ function Applicants() {
                   <p>
                     {applicant.email}
                   </p>
+
+                  <Link
+                      to={`/users/${applicant.applicant_id}?jobId=${jobId}`}
+                      className="view-profile-btn"
+                  >
+                    View Profile
+                  </Link>
                 </div>
 
               </div>

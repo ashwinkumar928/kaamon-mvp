@@ -18,6 +18,7 @@ import MyJobs from "./pages/MyJobs.jsx";
 import Applicants from "./pages/Applicants.jsx";
 import MyApplications from "./pages/MyApplications.jsx";
 import Profile from "./pages/Profile.jsx";
+import UserProfile from "./pages/UserProfile.jsx";
 
 
 function App() {
@@ -97,6 +98,10 @@ function App() {
          <Route
                path="/profile"
                element={<Profile />}
+        />
+        <Route
+              path="/users/:userId"
+               element={<UserProfile />}
         />
         
 

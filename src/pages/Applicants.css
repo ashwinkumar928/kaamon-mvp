@@ -191,3 +191,16 @@
     align-items: flex-start;
   }
 }
+
+.view-profile-btn {
+  display: inline-block;
+  margin-top: 8px;
+  color: #ff6b00;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.view-profile-btn:hover {
+  text-decoration: underline;
+}
