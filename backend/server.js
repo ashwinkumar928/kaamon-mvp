@@ -632,11 +632,13 @@ app.patch(
       const userId = req.user.id;
       const { status } = req.body;
 
-      if (!["accepted", "rejected"].includes(status)) {
-        return res.status(400).json({
-          message: "Invalid application status.",
-        });
-      }
+     if (
+       !["accepted", "rejected", "completed"].includes(status)
+    ) {
+       return res.status(400).json({
+       message: "Invalid application status.",
+      });
+    }
 
       // Find application and its job
       const applicationResult = await pool.query(
@@ -662,6 +664,15 @@ app.patch(
 
       const application =
         applicationResult.rows[0];
+
+        if (
+     status === "completed" && application.status !== "accepted"
+     ) {
+         return res.status(400).json({
+         message:
+         "Only accepted work can be marked as completed.",
+       });
+    }
 
       // Only job owner can accept/reject
       if (
