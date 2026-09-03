@@ -20,21 +20,22 @@ const [completedWork, setCompletedWork] = useState(0);
       }
 
       try {
-        const response = await fetch(
-          `${API_URL}/api/jobs`
-        );
+        const token = localStorage.getItem("kaamonToken");
 
-        const jobs = await response.json();
+const myJobsResponse = await fetch(
+  `${API_URL}/api/my-jobs`,
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+);
 
-        const myJobs = jobs.filter((job) => {
-          return (
-            String(job.postedBy?.id) ===
-            String(currentUser.id)
-          );
-        });
+if (myJobsResponse.ok) {
+  const myJobs = await myJobsResponse.json();
 
-        const token =
-  localStorage.getItem("kaamonToken");
+  setJobsPosted(myJobs.length);
+}
 
 const applicationsResponse = await fetch(
   `${API_URL}/api/my-applications`,

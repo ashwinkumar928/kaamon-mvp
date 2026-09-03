@@ -29,17 +29,7 @@ function MyJobs() {
         );
 
         const data = await response.json();
-        console.log("My jobs data:", data);
-        
-        console.log(
-  "Job status:",
-  data[0]?.job_status
-);
-
-console.log(
-  "Applicant count:",
-  data[0]?.applicant_count
-);
+        console.error("My jobs error:", error);
 
         if (!response.ok) {
           setError(
