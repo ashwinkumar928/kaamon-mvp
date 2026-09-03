@@ -9,6 +9,7 @@ function PostWork() {
   const currentUser = JSON.parse(
     localStorage.getItem("kaamonCurrentUser")
   );
+  const token = localStorage.getItem("kaamonToken");
 
   const [formData, setFormData] = useState({
     title: "",
@@ -22,7 +23,7 @@ function PostWork() {
 
   const [message, setMessage] = useState("");
 
-  if (!currentUser) {
+  if (!currentUser || !token) {
     return <Navigate to="/login" />;
   }
 
@@ -62,19 +63,14 @@ function PostWork() {
   }
 
   const newJob = {
-    title: formData.title,
-    category: formData.category,
-    description: formData.description,
-    location: formData.location,
-    date: formData.date,
-    time: formData.time,
-    payment: Number(formData.payment),
-
-    postedBy: {
-      id: currentUser.id,
-      name: currentUser.name,
-    },
-  };
+  title: formData.title,
+  category: formData.category,
+  description: formData.description,
+  location: formData.location,
+  date: formData.date,
+  time: formData.time,
+  payment: Number(formData.payment),
+};
 
   try {
     const response = await fetch(
@@ -82,10 +78,10 @@ function PostWork() {
       {
         method: "POST",
 
-        headers: {
-          "Content-Type": "application/json",
-        },
-
+       headers: {
+              "Content-Type": "application/json",
+               Authorization: `Bearer ${token}`,
+            },
         body: JSON.stringify(newJob),
       }
     );

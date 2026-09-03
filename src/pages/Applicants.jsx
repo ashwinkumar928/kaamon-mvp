@@ -191,15 +191,16 @@ function Applicants() {
                   </h2>
 
                   <p>
-                    {applicant.email}
+                   {applicant.email || "Contact available after acceptance"}
                   </p>
 
                   <Link
                       to={`/users/${applicant.applicant_id}?jobId=${jobId}`}
                       className="view-profile-btn"
-                  >
-                    View Profile
+                    >
+                      View Profile
                   </Link>
+
                 </div>
 
               </div>

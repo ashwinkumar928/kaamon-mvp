@@ -11,6 +11,7 @@ function Dashboard() {
   const [jobsPosted, setJobsPosted] = useState(0);
   const [applicationsCount, setApplicationsCount] = useState(0);
 const [acceptedWork, setAcceptedWork] = useState(0);
+const [completedWork, setCompletedWork] = useState(0);
 
   useEffect(() => {
     async function loadDashboardData() {
@@ -56,6 +57,13 @@ if (applicationsResponse.ok) {
     (application) =>
       application.status === "accepted"
   );
+
+  const completed = applications.filter(
+  (application) =>
+    application.status === "completed"
+);
+
+setCompletedWork(completed.length);
 
   setAcceptedWork(
     accepted.length
@@ -164,12 +172,17 @@ if (applicationsResponse.ok) {
 
          <div>
             <strong>{applicationsCount}</strong>
-            <span>Applications</span>
+            <span>Applications Sent</span>
           </div>
 
           <div>
               <strong>{acceptedWork}</strong>
               <span>Accepted Work</span>
+            </div>
+
+          <div>
+              <strong>{completedWork}</strong>
+              <span>Completed Work</span>
             </div>
 
         </div>

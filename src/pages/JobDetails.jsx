@@ -11,6 +11,9 @@ import API_URL from "../api";
 function JobDetails() {
   const { jobId } = useParams();
   const navigate = useNavigate();
+  const currentUser = JSON.parse(
+  localStorage.getItem("kaamonCurrentUser")
+);
 
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -226,6 +229,11 @@ useEffect(() => {
     );
   }
 
+  const isOwnJob =
+  currentUser &&
+  String(job.postedBy?.id) ===
+    String(currentUser.id);
+
 
   return (
     <main className="job-details-page">
@@ -370,35 +378,41 @@ useEffect(() => {
 
             </div>
 
-
-            <button
-              className={
-                applied
-                  ? "apply-job-btn applied"
-                  : "apply-job-btn"
-              }
-              onClick={handleApply}
-              disabled={
-                applied || applying
-              }
-            >
-
-             {applying
-                ? "Sending..."
-                : applicationStatus === "accepted"
-                ? "✓ Application Accepted"
-                : applicationStatus === "rejected"
-                ? "Application Rejected"
-                : applied
-                ? "✓ Application Sent"
-                : "Apply for Work"}
-
-            </button>
+             {isOwnJob ? (
+  <button
+    className="apply-job-btn applied"
+    disabled
+  >
+    ✓ You Posted This Job
+  </button>
+) : (
+  <button
+    className={
+      applied
+        ? "apply-job-btn applied"
+        : "apply-job-btn"
+    }
+    onClick={handleApply}
+    disabled={applied || applying}
+  >
+    {applying
+      ? "Sending..."
+      : applicationStatus === "completed"
+      ? "✓ Work Completed"
+      : applicationStatus === "accepted"
+      ? "✓ Application Accepted"
+      : applicationStatus === "rejected"
+      ? "Application Rejected"
+      : applied
+      ? "✓ Application Sent"
+      : "Apply for Work"}
+  </button>
+)}
 
           </div>
 
 
-          {applied && !applicationMessage && (
+          {!isOwnJob && applied && !applicationMessage && (
             <p className="application-message">
                {applicationStatus === "accepted"
                  ? "Your application has been accepted."
@@ -408,7 +422,7 @@ useEffect(() => {
                 </p>
           )}
 
-               {applicationMessage && (
+               {!isOwnJob && applicationMessage && (
              <p className="application-message">
               {applicationMessage}
                </p>

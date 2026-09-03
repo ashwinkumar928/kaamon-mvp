@@ -21,11 +21,11 @@ const jobId = searchParams.get("jobId");
       const token = localStorage.getItem("kaamonToken");
 
       try {
-        const response = await fetch(
-          `${API_URL}/api/users/${userId}/profile`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
+       const response = await fetch(
+             `${API_URL}/api/users/${userId}/profile?jobId=${jobId}`,
+            {
+              headers: {
+                 Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -114,12 +114,20 @@ const jobId = searchParams.get("jobId");
 
             <div className="profile-info-item">
               <span>Email:</span>
-              <strong>{user.email}</strong>
+              <strong>
+                   {user.canViewContact
+                      ? user.email || "Not added yet"
+                      : "Available after acceptance"}
+              </strong>
             </div>
 
             <div className="profile-info-item">
               <span>Phone:</span>
-              <strong>{user.phone || "Not added yet"}</strong>
+              <strong>
+                    {user.canViewContact
+                        ? user.phone || "Not added yet"
+                        : "Available after acceptance"}
+                    </strong>
             </div>
 
             <div className="profile-info-item">

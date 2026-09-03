@@ -177,119 +177,132 @@ app.get("/api/jobs/:id", async (req, res) => {
 // POST NEW JOB
 // ==============================
 
-app.post("/api/jobs", async (req, res) => {
-  try {
-    const {
-      title,
-      category,
-      description,
-      location,
-      date,
-      time,
-      payment,
-      postedBy,
-    } = req.body;
-
-
-    if (
-      !title ||
-      !category ||
-      !description ||
-      !location ||
-      !date ||
-      !time ||
-      !payment
-    ) {
-      return res.status(400).json({
-        message: "Please provide all required fields.",
-      });
-    }
-
-
-    const categoryIcons = {
-      DRIVER: "🚗",
-      PAINTER: "🎨",
-      COOK: "🍳",
-      CLEANER: "🧹",
-      ELECTRICIAN: "⚡",
-      PLUMBER: "🔧",
-      "SHOP HELPER": "🏪",
-      "RESTAURANT HELPER": "🍽️",
-    };
-
-
-    const icon =
-      categoryIcons[category] || "💼";
-
-
-    const result = await pool.query(
-      `
-      INSERT INTO jobs
-      (
-        category,
+app.post(
+  "/api/jobs",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const {
         title,
-        description,
-        location,
-        work_date,
-        work_time,
-        distance,
-        payment,
-        icon,
-        posted_by_id,
-        posted_by_name
-      )
-
-      VALUES
-      ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-
-      RETURNING *
-      `,
-      [
         category,
-        title,
         description,
         location,
         date,
         time,
-        "Nearby",
-        Number(payment),
-        icon,
-        postedBy?.id || null,
-        postedBy?.name || null,
-      ]
-    );
+        payment,
+      } = req.body;
 
+      const userId = req.user.id;
 
-    const savedJob = result.rows[0];
+      if (
+        !title ||
+        !category ||
+        !description ||
+        !location ||
+        !date ||
+        !time ||
+        !payment
+      ) {
+        return res.status(400).json({
+          message: "Please provide all required fields.",
+        });
+      }
 
+      const userResult = await pool.query(
+        `
+        SELECT id, name
+        FROM users
+        WHERE id = $1
+        `,
+        [userId]
+      );
 
-    res.status(201).json({
-      id: savedJob.id,
-      icon: savedJob.icon,
-      category: savedJob.category,
-      title: savedJob.title,
-      description: savedJob.description,
-      location: savedJob.location,
-      date: savedJob.work_date,
-      time: savedJob.work_time,
-      distance: savedJob.distance,
-      payment: savedJob.payment,
+      if (userResult.rows.length === 0) {
+        return res.status(404).json({
+          message: "User not found.",
+        });
+      }
 
-      postedBy: {
-        id: savedJob.posted_by_id,
-        name: savedJob.posted_by_name,
-      },
-    });
+      const user = userResult.rows[0];
 
-  } catch (error) {
-    console.error("Post job error:", error);
+      const categoryIcons = {
+        DRIVER: "🚗",
+        PAINTER: "🎨",
+        COOK: "🍳",
+        CLEANER: "🧹",
+        ELECTRICIAN: "⚡",
+        PLUMBER: "🔧",
+        "SHOP HELPER": "🏪",
+        "RESTAURANT HELPER": "🍽️",
+      };
 
-    res.status(500).json({
-      message: "Could not post work",
-    });
+      const icon = categoryIcons[category] || "💼";
+
+      const result = await pool.query(
+        `
+        INSERT INTO jobs
+        (
+          category,
+          title,
+          description,
+          location,
+          work_date,
+          work_time,
+          distance,
+          payment,
+          icon,
+          posted_by_id,
+          posted_by_name
+        )
+        VALUES
+        ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        RETURNING *
+        `,
+        [
+          category,
+          title,
+          description,
+          location,
+          date,
+          time,
+          "Nearby",
+          Number(payment),
+          icon,
+          user.id,
+          user.name,
+        ]
+      );
+
+      const savedJob = result.rows[0];
+
+      res.status(201).json({
+        id: savedJob.id,
+        icon: savedJob.icon,
+        category: savedJob.category,
+        title: savedJob.title,
+        description: savedJob.description,
+        location: savedJob.location,
+        date: savedJob.work_date,
+        time: savedJob.work_time,
+        distance: savedJob.distance,
+        payment: savedJob.payment,
+
+        postedBy: {
+          id: savedJob.posted_by_id,
+          name: savedJob.posted_by_name,
+        },
+      });
+    } catch (error) {
+      console.error("Post job error:", error);
+
+      res.status(500).json({
+        message: "Could not post work",
+      });
+    }
   }
-});
-
+);
+   
+      
 // ==============================
 // REGISTER USER
 // ==============================
@@ -335,7 +348,7 @@ app.post("/api/auth/register", async (req, res) => {
         email.toLowerCase(),
         hashedPassword,
       ]
-    );
+    );app.post
 
     const user = result.rows[0];
 
@@ -588,9 +601,14 @@ app.get(
           applications.status,
           applications.created_at,
 
-          users.id AS applicant_id,
-          users.name,
-          users.email
+         users.id AS applicant_id,
+        users.name,
+
+          CASE
+            WHEN applications.status IN ('accepted', 'completed')
+            THEN users.email
+            ELSE NULL
+            END AS email
 
         FROM applications
 
@@ -953,9 +971,11 @@ app.get(
   authenticateToken,
   async (req, res) => {
     try {
-      const userId = req.params.id;
+      const profileUserId = req.params.id;
+      const loggedInUserId = req.user.id;
+      const jobId = req.query.jobId;
 
-      const result = await pool.query(
+      const userResult = await pool.query(
         `
         SELECT
           id,
@@ -967,16 +987,65 @@ app.get(
         FROM users
         WHERE id = $1
         `,
-        [userId]
+        [profileUserId]
       );
 
-      if (result.rows.length === 0) {
+      if (userResult.rows.length === 0) {
         return res.status(404).json({
           message: "User not found.",
         });
       }
 
-      res.json(result.rows[0]);
+      const user = userResult.rows[0];
+
+      let applicationStatus = null;
+      let canViewContact = false;
+
+      if (jobId) {
+        const applicationResult = await pool.query(
+          `
+          SELECT
+            applications.status,
+            jobs.posted_by_id
+          FROM applications
+
+          JOIN jobs
+            ON jobs.id = applications.job_id
+
+          WHERE applications.job_id = $1
+          AND applications.applicant_id = $2
+          `,
+          [jobId, profileUserId]
+        );
+
+        if (applicationResult.rows.length > 0) {
+          const application = applicationResult.rows[0];
+
+          if (
+            String(application.posted_by_id) ===
+            String(loggedInUserId)
+          ) {
+            applicationStatus = application.status;
+
+            canViewContact =
+              application.status === "accepted" ||
+              application.status === "completed";
+          }
+        }
+      }
+
+      res.json({
+        id: user.id,
+        name: user.name,
+        location: user.location,
+        skills: user.skills,
+
+        applicationStatus,
+        canViewContact,
+
+        email: canViewContact ? user.email : null,
+        phone: canViewContact ? user.phone : null,
+      });
     } catch (error) {
       console.error("Public profile error:", error);
 
