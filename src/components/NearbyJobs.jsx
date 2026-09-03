@@ -8,6 +8,11 @@ function NearbyJobs() {
   const [loadError, setLoadError] = useState("");
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("ALL");
+  function formatJobDate(dateValue) {
+  if (!dateValue) return "";
+
+  return String(dateValue).split("T")[0];
+}
 
  useEffect(() => {
   async function loadJobs() {
@@ -175,7 +180,7 @@ function NearbyJobs() {
 
               <div className="job-details-row">
                 <span>📍 {job.location}</span>
-                <span>📅 {job.date}</span>
+                <span>📅 {formatJobDate(job.date)}</span>
               </div>
 
               <div className="job-details-row">

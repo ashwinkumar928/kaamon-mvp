@@ -11,6 +11,11 @@ import API_URL from "../api";
 function JobDetails() {
   const { jobId } = useParams();
   const navigate = useNavigate();
+  function formatJobDate(dateValue) {
+  if (!dateValue) return "";
+
+  return String(dateValue).split("T")[0];
+}
   const currentUser = JSON.parse(
   localStorage.getItem("kaamonCurrentUser")
 );
@@ -296,7 +301,7 @@ useEffect(() => {
               <div>
                 <small>Date</small>
                 <strong>
-                  {job.date}
+                    {formatJobDate(job.date)}
                 </strong>
               </div>
             </div>
@@ -414,11 +419,13 @@ useEffect(() => {
 
           {!isOwnJob && applied && !applicationMessage && (
             <p className="application-message">
-               {applicationStatus === "accepted"
-                 ? "Your application has been accepted."
-                 : applicationStatus === "rejected"
-                 ? "Your application was not selected."
-                 : "You have already applied for this job."}
+               {applicationStatus === "completed"
+                   ? "This work has been completed."
+                   : applicationStatus === "accepted"
+                   ? "Your application has been accepted."
+                   : applicationStatus === "rejected"
+                   ? "Your application was not selected."
+                   : "You have already applied for this job."}
                 </p>
           )}
 
