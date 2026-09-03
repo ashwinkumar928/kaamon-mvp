@@ -87,10 +87,20 @@ app.get("/api/test-db", async (req, res) => {
 app.get("/api/jobs", async (req, res) => {
   try {
     const result = await pool.query(`
-      SELECT *
-      FROM jobs
-      ORDER BY created_at DESC
-    `);
+  SELECT jobs.*
+  FROM jobs
+
+  WHERE jobs.work_date >= CURRENT_DATE
+
+  AND NOT EXISTS (
+    SELECT 1
+    FROM applications
+    WHERE applications.job_id = jobs.id
+    AND applications.status IN ('accepted', 'completed')
+  )
+
+  ORDER BY jobs.created_at DESC
+`);
 
     const jobs = result.rows.map((job) => ({
       id: job.id,
@@ -454,8 +464,23 @@ app.post(
           message: "Job not found.",
         });
       }
-
       const job = jobResult.rows[0];
+
+const filledResult = await pool.query(
+  `
+  SELECT id
+  FROM applications
+  WHERE job_id = $1
+  AND status IN ('accepted', 'completed')
+  `,
+  [jobId]
+);
+
+if (filledResult.rows.length > 0) {
+  return res.status(409).json({
+    message: "This job is no longer available.",
+  });
+}
 
       if (
         String(job.posted_by_id) ===
