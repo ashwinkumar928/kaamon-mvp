@@ -356,7 +356,7 @@ app.post("/api/auth/register", async (req, res) => {
         email.toLowerCase(),
         hashedPassword,
       ]
-    );app.post
+    );
 
     const user = result.rows[0];
 
@@ -549,18 +549,36 @@ app.get(
       const result = await pool.query(
         `
         SELECT
-          jobs.*,
-          COUNT(applications.id)::int AS applicant_count
-        FROM jobs
+  jobs.*,
 
-        LEFT JOIN applications
-          ON applications.job_id = jobs.id
+  COUNT(applications.id)::int AS applicant_count,
 
-        WHERE jobs.posted_by_id = $1::text
+  CASE
+    WHEN COUNT(applications.id)
+      FILTER (
+        WHERE applications.status = 'completed'
+      ) > 0
+    THEN 'completed'
 
-        GROUP BY jobs.id
+    WHEN COUNT(applications.id)
+      FILTER (
+        WHERE applications.status = 'accepted'
+      ) > 0
+    THEN 'filled'
 
-        ORDER BY jobs.created_at DESC
+    ELSE 'available'
+  END AS job_status
+
+FROM jobs
+
+LEFT JOIN applications
+  ON applications.job_id = jobs.id
+
+WHERE jobs.posted_by_id = $1::text
+
+GROUP BY jobs.id
+
+ORDER BY jobs.created_at DESC
         `,
         [userId]
       );

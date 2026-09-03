@@ -128,25 +128,33 @@ function MyJobs() {
               className="my-job-card"
               key={job.id}
             >
+               <div className="my-job-top">
 
-              <div className="my-job-top">
+  <div className="my-job-icon">
+    {job.icon || "💼"}
+  </div>
 
-                <div className="my-job-icon">
-                  {job.icon || "💼"}
-                </div>
+  <div>
+    <span>
+      {job.category}
+    </span>
 
-                <div>
-                  <span>
-                    {job.category}
-                  </span>
+    <h2>
+      {job.title}
+    </h2>
+  </div>
 
-                  <h2>
-                    {job.title}
-                  </h2>
-                </div>
+  <span
+    className={`my-job-status status-${job.job_status}`}
+  >
+    {job.job_status === "filled"
+      ? "Filled"
+      : job.job_status === "completed"
+      ? "Completed"
+      : "Available"}
+  </span>
 
-              </div>
-
+</div>
 
               <p className="my-job-description">
                 {job.description}
