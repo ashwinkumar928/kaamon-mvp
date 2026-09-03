@@ -547,41 +547,41 @@ app.get(
       const userId = req.user.id;
 
       const result = await pool.query(
-        `
-        SELECT
-  jobs.*,
+  `
+  SELECT
+    jobs.*,
 
-  COUNT(applications.id)::int AS applicant_count,
+    COUNT(applications.id)::int AS applicant_count,
 
-  CASE
-    WHEN COUNT(applications.id)
-      FILTER (
-        WHERE applications.status = 'completed'
-      ) > 0
-    THEN 'completed'
+    CASE
+      WHEN COUNT(applications.id)
+        FILTER (
+          WHERE applications.status = 'completed'
+        ) > 0
+      THEN 'completed'
 
-    WHEN COUNT(applications.id)
-      FILTER (
-        WHERE applications.status = 'accepted'
-      ) > 0
-    THEN 'filled'
+      WHEN COUNT(applications.id)
+        FILTER (
+          WHERE applications.status = 'accepted'
+        ) > 0
+      THEN 'filled'
 
-    ELSE 'available'
-  END AS job_status
+      ELSE 'available'
+    END AS job_status
 
-FROM jobs
+  FROM jobs
 
-LEFT JOIN applications
-  ON applications.job_id = jobs.id
+  LEFT JOIN applications
+    ON applications.job_id = jobs.id
 
-WHERE jobs.posted_by_id = $1::text
+  WHERE jobs.posted_by_id = $1::text
 
-GROUP BY jobs.id
+  GROUP BY jobs.id
 
-ORDER BY jobs.created_at DESC
-        `,
-        [userId]
-      );
+  ORDER BY jobs.created_at DESC
+  `,
+  [userId]
+);
 
       res.json(result.rows);
 
