@@ -10,6 +10,12 @@ function MyJobs() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  function formatJobDate(dateValue) {
+  if (!dateValue) return "";
+
+  return String(dateValue).split("T")[0];
+}
+
   useEffect(() => {
     async function loadMyJobs() {
       try {
@@ -154,7 +160,7 @@ function MyJobs() {
                 </span>
 
                 <span>
-                  📅 {job.work_date}
+                  📅 {formatJobDate(job.work_date)}
                 </span>
 
                 <span>
