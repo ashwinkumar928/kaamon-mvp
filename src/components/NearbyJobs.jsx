@@ -5,24 +5,56 @@ import API_URL from "../api";
 
 function NearbyJobs() {
   const [allJobs, setAllJobs] = useState([]);
+  const [loadError, setLoadError] = useState("");
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("ALL");
 
-  useEffect(() => {
-    async function loadJobs() {
-      try {
-        const response = await fetch(`${API_URL}/api/jobs`);
+ useEffect(() => {
+  async function loadJobs() {
+    try {
+      setLoadError("");
 
-        const data = await response.json();
+      const response = await fetch(
+        `${API_URL}/api/jobs`
+      );
 
-        setAllJobs(data);
-      } catch (error) {
-        console.error("Could not load jobs:", error);
+      const data = await response.json();
+
+      if (!response.ok) {
+        setAllJobs([]);
+        setLoadError(
+          data.message ||
+            "Could not load work opportunities."
+        );
+        return;
       }
-    }
 
-    loadJobs();
-  }, []);
+      if (!Array.isArray(data)) {
+        setAllJobs([]);
+        setLoadError(
+          "Could not load work opportunities."
+        );
+        return;
+      }
+
+      setAllJobs(data);
+
+    } catch (error) {
+      console.error(
+        "Could not load jobs:",
+        error
+      );
+
+      setAllJobs([]);
+
+      setLoadError(
+        "Could not connect to KaamON server."
+      );
+    }
+  }
+
+  loadJobs();
+}, []);
 
   const categories = [
     "ALL",
@@ -109,7 +141,14 @@ function NearbyJobs() {
       {/* JOB CARDS */}
       <div className="jobs-grid">
 
-        {filteredJobs.length > 0 ? (
+        {loadError && (
+          <div className="no-jobs">
+          <h3>Could not load opportunities</h3>
+          <p>{loadError}</p>
+        </div>
+      )}
+
+        {!loadError && filteredJobs.length > 0 ? (
           filteredJobs.map((job) => (
 
             <div className="nearby-job-card" key={job.id}>
@@ -159,14 +198,14 @@ function NearbyJobs() {
             </div>
 
           ))
-        ) : (
+        ) : !loadError ? (
 
-          <div className="no-jobs">
-            <h3>No opportunities found</h3>
-            <p>Try another work type or location.</p>
-          </div>
+  <div className="no-jobs">
+    <h3>No opportunities found</h3>
+    <p>Try another work type or location.</p>
+  </div>
 
-        )}
+) : null}
 
       </div>
 
