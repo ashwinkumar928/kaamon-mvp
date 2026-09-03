@@ -79,7 +79,6 @@ app.get("/api/test-db", async (req, res) => {
   }
 });
 
-
 // ==============================
 // GET ALL JOBS
 // ==============================
@@ -87,20 +86,10 @@ app.get("/api/test-db", async (req, res) => {
 app.get("/api/jobs", async (req, res) => {
   try {
     const result = await pool.query(`
-  SELECT jobs.*
-  FROM jobs
-
-  WHERE jobs.work_date >= CURRENT_DATE
-
-  AND NOT EXISTS (
-    SELECT 1
-    FROM applications
-    WHERE applications.job_id = jobs.id
-    AND applications.status IN ('accepted', 'completed')
-  )
-
-  ORDER BY jobs.created_at DESC
-`);
+      SELECT *
+      FROM jobs
+      ORDER BY created_at DESC
+    `);
 
     const jobs = result.rows.map((job) => ({
       id: job.id,
@@ -130,7 +119,6 @@ app.get("/api/jobs", async (req, res) => {
     });
   }
 });
-
 
 // ==============================
 // GET ONE JOB
