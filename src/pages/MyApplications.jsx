@@ -191,6 +191,35 @@ function MyApplications() {
 
               </div>
 
+              {application.status === "accepted" ||
+               application.status === "completed" ? (
+                   <div className="hirer-contact">
+                 <h3>Contact Hirer</h3>
+
+              <p>
+                  <strong>Name:</strong>{" "}
+                  {application.posted_by_name || "Not available"}
+              </p>
+
+               <p>
+                  <strong>Phone:</strong>{" "}
+                  {application.poster_phone || "Not added yet"}
+              </p>
+
+              <p>
+                 <strong>Email:</strong>{" "}
+                 {application.poster_email || "Not added yet"}
+              </p>
+            </div>
+              ) : (
+              <div className="hirer-contact locked-contact">
+              <p>
+                🔒 Contact details will be available after your
+                application is accepted.
+            </p>
+        </div>
+      )}
+
             </div>
 
           ))}

@@ -793,33 +793,51 @@ app.get(
       );
 
       const result = await pool.query(
-        `
-        SELECT
-          applications.id AS application_id,
-          applications.status,
-          applications.created_at,
+  `
+  SELECT
+    applications.id AS application_id,
+    applications.status,
+    applications.created_at,
 
-          jobs.id AS job_id,
-          jobs.title,
-          jobs.category,
-          jobs.description,
-          jobs.location,
-          jobs.work_date,
-          jobs.work_time,
-          jobs.payment,
-          jobs.icon
+    jobs.id AS job_id,
+    jobs.title,
+    jobs.category,
+    jobs.description,
+    jobs.location,
+    jobs.work_date,
+    jobs.work_time,
+    jobs.payment,
+    jobs.icon,
 
-        FROM applications
+    jobs.posted_by_id,
+    jobs.posted_by_name,
 
-        JOIN jobs
-          ON jobs.id = applications.job_id
+    CASE
+      WHEN applications.status IN ('accepted', 'completed')
+      THEN poster.email
+      ELSE NULL
+    END AS poster_email,
 
-        WHERE applications.applicant_id = $1
+    CASE
+      WHEN applications.status IN ('accepted', 'completed')
+      THEN poster.phone
+      ELSE NULL
+    END AS poster_phone
 
-        ORDER BY applications.created_at DESC
-        `,
-        [userId]
-      );
+  FROM applications
+
+  JOIN jobs
+    ON jobs.id = applications.job_id
+
+  LEFT JOIN users AS poster
+    ON poster.id::text = jobs.posted_by_id
+
+  WHERE applications.applicant_id = $1
+
+  ORDER BY applications.created_at DESC
+  `,
+  [userId]
+);
 
       console.log(
         "Applications found:",

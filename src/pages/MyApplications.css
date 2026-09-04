@@ -212,3 +212,26 @@
     gap: 15px;
   }
 }
+
+.hirer-contact {
+  margin-top: 18px;
+  padding: 14px 16px;
+  background: #f8fafc;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+}
+
+.hirer-contact h3 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  color: #172033;
+}
+
+.hirer-contact p {
+  margin: 6px 0;
+  font-size: 13px;
+}
+
+.locked-contact {
+  color: #64748b;
+}
