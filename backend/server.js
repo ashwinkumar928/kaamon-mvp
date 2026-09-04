@@ -1115,6 +1115,195 @@ app.get(
   }
 );
 
+// ==============================
+// SUBMIT REVIEW
+// ==============================
+
+app.post(
+  "/api/reviews",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const reviewerId = req.user.id;
+
+      const {
+        applicationId,
+        rating,
+        comment,
+      } = req.body;
+
+      if (!applicationId || !rating) {
+        return res.status(400).json({
+          message: "Rating is required.",
+        });
+      }
+
+      if (rating < 1 || rating > 5) {
+        return res.status(400).json({
+          message: "Rating must be between 1 and 5.",
+        });
+      }
+
+      const applicationResult =
+        await pool.query(
+          `
+          SELECT
+            applications.id,
+            applications.applicant_id,
+            applications.status,
+            jobs.posted_by_id
+
+          FROM applications
+
+          JOIN jobs
+            ON jobs.id = applications.job_id
+
+          WHERE applications.id = $1
+          `,
+          [applicationId]
+        );
+
+      if (applicationResult.rows.length === 0) {
+        return res.status(404).json({
+          message: "Application not found.",
+        });
+      }
+
+      const application =
+        applicationResult.rows[0];
+
+      if (application.status !== "completed") {
+        return res.status(400).json({
+          message:
+            "Reviews can only be submitted after work is completed.",
+        });
+      }
+
+      const applicantId =
+        String(application.applicant_id);
+
+      const posterId =
+        String(application.posted_by_id);
+
+      const currentUserId =
+        String(reviewerId);
+
+      let revieweeId;
+
+      if (currentUserId === applicantId) {
+        revieweeId = posterId;
+      } else if (currentUserId === posterId) {
+        revieweeId = applicantId;
+      } else {
+        return res.status(403).json({
+          message:
+            "You cannot review this work.",
+        });
+      }
+
+      const result = await pool.query(
+        `
+        INSERT INTO reviews
+        (
+          application_id,
+          reviewer_id,
+          reviewee_id,
+          rating,
+          comment
+        )
+
+        VALUES ($1, $2, $3, $4, $5)
+
+        RETURNING *
+        `,
+        [
+          applicationId,
+          reviewerId,
+          revieweeId,
+          rating,
+          comment || null,
+        ]
+      );
+
+      res.status(201).json({
+        message: "Review submitted successfully.",
+        review: result.rows[0],
+      });
+
+    } catch (error) {
+
+      if (error.code === "23505") {
+        return res.status(409).json({
+          message:
+            "You already reviewed this work.",
+        });
+      }
+
+      console.error(
+        "Submit review error:",
+        error
+      );
+
+      res.status(500).json({
+        message:
+          "Could not submit review.",
+      });
+    }
+  }
+);
+
+// ==============================
+// CHECK MY REVIEW
+// ==============================
+
+app.get(
+  "/api/applications/:id/my-review",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const applicationId = req.params.id;
+      const reviewerId = req.user.id;
+
+      const result = await pool.query(
+        `
+        SELECT
+          id,
+          rating,
+          comment,
+          created_at
+        FROM reviews
+
+        WHERE application_id = $1
+        AND reviewer_id = $2
+        `,
+        [applicationId, reviewerId]
+      );
+
+      if (result.rows.length === 0) {
+        return res.json({
+          reviewed: false,
+        });
+      }
+
+      res.json({
+        reviewed: true,
+        review: result.rows[0],
+      });
+
+    } catch (error) {
+      console.error(
+        "Check review error:",
+        error
+      );
+
+      res.status(500).json({
+        message:
+          "Could not check review.",
+      });
+    }
+  }
+);
+
 
 // ==============================
 // START SERVER

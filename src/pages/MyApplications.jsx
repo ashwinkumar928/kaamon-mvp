@@ -10,6 +10,11 @@ function MyApplications() {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [reviewRatings, setReviewRatings] = useState({});
+const [reviewComments, setReviewComments] = useState({});
+const [reviewedApplications, setReviewedApplications] = useState({});
+const [reviewMessages, setReviewMessages] = useState({});
+const [reviewSubmitting, setReviewSubmitting] = useState({});
 
 
   useEffect(() => {
@@ -59,6 +64,140 @@ function MyApplications() {
     }
 
   }, [token]);
+
+  useEffect(() => {
+  async function checkReviews() {
+    const completedApplications = applications.filter(
+      (application) =>
+        application.status === "completed"
+    );
+
+    for (const application of completedApplications) {
+      try {
+        const response = await fetch(
+          `${API_URL}/api/applications/${application.application_id}/my-review`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          continue;
+        }
+
+        const data = await response.json();
+
+        setReviewedApplications((current) => ({
+          ...current,
+          [application.application_id]: data.reviewed,
+        }));
+
+      } catch (error) {
+        console.error(
+          "Could not check review:",
+          error
+        );
+      }
+    }
+  }
+
+  if (token && applications.length > 0) {
+    checkReviews();
+  }
+
+}, [applications, token]);
+
+async function handleSubmitReview(applicationId) {
+  const rating =
+    reviewRatings[applicationId];
+
+  const comment =
+    reviewComments[applicationId] || "";
+
+  if (!rating) {
+    setReviewMessages((current) => ({
+      ...current,
+      [applicationId]:
+        "Please select a rating.",
+    }));
+
+    return;
+  }
+
+  try {
+    setReviewSubmitting((current) => ({
+      ...current,
+      [applicationId]: true,
+    }));
+
+    setReviewMessages((current) => ({
+      ...current,
+      [applicationId]: "",
+    }));
+
+    const response = await fetch(
+      `${API_URL}/api/reviews`,
+      {
+        method: "POST",
+
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          applicationId,
+          rating,
+          comment,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      setReviewMessages((current) => ({
+        ...current,
+        [applicationId]:
+          data.message ||
+          "Could not submit review.",
+      }));
+
+      return;
+    }
+
+    setReviewedApplications((current) => ({
+      ...current,
+      [applicationId]: true,
+    }));
+
+    setReviewMessages((current) => ({
+      ...current,
+      [applicationId]:
+        "Review submitted successfully.",
+    }));
+
+  } catch (error) {
+    console.error(
+      "Submit review error:",
+      error
+    );
+
+    setReviewMessages((current) => ({
+      ...current,
+      [applicationId]:
+        "Could not connect to KaamON server.",
+    }));
+
+  } finally {
+    setReviewSubmitting((current) => ({
+      ...current,
+      [applicationId]: false,
+    }));
+  }
+}
 
 
   if (!token) {
@@ -246,6 +385,107 @@ function MyApplications() {
             </p>
         </div>
       )}
+
+      {application.status === "completed" && (
+  <div className="review-section">
+
+    {reviewedApplications[
+      application.application_id
+    ] ? (
+      <div className="review-submitted">
+        ⭐ Review Submitted
+      </div>
+    ) : (
+      <>
+        <h3>Rate Hirer</h3>
+
+        <p>
+          How was your experience working with{" "}
+          {application.posted_by_name}?
+        </p>
+
+        <div className="review-stars">
+
+          {[1, 2, 3, 4, 5].map((star) => (
+            <button
+              key={star}
+              type="button"
+              className={
+                star <=
+                (reviewRatings[
+                  application.application_id
+                ] || 0)
+                  ? "review-star selected"
+                  : "review-star"
+              }
+              onClick={() =>
+                setReviewRatings((current) => ({
+                  ...current,
+                  [application.application_id]:
+                    star,
+                }))
+              }
+            >
+              ★
+            </button>
+          ))}
+
+        </div>
+
+        <textarea
+          className="review-comment"
+          placeholder="Write a short review (optional)"
+          value={
+            reviewComments[
+              application.application_id
+            ] || ""
+          }
+          onChange={(event) =>
+            setReviewComments((current) => ({
+              ...current,
+              [application.application_id]:
+                event.target.value,
+            }))
+          }
+        />
+
+        <button
+          type="button"
+          className="submit-review-btn"
+          disabled={
+            reviewSubmitting[
+              application.application_id
+            ]
+          }
+          onClick={() =>
+            handleSubmitReview(
+              application.application_id
+            )
+          }
+        >
+          {reviewSubmitting[
+            application.application_id
+          ]
+            ? "Submitting..."
+            : "Submit Review"}
+        </button>
+      </>
+    )}
+
+    {reviewMessages[
+      application.application_id
+    ] && (
+      <p className="review-message">
+        {
+          reviewMessages[
+            application.application_id
+          ]
+        }
+      </p>
+    )}
+
+  </div>
+)}
 
             </div>
 
