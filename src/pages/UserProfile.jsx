@@ -135,6 +135,34 @@ const jobId = searchParams.get("jobId");
               <strong>{user.location || "Not added yet"}</strong>
             </div>
           </div>
+
+          {user.canViewContact && (
+              <div className="worker-contact-actions">
+
+                {user.phone && (
+              <a
+                 href={`tel:${user.phone}`}
+                  className="worker-contact-btn"
+               >
+                 📞 Call
+              </a>
+                  )}
+
+            {user.email && (
+               <a
+                  href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
+                  user.email
+           )}`}
+                target="_blank"
+                rel="noreferrer"
+                className="worker-contact-btn"
+              >
+              ✉️ Email
+              </a>
+            )}
+
+             </div>
+         )}
         </section>
 
         <section className="profile-section">

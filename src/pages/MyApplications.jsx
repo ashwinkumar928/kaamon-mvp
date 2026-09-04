@@ -194,23 +194,50 @@ function MyApplications() {
               {application.status === "accepted" ||
                application.status === "completed" ? (
                    <div className="hirer-contact">
-                 <h3>Contact Hirer</h3>
-
-              <p>
-                  <strong>Name:</strong>{" "}
-                  {application.posted_by_name || "Not available"}
-              </p>
+                     <h3>Contact Hirer</h3>
 
                <p>
-                  <strong>Phone:</strong>{" "}
-                  {application.poster_phone || "Not added yet"}
-              </p>
+                 <strong>Name:</strong>{" "}
+                 {application.posted_by_name || "Not available"}
+             </p>
 
-              <p>
-                 <strong>Email:</strong>{" "}
-                 {application.poster_email || "Not added yet"}
-              </p>
-            </div>
+         <p>
+             <strong>Phone:</strong>{" "}
+             {application.poster_phone || "Not added yet"}
+        </p>
+
+     <p>
+        <strong>Email:</strong>{" "}
+        {application.poster_email || "Not added yet"}
+    </p>
+
+      <div className="hirer-contact-actions">
+
+    {application.poster_phone && (
+      <a
+        href={`tel:${application.poster_phone}`}
+        className="contact-action-btn"
+      >
+        📞 Call
+      </a>
+    )}
+
+    {application.poster_email && (
+      <a
+           href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
+          application.poster_email
+         )}`}
+             target="_blank"
+             rel="noreferrer"
+              className="contact-action-btn"
+          >
+               ✉️ Email
+           </a>
+     )}
+
+  </div>
+</div>
+     
               ) : (
               <div className="hirer-contact locked-contact">
               <p>

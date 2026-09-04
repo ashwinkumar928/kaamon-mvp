@@ -235,3 +235,25 @@
 .locked-contact {
   color: #64748b;
 }
+
+.hirer-contact-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.contact-action-btn {
+  display: inline-block;
+  padding: 9px 14px;
+  border-radius: 8px;
+  background: #172033;
+  color: white;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.contact-action-btn:hover {
+  opacity: 0.9;
+}
