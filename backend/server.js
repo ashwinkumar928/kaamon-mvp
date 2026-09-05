@@ -1304,6 +1304,71 @@ app.get(
   }
 );
 
+// ==============================
+// GET USER RATINGS AND REVIEWS
+// ==============================
+
+app.get(
+  "/api/users/:id/reviews",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const userId = req.params.id;
+
+      // Get average rating and total number of reviews
+      const summaryResult = await pool.query(
+        `
+        SELECT
+          COUNT(*)::int AS review_count,
+          COALESCE(
+            ROUND(AVG(rating)::numeric, 1),
+            0
+          ) AS average_rating
+        FROM reviews
+        WHERE reviewee_id = $1
+        `,
+        [userId]
+      );
+
+      // Get latest reviews
+      const reviewsResult = await pool.query(
+        `
+        SELECT
+          reviews.id,
+          reviews.rating,
+          reviews.comment,
+          reviews.created_at,
+          users.name AS reviewer_name
+        FROM reviews
+        JOIN users
+          ON users.id = reviews.reviewer_id
+        WHERE reviews.reviewee_id = $1
+        ORDER BY reviews.created_at DESC
+        LIMIT 5
+        `,
+        [userId]
+      );
+
+      res.json({
+        averageRating: Number(
+          summaryResult.rows[0].average_rating
+        ),
+        reviewCount:
+          summaryResult.rows[0].review_count,
+        reviews: reviewsResult.rows,
+      });
+    } catch (error) {
+      console.error(
+        "User reviews error:",
+        error
+      );
+
+      res.status(500).json({
+        message: "Could not load reviews.",
+      });
+    }
+  }
+);
 
 // ==============================
 // START SERVER
