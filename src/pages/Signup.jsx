@@ -13,9 +13,6 @@ function Signup() {
   });
 
   const [message, setMessage] = useState("");
-  const [showOtp, setShowOtp] = useState(false);
-  const [verificationEmail, setVerificationEmail] = useState("");
-  const [otp, setOtp] = useState("");
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -26,112 +23,69 @@ function Signup() {
     });
   }
 
-    async function handleSubmit(event) {
-      async function handleVerifyOtp(event) {
-  event.preventDefault();
+  async function handleSubmit(event) {
+    event.preventDefault();
 
-  if (!otp) {
-    setMessage("Please enter the OTP.");
-    return;
-  }
+    if (
+      !formData.name ||
+      !formData.email ||
+      !formData.password
+    ) {
+      setMessage("Please fill all fields.");
+      return;
+    }
 
-  try {
-    const response = await fetch(
-      `${API_URL}/api/auth/verify-email-otp`,
-      {
-        method: "POST",
-
-        headers: {
-          "Content-Type": "application/json",
-        },
-
-        body: JSON.stringify({
-          email: verificationEmail,
-          otp,
-        }),
-      }
-    );
-
-    const data = await response.json();
-
-    if (!response.ok) {
+    if (formData.password.length < 6) {
       setMessage(
-        data.message || "Could not verify OTP."
+        "Password must be at least 6 characters."
       );
       return;
     }
 
-    setMessage("");
+    try {
+      const response = await fetch(
+        `${API_URL}/api/auth/register`,
+        {
+          method: "POST",
 
-    navigate("/login");
+          headers: {
+            "Content-Type": "application/json",
+          },
 
-  } catch (error) {
-    console.error("OTP verification error:", error);
-
-    setMessage(
-      "Could not connect to KaamON server."
-    );
-  }
-}
-  event.preventDefault();
-
-  if (
-    !formData.name ||
-    !formData.email ||
-    !formData.password
-  ) {
-    setMessage("Please fill all fields.");
-    return;
-  }
-
-  if (formData.password.length < 6) {
-    setMessage(
-      "Password must be at least 6 characters."
-    );
-    return;
-  }
-
-  try {
-    const response = await fetch(
-      `${API_URL}/api/auth/register`,
-      {
-        method: "POST",
-
-        headers: {
-          "Content-Type": "application/json",
-        },
-
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-        }),
-      }
-    );
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      setMessage(
-        data.message || "Could not create account."
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            password: formData.password,
+          }),
+        }
       );
-      return;
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setMessage(
+          data.message ||
+            "Could not create account."
+        );
+        return;
+      }
+
+      setMessage("");
+
+      navigate("/login");
+
+    } catch (error) {
+      console.error(
+        "Signup error:",
+        error
+      );
+
+      setMessage(
+        "Could not connect to KaamON server."
+      );
     }
-
-    setMessage("");
-
-      setVerificationEmail(data.email);
-      setShowOtp(true);
-
-  } catch (error) {
-    console.error("Signup error:", error);
-
-    setMessage(
-      "Could not connect to KaamON server."
-    );
   }
-}
-  
+
   return (
     <main className="auth-page">
 
@@ -146,11 +100,11 @@ function Signup() {
         <p className="auth-subtitle">
           One account to hire people and find work.
         </p>
-         
-         {!showOtp && (
+
         <form onSubmit={handleSubmit}>
 
           <label>Full Name</label>
+
           <input
             type="text"
             name="name"
@@ -160,6 +114,7 @@ function Signup() {
           />
 
           <label>Email</label>
+
           <input
             type="email"
             name="email"
@@ -169,6 +124,7 @@ function Signup() {
           />
 
           <label>Password</label>
+
           <input
             type="password"
             name="password"
@@ -190,37 +146,7 @@ function Signup() {
             Create Account
           </button>
 
-          </form>
-)}
-
-{showOtp && (
-  <form onSubmit={handleVerifyOtp}>
-
-    <label>Enter OTP</label>
-
-    <input
-      type="text"
-      placeholder="Enter 6-digit OTP"
-      value={otp}
-      onChange={(e) => setOtp(e.target.value)}
-      maxLength="6"
-    />
-
-    {message && (
-      <p className="auth-message">
-        {message}
-      </p>
-    )}
-
-    <button
-      type="submit"
-      className="auth-main-btn"
-    >
-      Verify Email
-    </button>
-
-  </form>
-)}
+        </form>
 
         <p className="auth-switch">
           Already have an account?{" "}

@@ -6,7 +6,6 @@ const pool = require("./db");
 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const nodemailer = require("nodemailer");
 
 const app = express();
 
@@ -14,23 +13,6 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
-
-const emailTransporter = nodemailer.createTransport({
-  service: "gmail",
-
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_APP_PASSWORD,
-  },
-});
-
-emailTransporter.verify((error, success) => {
-  if (error) {
-    console.error("Email setup error:", error);
-  } else {
-    console.log("Email server is ready.");
-  }
-});
 
 function authenticateToken(req, res, next) {
   const authHeader = req.headers.authorization;
@@ -328,7 +310,6 @@ app.post(
   }
 );
    
-      
 // ==============================
 // REGISTER USER
 // ==============================
@@ -345,180 +326,72 @@ app.post("/api/auth/register", async (req, res) => {
 
     if (password.length < 6) {
       return res.status(400).json({
-        message: "Password must be at least 6 characters.",
+        message:
+          "Password must be at least 6 characters.",
       });
     }
 
+    const normalizedEmail =
+      email.toLowerCase().trim();
+
     const existingUser = await pool.query(
-  `
-  SELECT id, email_verified
-  FROM users
-  WHERE email = $1
-  `,
-  [email.toLowerCase()]
-);
+      `
+      SELECT id
+      FROM users
+      WHERE email = $1
+      `,
+      [normalizedEmail]
+    );
 
-if (existingUser.rows.length > 0) {
-  const oldUser = existingUser.rows[0];
+    if (existingUser.rows.length > 0) {
+      return res.status(409).json({
+        message: "User already exists.",
+      });
+    }
 
-  if (oldUser.email_verified) {
-    return res.status(409).json({
-      message: "User already exists.",
-    });
-  }
-
-  await pool.query(
-    "DELETE FROM email_otps WHERE email = $1",
-    [email.toLowerCase()]
-  );
-
-  await pool.query(
-    "DELETE FROM users WHERE id = $1",
-    [oldUser.id]
-  );
-}
-
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword =
+      await bcrypt.hash(password, 10);
 
     const result = await pool.query(
       `
       INSERT INTO users
-      (name, email, password, email_verified)
-      VALUES ($1, $2, $3, FALSE)
-      RETURNING id, name, email, created_at
+      (
+        name,
+        email,
+        password,
+        email_verified
+      )
+      VALUES ($1, $2, $3, TRUE)
+      RETURNING
+        id,
+        name,
+        email,
+        created_at
       `,
       [
-        name,
-        email.toLowerCase(),
+        name.trim(),
+        normalizedEmail,
         hashedPassword,
       ]
     );
 
     const user = result.rows[0];
 
-    const otp = String(
-  Math.floor(100000 + Math.random() * 900000)
-);
-
-const otpHash = await bcrypt.hash(otp, 10);
-
-await pool.query(
-  `
-  INSERT INTO email_otps
-  (email, otp_hash, expires_at)
-  VALUES (
-    $1,
-    $2,
-    NOW() + INTERVAL '10 minutes'
-  )
-  ON CONFLICT (email)
-  DO UPDATE SET
-    otp_hash = EXCLUDED.otp_hash,
-    expires_at = EXCLUDED.expires_at,
-    created_at = NOW()
-  `,
-  [email.toLowerCase(), otpHash]
-);
-
-await emailTransporter.sendMail({
-  from: `"KaamON" <${process.env.EMAIL_USER}>`,
-  to: email.toLowerCase(),
-  subject: "Verify your KaamON account",
-
-  text: `Your KaamON verification code is ${otp}. This code expires in 10 minutes.`,
-});
-
-   res.status(201).json({
-  message: "OTP sent to your email.",
-  email: user.email,
-  requiresVerification: true,
-});
-
-  } catch (error) {
-    console.error("Register error:", error);
-
-    res.status(500).json({
-      message: "Could not create account.",
-    });
-  }
-});
-
-// ==============================
-// VERIFY EMAIL OTP
-// ==============================
-
-app.post("/api/auth/verify-email-otp", async (req, res) => {
-  try {
-    const { email, otp } = req.body;
-
-    if (!email || !otp) {
-      return res.status(400).json({
-        message: "Please enter the verification code.",
-      });
-    }
-
-    const normalizedEmail = email.toLowerCase().trim();
-
-    const result = await pool.query(
-      `
-      SELECT otp_hash, expires_at
-      FROM email_otps
-      WHERE email = $1
-      `,
-      [normalizedEmail]
-    );
-
-    if (result.rows.length === 0) {
-      return res.status(400).json({
-        message: "Verification code not found.",
-      });
-    }
-
-    const otpRecord = result.rows[0];
-
-    if (new Date(otpRecord.expires_at) < new Date()) {
-      return res.status(400).json({
-        message: "OTP has expired.",
-      });
-    }
-
-    const otpMatches = await bcrypt.compare(
-      String(otp),
-      otpRecord.otp_hash
-    );
-
-    if (!otpMatches) {
-      return res.status(400).json({
-        message: "Incorrect verification code.",
-      });
-    }
-
-    await pool.query(
-      `
-      UPDATE users
-      SET email_verified = TRUE
-      WHERE email = $1
-      `,
-      [normalizedEmail]
-    );
-
-    await pool.query(
-      `
-      DELETE FROM email_otps
-      WHERE email = $1
-      `,
-      [normalizedEmail]
-    );
-
-    res.json({
-      message: "Email verified successfully.",
+    res.status(201).json({
+      message:
+        "Account created successfully",
+      user,
     });
 
   } catch (error) {
-    console.error("Verify OTP error:", error);
+    console.error(
+      "Register error:",
+      error
+    );
 
     res.status(500).json({
-      message: "Could not verify email.",
+      message:
+        "Could not create account.",
     });
   }
 });
