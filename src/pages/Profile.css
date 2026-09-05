@@ -436,3 +436,158 @@ body.dark-mode .profile-edit-form input {
 .worker-contact-btn:hover {
   opacity: 0.9;
 }
+
+/* ==============================
+   USER PROFILE - INFO GRID
+   ============================== */
+
+.profile-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px 30px;
+}
+
+
+/* ==============================
+   RATINGS & REVIEWS
+   ============================== */
+
+.profile-rating-summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 14px 16px;
+  margin-bottom: 16px;
+
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.profile-rating-summary strong {
+  color: #172033;
+  font-size: 20px;
+}
+
+.profile-rating-summary span {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.profile-reviews {
+  display: grid;
+  gap: 12px;
+}
+
+.profile-review {
+  padding: 14px 16px;
+
+  background: #f8fafc;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.profile-review-stars {
+  margin-bottom: 7px;
+
+  color: #ff6b00;
+
+  font-size: 17px;
+  letter-spacing: 2px;
+}
+
+.profile-review p {
+  margin: 0 0 8px;
+
+  color: #475569;
+
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.profile-review span {
+  color: #94a3b8;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.no-profile-reviews {
+  margin: 0;
+
+  color: #64748b;
+
+  font-size: 13px;
+}
+
+
+/* ==============================
+   PUBLIC PROFILE DARK MODE
+   ============================== */
+
+body.dark-mode .profile-info-item span {
+  color: #94a3b8;
+}
+
+body.dark-mode .profile-info-item strong {
+  color: #f8fafc;
+}
+
+body.dark-mode .profile-rating-summary {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+body.dark-mode .profile-rating-summary strong {
+  color: #f8fafc;
+}
+
+body.dark-mode .profile-rating-summary span {
+  color: #94a3b8;
+}
+
+body.dark-mode .profile-review {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+body.dark-mode .profile-review p {
+  color: #cbd5e1;
+}
+
+body.dark-mode .profile-review span {
+  color: #94a3b8;
+}
+
+body.dark-mode .no-profile-reviews {
+  color: #94a3b8;
+}
+
+body.dark-mode .worker-contact-btn {
+  background: #334155;
+  color: #ffffff;
+}
+
+body.dark-mode .worker-contact-btn:hover {
+  background: #ff6b00;
+}
+
+
+/* ==============================
+   MOBILE
+   ============================== */
+
+@media (max-width: 650px) {
+  .profile-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-rating-summary {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+  }
+}

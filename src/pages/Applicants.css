@@ -319,3 +319,157 @@ body.dark-mode .no-applicants {
 body.dark-mode .no-applicants p {
   color: #cbd5e1;
 }
+
+/* ==============================
+   HIRER -> WORKER REVIEW
+   ============================== */
+
+.applicant-card {
+  flex-wrap: wrap;
+}
+
+.applicant-review-section {
+  width: 100%;
+  flex-basis: 100%;
+
+  margin-top: 18px;
+  padding: 18px;
+
+  background: #f8fafc;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+}
+
+.applicant-review-section h3 {
+  margin: 0 0 5px;
+
+  color: #172033;
+
+  font-size: 16px;
+}
+
+.applicant-review-section p {
+  margin: 5px 0 12px;
+
+  color: #64748b;
+
+  font-size: 13px;
+}
+
+.applicant-review-stars {
+  display: flex;
+  gap: 5px;
+
+  margin-bottom: 12px;
+}
+
+.applicant-review-star {
+  padding: 0;
+
+  border: none;
+  background: transparent;
+
+  color: #cbd5e1;
+
+  font-size: 28px;
+
+  cursor: pointer;
+}
+
+.applicant-review-star.selected {
+  color: #ff6b00;
+}
+
+.applicant-review-comment {
+  width: 100%;
+  min-height: 80px;
+
+  padding: 10px;
+
+  border: 1px solid #dbe2ea;
+  border-radius: 8px;
+
+  box-sizing: border-box;
+
+  font-family: inherit;
+
+  resize: vertical;
+}
+
+.applicant-submit-review-btn {
+  margin-top: 10px;
+
+  padding: 10px 16px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #172033;
+  color: #ffffff;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.applicant-submit-review-btn:hover {
+  background: #ff6b00;
+}
+
+.applicant-submit-review-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.applicant-review-submitted {
+  color: #15803d;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.applicant-review-message {
+  margin-top: 10px;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+
+/* DARK MODE */
+
+body.dark-mode .applicant-review-section {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+body.dark-mode .applicant-review-section h3 {
+  color: #f8fafc;
+}
+
+body.dark-mode .applicant-review-section p {
+  color: #cbd5e1;
+}
+
+body.dark-mode .applicant-review-comment {
+  background: #0f172a;
+  border-color: #475569;
+
+  color: #f8fafc;
+}
+
+body.dark-mode
+  .applicant-review-comment::placeholder {
+  color: #94a3b8;
+}
+
+body.dark-mode
+  .applicant-submit-review-btn {
+  background: #334155;
+}
+
+body.dark-mode
+  .applicant-submit-review-btn:hover {
+  background: #ff6b00;
+}

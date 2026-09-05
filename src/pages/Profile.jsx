@@ -34,6 +34,12 @@ function Profile() {
   const [saving, setSaving] =
     useState(false);
 
+    const [ratingData, setRatingData] = useState({
+        averageRating: 0,
+        reviewCount: 0,
+        reviews: [],
+      });
+
 
   // ==============================
   // LOAD PROFILE
@@ -77,6 +83,47 @@ function Profile() {
     }
 
   }, [token]);
+
+  // ==============================
+// LOAD MY RATINGS & REVIEWS
+// ==============================
+
+useEffect(() => {
+  async function loadMyRatings() {
+    try {
+      const response = await fetch(
+        `${API_URL}/api/users/${currentUser.id}/reviews`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error(
+          data.message || "Could not load ratings."
+        );
+        return;
+      }
+
+      setRatingData(data);
+
+    } catch (error) {
+      console.error(
+        "Could not load my ratings:",
+        error
+      );
+    }
+  }
+
+  if (token && currentUser?.id) {
+    loadMyRatings();
+  }
+
+}, [token, currentUser?.id]);
 
 
   // ==============================
@@ -359,6 +406,91 @@ function Profile() {
             </div>
 
           </div>
+
+        </section>
+
+        {/* MY RATINGS & REVIEWS */}
+
+        <section className="profile-section">
+
+          <div className="profile-section-heading">
+            <div>
+
+              <h2>My Ratings & Reviews</h2>
+
+              <p>
+                Ratings you received from completed KaamON work.
+              </p>
+
+            </div>
+          </div>
+
+
+          <div className="profile-rating-summary">
+
+            {ratingData.reviewCount > 0 ? (
+              <>
+
+                <strong>
+                  ⭐ {ratingData.averageRating}
+                </strong>
+
+                <span>
+                  {ratingData.reviewCount}{" "}
+                  {ratingData.reviewCount === 1
+                    ? "Review"
+                    : "Reviews"}
+                </span>
+
+              </>
+            ) : (
+              <strong>
+                ⭐ No ratings yet
+              </strong>
+            )}
+
+          </div>
+
+
+          {ratingData.reviews.length > 0 ? (
+
+            <div className="profile-reviews">
+
+              {ratingData.reviews.map((review) => (
+
+                <div
+                  className="profile-review"
+                  key={review.id}
+                >
+
+                  <div className="profile-review-stars">
+                    {"★".repeat(review.rating)}
+                    {"☆".repeat(5 - review.rating)}
+                  </div>
+
+                  {review.comment && (
+                    <p>
+                      "{review.comment}"
+                    </p>
+                  )}
+
+                  <span>
+                    — {review.reviewer_name}
+                  </span>
+
+                </div>
+
+              ))}
+
+            </div>
+
+          ) : (
+
+            <p className="no-profile-reviews">
+              You have not received any reviews yet.
+            </p>
+
+          )}
 
         </section>
 
