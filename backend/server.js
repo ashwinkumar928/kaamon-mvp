@@ -350,15 +350,33 @@ app.post("/api/auth/register", async (req, res) => {
     }
 
     const existingUser = await pool.query(
-      "SELECT id FROM users WHERE email = $1",
-      [email.toLowerCase()]
-    );
+  `
+  SELECT id, email_verified
+  FROM users
+  WHERE email = $1
+  `,
+  [email.toLowerCase()]
+);
 
-    if (existingUser.rows.length > 0) {
-      return res.status(409).json({
-        message: "User already exists.",
-      });
-    }
+if (existingUser.rows.length > 0) {
+  const oldUser = existingUser.rows[0];
+
+  if (oldUser.email_verified) {
+    return res.status(409).json({
+      message: "User already exists.",
+    });
+  }
+
+  await pool.query(
+    "DELETE FROM email_otps WHERE email = $1",
+    [email.toLowerCase()]
+  );
+
+  await pool.query(
+    "DELETE FROM users WHERE id = $1",
+    [oldUser.id]
+  );
+}
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
