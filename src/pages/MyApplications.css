@@ -331,3 +331,148 @@
   margin-top: 10px;
   font-weight: 600;
 }
+
+/* ==============================
+   DARK MODE - MY APPLICATIONS
+   ============================== */
+
+body.dark-mode .my-applications-page {
+  background: #0f172a;
+}
+
+body.dark-mode .my-applications-back {
+  color: #cbd5e1;
+}
+
+body.dark-mode .my-applications-heading h1 {
+  color: #f8fafc;
+}
+
+body.dark-mode .my-applications-heading p {
+  color: #94a3b8;
+}
+
+body.dark-mode .application-card {
+  background: #172033;
+  border-color: #334155;
+}
+
+body.dark-mode .application-main h2 {
+  color: #f8fafc;
+}
+
+body.dark-mode .application-main p {
+  color: #cbd5e1;
+}
+
+body.dark-mode .application-icon {
+  background: #2b211d;
+}
+
+body.dark-mode .application-info small {
+  color: #94a3b8;
+}
+
+body.dark-mode .application-info strong {
+  color: #f8fafc;
+}
+
+/* CONTACT HIRER */
+
+body.dark-mode .hirer-contact {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+body.dark-mode .hirer-contact h3 {
+  color: #f8fafc;
+}
+
+body.dark-mode .hirer-contact p {
+  color: #cbd5e1;
+}
+
+body.dark-mode .hirer-contact strong {
+  color: #f8fafc;
+}
+
+body.dark-mode .locked-contact {
+  color: #94a3b8;
+}
+
+body.dark-mode .contact-action-btn {
+  background: #334155;
+  color: #ffffff;
+}
+
+body.dark-mode .contact-action-btn:hover {
+  background: #ff6b00;
+}
+
+/* REVIEW SECTION */
+
+body.dark-mode .review-section {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+body.dark-mode .review-section h3 {
+  color: #f8fafc;
+}
+
+body.dark-mode .review-section p {
+  color: #cbd5e1;
+}
+
+body.dark-mode .review-comment {
+  background: #0f172a;
+  border-color: #475569;
+  color: #f8fafc;
+}
+
+body.dark-mode .review-comment::placeholder {
+  color: #94a3b8;
+}
+
+body.dark-mode .submit-review-btn {
+  background: #334155;
+  color: #ffffff;
+}
+
+body.dark-mode .submit-review-btn:hover {
+  background: #ff6b00;
+}
+
+/* STATUS BADGES */
+
+body.dark-mode .status-pending {
+  background: #3b2718;
+  color: #fb923c;
+}
+
+body.dark-mode .status-accepted {
+  background: #153b2a;
+  color: #86efac;
+}
+
+body.dark-mode .status-rejected {
+  background: #3f1d1d;
+  color: #fca5a5;
+}
+
+body.dark-mode .status-completed {
+  background: #334155;
+  color: #e2e8f0;
+}
+
+/* EMPTY STATE */
+
+body.dark-mode .no-applications {
+  background: #172033;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+body.dark-mode .no-applications p {
+  color: #cbd5e1;
+}

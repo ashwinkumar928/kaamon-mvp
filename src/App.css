@@ -1010,3 +1010,7 @@ body.dark-mode .logout-btn {
   color: #f8fafc;
   border-color: #334155;
 }
+
+.apply-btn {
+  text-decoration: none;
+}

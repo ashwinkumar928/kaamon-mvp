@@ -95,3 +95,33 @@
     font-size: 32px;
   }
 }
+
+body.dark-mode .how-it-works {
+  background: #0f172a;
+}
+
+body.dark-mode .how-heading h2 {
+  color: #f8fafc;
+}
+
+body.dark-mode .how-heading p {
+  color: #94a3b8;
+}
+
+body.dark-mode .how-card {
+  background: #172033;
+  border-color: #334155;
+}
+
+body.dark-mode .how-card h3 {
+  color: #f8fafc;
+}
+
+body.dark-mode .how-card p {
+  color: #cbd5e1;
+}
+
+body.dark-mode .how-number {
+  background: #2b211d;
+  color: #ff6b00;
+}

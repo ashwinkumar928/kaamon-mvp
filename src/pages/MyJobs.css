@@ -248,3 +248,91 @@
   background: #e8edf5;
   color: #172033;
 }
+
+/* ==============================
+   DARK MODE - MY POSTED JOBS
+   ============================== */
+
+body.dark-mode .my-jobs-page {
+  background: #0f172a;
+}
+
+body.dark-mode .my-jobs-back {
+  color: #cbd5e1;
+}
+
+body.dark-mode .my-jobs-heading h1 {
+  color: #f8fafc;
+}
+
+body.dark-mode .my-jobs-heading p {
+  color: #94a3b8;
+}
+
+body.dark-mode .my-job-card {
+  background: #172033;
+  border-color: #334155;
+}
+
+body.dark-mode .my-job-top h2 {
+  color: #f8fafc;
+}
+
+body.dark-mode .my-job-description {
+  color: #cbd5e1;
+}
+
+body.dark-mode .my-job-details {
+  color: #cbd5e1;
+}
+
+body.dark-mode .my-job-bottom {
+  border-top-color: #334155;
+}
+
+body.dark-mode .my-job-bottom small {
+  color: #94a3b8;
+}
+
+body.dark-mode .my-job-bottom strong {
+  color: #f8fafc;
+}
+
+body.dark-mode .my-job-icon {
+  background: #2b211d;
+}
+
+body.dark-mode .applicant-count {
+  background: #2b211d;
+  color: #ff8a33;
+}
+
+body.dark-mode .view-applicants-btn {
+  background: #334155;
+  color: #ffffff;
+}
+
+body.dark-mode .view-applicants-btn:hover {
+  background: #ff6b00;
+}
+
+body.dark-mode .no-my-jobs {
+  background: #172033;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+body.dark-mode .my-job-status.status-available {
+  background: #153b2a;
+  color: #86efac;
+}
+
+body.dark-mode .my-job-status.status-filled {
+  background: #3b2718;
+  color: #fb923c;
+}
+
+body.dark-mode .my-job-status.status-completed {
+  background: #334155;
+  color: #e2e8f0;
+}

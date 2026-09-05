@@ -218,3 +218,104 @@
 .complete-btn:hover {
   opacity: 0.9;
 }
+
+/* ==============================
+   DARK MODE - APPLICANTS
+   ============================== */
+
+body.dark-mode .applicants-page {
+  background: #0f172a;
+}
+
+body.dark-mode .applicants-back {
+  color: #cbd5e1;
+}
+
+body.dark-mode .applicants-heading h1 {
+  color: #f8fafc;
+}
+
+body.dark-mode .applicants-heading p {
+  color: #94a3b8;
+}
+
+body.dark-mode .applicant-card {
+  background: #172033;
+  border-color: #334155;
+}
+
+body.dark-mode .applicant-profile h2 {
+  color: #f8fafc;
+}
+
+body.dark-mode .applicant-profile p {
+  color: #cbd5e1;
+}
+
+body.dark-mode .applicant-avatar {
+  background: #334155;
+  color: #ffffff;
+}
+
+body.dark-mode .view-profile-btn {
+  color: #fb923c;
+}
+
+body.dark-mode .status-pending {
+  background: #3b2718;
+  color: #fb923c;
+}
+
+body.dark-mode .status-accepted {
+  background: #153b2a;
+  color: #86efac;
+}
+
+body.dark-mode .status-rejected {
+  background: #3f1d1d;
+  color: #fca5a5;
+}
+
+body.dark-mode .status-completed {
+  background: #334155;
+  color: #e2e8f0;
+}
+
+body.dark-mode .accept-btn {
+  background: #153b2a;
+  color: #86efac;
+}
+
+body.dark-mode .accept-btn:hover {
+  background: #149155;
+  color: #ffffff;
+}
+
+body.dark-mode .reject-btn {
+  background: #3f1d1d;
+  color: #fca5a5;
+}
+
+body.dark-mode .reject-btn:hover {
+  background: #c93636;
+  color: #ffffff;
+}
+
+body.dark-mode .complete-btn {
+  background: #334155;
+  color: #ffffff;
+}
+
+body.dark-mode .complete-btn:hover {
+  background: #ff6b00;
+}
+
+body.dark-mode .no-applicants {
+  background: #172033;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+body.dark-mode .no-applicants p {
+  color: #cbd5e1;
+}

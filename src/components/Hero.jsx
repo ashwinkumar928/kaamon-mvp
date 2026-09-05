@@ -112,10 +112,12 @@ function Hero() {
 
           </div>
 
-          <button className="apply-btn">
-            View Work →
-          </button>
-
+          <a
+            href="#jobs"
+            className="apply-btn"
+          >
+           View Work →
+          </a>
         </div>
 
         <div className="small-card worker-card">
