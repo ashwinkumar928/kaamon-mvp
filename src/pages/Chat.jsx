@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Link,
   Navigate,
@@ -22,11 +22,9 @@ function Chat() {
     : null;
 
   const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] =
-    useState("");
-
-  const [loading, setLoading] =
-    useState(true);
+  const [newMessage, setNewMessage] = useState("");
+  const [loading, setLoading] = useState(true);
+  const messagesEndRef = useRef(null);
 
   const [error, setError] =
     useState("");
@@ -39,50 +37,81 @@ function Chat() {
   // LOAD CHAT MESSAGES
   // ==============================
 
-  useEffect(() => {
-    async function loadMessages() {
-      try {
-        const response = await fetch(
-          `${API_URL}/api/applications/${applicationId}/messages`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+    useEffect(() => {
+  let active = true;
 
-        const data = await response.json();
+  async function loadMessages() {
+    try {
+      const response = await fetch(
+        `${API_URL}/api/applications/${applicationId}/messages`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-        if (!response.ok) {
+      const data = await response.json();
+
+      if (!response.ok) {
+        if (active) {
           setError(
             data.message ||
               "Could not load chat."
           );
-          return;
         }
 
+        return;
+      }
+
+      if (active) {
         setMessages(data);
+        setError("");
+      }
 
-      } catch (error) {
-        console.error(
-          "Load chat error:",
-          error
-        );
+    } catch (error) {
+      console.error(
+        "Load chat error:",
+        error
+      );
 
+      if (active) {
         setError(
           "Could not connect to KaamON server."
         );
+      }
 
-      } finally {
+    } finally {
+      if (active) {
         setLoading(false);
       }
     }
+  }
 
-    if (token) {
-      loadMessages();
-    }
+  if (token) {
+    loadMessages();
 
-  }, [applicationId, token]);
+    const intervalId = setInterval(
+      loadMessages,
+      3000
+    );
+
+    return () => {
+      active = false;
+      clearInterval(intervalId);
+    };
+  }
+
+  setLoading(false);
+
+}, [applicationId, token]);
+
+useEffect(() => {
+  messagesEndRef.current?.scrollIntoView({
+    behavior: "smooth",
+  });
+}, [messages]);
+  
 
 
   // ==============================
@@ -267,6 +296,8 @@ function Chat() {
               })
 
             )}
+
+            <div ref={messagesEndRef} />
 
           </div>
 
