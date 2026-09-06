@@ -6,8 +6,10 @@ const pool = require("./db");
 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { Resend } = require("resend");
 
 const app = express();
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const PORT = process.env.PORT || 5000;
 
@@ -361,7 +363,7 @@ app.post("/api/auth/register", async (req, res) => {
         password,
         email_verified
       )
-      VALUES ($1, $2, $3, TRUE)
+      VALUES ($1, $2, $3, FALSE)
       RETURNING
         id,
         name,
@@ -377,11 +379,89 @@ app.post("/api/auth/register", async (req, res) => {
 
     const user = result.rows[0];
 
+    const otp = String(
+  Math.floor(100000 + Math.random() * 900000)
+);
+
+const otpHash = await bcrypt.hash(otp, 10);
+
+await pool.query(
+  `
+  INSERT INTO email_otps
+  (email, otp_hash, expires_at)
+  VALUES (
+    $1,
+    $2,
+    NOW() + INTERVAL '10 minutes'
+  )
+  ON CONFLICT (email)
+  DO UPDATE SET
+    otp_hash = EXCLUDED.otp_hash,
+    expires_at = EXCLUDED.expires_at,
+    created_at = NOW()
+  `,
+  [normalizedEmail, otpHash]
+);
+
+const { error: emailError } = await resend.emails.send({
+  from: "KaamON <onboarding@resend.dev>",
+  to: normalizedEmail,
+  subject: "Verify your KaamON account",
+
+  html: `
+    <div style="font-family: Arial, sans-serif;">
+      <h2 style="color:#172033;">
+        Kaam<span style="color:#ff6b00;">ON</span>
+      </h2>
+
+      <p>Your email verification code is:</p>
+
+      <h1 style="
+        color:#ff6b00;
+        letter-spacing:6px;
+      ">
+        ${otp}
+      </h1>
+
+      <p>
+        This OTP will expire in
+        <strong>10 minutes</strong>.
+      </p>
+
+      <p>
+        Do not share this code with anyone.
+      </p>
+    </div>
+  `,
+});
+
+if (emailError) {
+  console.error("OTP email error:", emailError);
+
+  await pool.query(
+    "DELETE FROM email_otps WHERE email = $1",
+    [normalizedEmail]
+  );
+
+  await pool.query(
+    `
+    DELETE FROM users
+    WHERE id = $1
+    AND email_verified = FALSE
+    `,
+    [user.id]
+  );
+
+  return res.status(500).json({
+    message: "Could not send verification email.",
+  });
+}
+
     res.status(201).json({
-      message:
-        "Account created successfully",
-      user,
-    });
+  message: "OTP sent to your email.",
+  email: user.email,
+  requiresVerification: true,
+});
 
   } catch (error) {
     console.error(
@@ -392,6 +472,87 @@ app.post("/api/auth/register", async (req, res) => {
     res.status(500).json({
       message:
         "Could not create account.",
+    });
+  }
+});
+
+// ==============================
+// VERIFY EMAIL OTP
+// ==============================
+
+app.post("/api/auth/verify-email-otp", async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    if (!email || !otp) {
+      return res.status(400).json({
+        message: "Please enter the verification code.",
+      });
+    }
+
+    const normalizedEmail =
+      email.toLowerCase().trim();
+
+    const result = await pool.query(
+      `
+      SELECT otp_hash, expires_at
+      FROM email_otps
+      WHERE email = $1
+      `,
+      [normalizedEmail]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(400).json({
+        message: "Verification code not found.",
+      });
+    }
+
+    const otpRecord = result.rows[0];
+
+    if (new Date(otpRecord.expires_at) < new Date()) {
+      return res.status(400).json({
+        message: "OTP has expired.",
+      });
+    }
+
+    const otpMatches = await bcrypt.compare(
+      String(otp),
+      otpRecord.otp_hash
+    );
+
+    if (!otpMatches) {
+      return res.status(400).json({
+        message: "Incorrect verification code.",
+      });
+    }
+
+    await pool.query(
+      `
+      UPDATE users
+      SET email_verified = TRUE
+      WHERE email = $1
+      `,
+      [normalizedEmail]
+    );
+
+    await pool.query(
+      `
+      DELETE FROM email_otps
+      WHERE email = $1
+      `,
+      [normalizedEmail]
+    );
+
+    res.json({
+      message: "Email verified successfully.",
+    });
+
+  } catch (error) {
+    console.error("Verify OTP error:", error);
+
+    res.status(500).json({
+      message: "Could not verify email.",
     });
   }
 });

@@ -13,6 +13,10 @@ function Signup() {
   });
 
   const [message, setMessage] = useState("");
+  const [showOtp, setShowOtp] = useState(false);
+  const [verificationEmail, setVerificationEmail] =
+    useState("");
+  const [otp, setOtp] = useState("");
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -23,8 +27,10 @@ function Signup() {
     });
   }
 
+  // CREATE ACCOUNT
   async function handleSubmit(event) {
     event.preventDefault();
+    setMessage("");
 
     if (
       !formData.name ||
@@ -70,13 +76,64 @@ function Signup() {
         return;
       }
 
-      setMessage("");
+      setVerificationEmail(data.email);
+      setShowOtp(true);
+
+      setMessage("OTP sent to your email.");
+
+    } catch (error) {
+      console.error("Signup error:", error);
+
+      setMessage(
+        "Could not connect to KaamON server."
+      );
+    }
+  }
+
+  // VERIFY OTP
+  async function handleVerifyOtp(event) {
+    event.preventDefault();
+    setMessage("");
+
+    if (otp.length !== 6) {
+      setMessage(
+        "Please enter the 6-digit OTP."
+      );
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `${API_URL}/api/auth/verify-email-otp`,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify({
+            email: verificationEmail,
+            otp,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setMessage(
+          data.message ||
+            "Could not verify OTP."
+        );
+        return;
+      }
 
       navigate("/login");
 
     } catch (error) {
       console.error(
-        "Signup error:",
+        "OTP verification error:",
         error
       );
 
@@ -88,75 +145,120 @@ function Signup() {
 
   return (
     <main className="auth-page">
-
       <div className="auth-card">
 
         <div className="auth-brand">
           Kaam<span>ON</span>
         </div>
 
-        <h1>Create your account</h1>
+        {!showOtp ? (
+          <>
+            <h1>Create your account</h1>
 
-        <p className="auth-subtitle">
-          One account to hire people and find work.
-        </p>
-
-        <form onSubmit={handleSubmit}>
-
-          <label>Full Name</label>
-
-          <input
-            type="text"
-            name="name"
-            placeholder="Enter your name"
-            value={formData.name}
-            onChange={handleChange}
-          />
-
-          <label>Email</label>
-
-          <input
-            type="email"
-            name="email"
-            placeholder="Enter your email"
-            value={formData.email}
-            onChange={handleChange}
-          />
-
-          <label>Password</label>
-
-          <input
-            type="password"
-            name="password"
-            placeholder="Minimum 6 characters"
-            value={formData.password}
-            onChange={handleChange}
-          />
-
-          {message && (
-            <p className="auth-message">
-              {message}
+            <p className="auth-subtitle">
+              One account to hire people and find work.
             </p>
-          )}
 
-          <button
-            type="submit"
-            className="auth-main-btn"
-          >
-            Create Account
-          </button>
+            <form onSubmit={handleSubmit}>
 
-        </form>
+              <label>Full Name</label>
+              <input
+                type="text"
+                name="name"
+                placeholder="Enter your name"
+                value={formData.name}
+                onChange={handleChange}
+              />
 
-        <p className="auth-switch">
-          Already have an account?{" "}
-          <Link to="/login">
-            Login
-          </Link>
-        </p>
+              <label>Email</label>
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                value={formData.email}
+                onChange={handleChange}
+              />
+
+              <label>Password</label>
+              <input
+                type="password"
+                name="password"
+                placeholder="Minimum 6 characters"
+                value={formData.password}
+                onChange={handleChange}
+              />
+
+              {message && (
+                <p className="auth-message">
+                  {message}
+                </p>
+              )}
+
+              <button
+                type="submit"
+                className="auth-main-btn"
+              >
+                Create Account
+              </button>
+
+            </form>
+
+            <p className="auth-switch">
+              Already have an account?{" "}
+              <Link to="/login">
+                Login
+              </Link>
+            </p>
+          </>
+        ) : (
+          <>
+            <h1>Verify your email</h1>
+
+            <p className="auth-subtitle">
+              We sent a 6-digit OTP to
+              <br />
+              <strong>{verificationEmail}</strong>
+            </p>
+
+            <form onSubmit={handleVerifyOtp}>
+
+              <label>Enter OTP</label>
+
+              <input
+                type="text"
+                inputMode="numeric"
+                placeholder="Enter 6-digit OTP"
+                value={otp}
+                maxLength={6}
+                onChange={(event) => {
+                  const value =
+                    event.target.value.replace(
+                      /\D/g,
+                      ""
+                    );
+
+                  setOtp(value);
+                }}
+              />
+
+              {message && (
+                <p className="auth-message">
+                  {message}
+                </p>
+              )}
+
+              <button
+                type="submit"
+                className="auth-main-btn"
+              >
+                Verify Email
+              </button>
+
+            </form>
+          </>
+        )}
 
       </div>
-
     </main>
   );
 }
