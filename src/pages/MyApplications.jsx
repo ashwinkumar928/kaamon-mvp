@@ -16,15 +16,19 @@ function MyApplications() {
   const [reviewedApplications, setReviewedApplications] =
     useState({});
   const [reviewMessages, setReviewMessages] = useState({});
-  const [reviewSubmitting, setReviewSubmitting] = useState({});
+  const [reviewSubmitting, setReviewSubmitting] =
+    useState({});
 
   // ==============================
-  // LOAD MY APPLICATIONS
+  // LOAD APPLICATIONS + REVIEWS
   // ==============================
 
   useEffect(() => {
     async function loadApplications() {
       try {
+        setLoading(true);
+        setError("");
+
         const response = await fetch(
           `${API_URL}/api/my-applications`,
           {
@@ -41,10 +45,59 @@ function MyApplications() {
             data.message ||
               "Could not load your applications."
           );
+
           return;
         }
 
+        // Store review status before showing page
+        const reviewStatus = {};
+
+        const completedApplications = data.filter(
+          (application) =>
+            application.status === "completed"
+        );
+
+        for (const application of completedApplications) {
+          try {
+            const reviewResponse = await fetch(
+              `${API_URL}/api/applications/${application.application_id}/my-review`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+
+            if (!reviewResponse.ok) {
+              reviewStatus[
+                application.application_id
+              ] = "error";
+
+              continue;
+            }
+
+            const reviewData =
+              await reviewResponse.json();
+
+            reviewStatus[
+              application.application_id
+            ] = reviewData.reviewed;
+
+          } catch (reviewError) {
+            console.error(
+              "Could not check review:",
+              reviewError
+            );
+
+            reviewStatus[
+              application.application_id
+            ] = "error";
+          }
+        }
+
+        setReviewedApplications(reviewStatus);
         setApplications(data);
+
       } catch (error) {
         console.error(
           "My applications error:",
@@ -54,6 +107,7 @@ function MyApplications() {
         setError(
           "Could not connect to KaamON server."
         );
+
       } finally {
         setLoading(false);
       }
@@ -64,65 +118,8 @@ function MyApplications() {
     } else {
       setLoading(false);
     }
+
   }, [token]);
-
-  // ==============================
-  // CHECK EXISTING REVIEWS
-  // ==============================
-
-  useEffect(() => {
-    async function checkReviews() {
-      const completedApplications =
-        applications.filter(
-          (application) =>
-            application.status === "completed"
-        );
-
-      for (const application of completedApplications) {
-        try {
-          const response = await fetch(
-            `${API_URL}/api/applications/${application.application_id}/my-review`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-
-          if (!response.ok) {
-            setReviewedApplications((current) => ({
-              ...current,
-              [application.application_id]: "error",
-            }));
-
-            continue;
-          }
-
-          const data = await response.json();
-
-          setReviewedApplications((current) => ({
-            ...current,
-            [application.application_id]:
-              data.reviewed,
-          }));
-        } catch (error) {
-          console.error(
-            "Could not check review:",
-            error
-          );
-
-          setReviewedApplications((current) => ({
-            ...current,
-            [application.application_id]: "error",
-          }));
-        }
-      }
-    }
-
-    if (token && applications.length > 0) {
-      checkReviews();
-    }
-  }, [applications, token]);
 
   // ==============================
   // SUBMIT REVIEW
@@ -197,6 +194,7 @@ function MyApplications() {
         [applicationId]:
           "Review submitted successfully.",
       }));
+
     } catch (error) {
       console.error(
         "Submit review error:",
@@ -208,6 +206,7 @@ function MyApplications() {
         [applicationId]:
           "Could not connect to KaamON server.",
       }));
+
     } finally {
       setReviewSubmitting((current) => ({
         ...current,
@@ -240,6 +239,7 @@ function MyApplications() {
 
   return (
     <main className="my-applications-page">
+
       <div className="my-applications-container">
 
         <Link
@@ -250,13 +250,16 @@ function MyApplications() {
         </Link>
 
         <div className="my-applications-heading">
+
           <span>YOUR APPLICATIONS</span>
 
           <h1>My Applications</h1>
 
           <p>
-            Track the work opportunities you have applied for.
+            Track the work opportunities you have
+            applied for.
           </p>
+
         </div>
 
         {error && (
@@ -268,21 +271,25 @@ function MyApplications() {
         {!error &&
           applications.length === 0 && (
             <div className="no-applications">
+
               <h2>No applications yet</h2>
 
               <p>
-                Find work opportunities and apply for them.
+                Find work opportunities and apply
+                for them.
               </p>
 
               <Link to="/">
                 Find Work →
               </Link>
+
             </div>
           )}
 
         <div className="applications-list">
 
           {applications.map((application) => (
+
             <div
               className="application-card"
               key={application.application_id}
@@ -297,6 +304,7 @@ function MyApplications() {
                 </div>
 
                 <div>
+
                   <span className="application-category">
                     {application.category}
                   </span>
@@ -308,6 +316,7 @@ function MyApplications() {
                   <p>
                     📍 {application.location}
                   </p>
+
                 </div>
 
               </div>
@@ -317,6 +326,7 @@ function MyApplications() {
               <div className="application-info">
 
                 <div>
+
                   <small>Payment</small>
 
                   <strong>
@@ -325,9 +335,11 @@ function MyApplications() {
                       application.payment
                     ).toLocaleString("en-IN")}
                   </strong>
+
                 </div>
 
                 <div className="application-status-area">
+
                   <small>Status</small>
 
                   <span
@@ -335,6 +347,7 @@ function MyApplications() {
                   >
                     {application.status}
                   </span>
+
                 </div>
 
               </div>
@@ -343,6 +356,7 @@ function MyApplications() {
 
               {application.status === "accepted" ||
               application.status === "completed" ? (
+
                 <div className="hirer-contact">
 
                   <h3>Contact Hirer</h3>
@@ -399,44 +413,52 @@ function MyApplications() {
                   </div>
 
                 </div>
+
               ) : (
+
                 <div className="hirer-contact locked-contact">
+
                   <p>
-                    🔒 Contact details will be available after
-                    your application is accepted.
+                    🔒 Contact details will be
+                    available after your application
+                    is accepted.
                   </p>
+
                 </div>
+
               )}
 
               {/* REVIEW SECTION */}
 
               {application.status === "completed" && (
+
                 <div className="review-section">
 
                   {reviewedApplications[
                     application.application_id
-                  ] === undefined ? (
-                    <div className="review-submitted">
-                      Checking review...
-                    </div>
-                  ) : reviewedApplications[
-                      application.application_id
-                    ] === "error" ? (
+                  ] === "error" ? (
+
                     <div className="review-message">
                       Could not check review status.
                     </div>
+
                   ) : reviewedApplications[
                       application.application_id
                     ] ? (
+
                     <div className="review-submitted">
                       ⭐ Review Submitted
                     </div>
+
                   ) : (
+
                     <>
+
                       <h3>Rate Hirer</h3>
 
                       <p>
-                        How was your experience working with{" "}
+                        How was your experience
+                        working with{" "}
                         {application.posted_by_name}?
                       </p>
 
@@ -444,13 +466,15 @@ function MyApplications() {
 
                         {[1, 2, 3, 4, 5].map(
                           (star) => (
+
                             <button
                               key={star}
                               type="button"
                               className={
                                 star <=
                                 (reviewRatings[
-                                  application.application_id
+                                  application
+                                    .application_id
                                 ] || 0)
                                   ? "review-star selected"
                                   : "review-star"
@@ -467,6 +491,7 @@ function MyApplications() {
                             >
                               ★
                             </button>
+
                           )
                         )}
 
@@ -511,12 +536,15 @@ function MyApplications() {
                           ? "Submitting..."
                           : "Submit Review"}
                       </button>
+
                     </>
+
                   )}
 
                   {reviewMessages[
                     application.application_id
                   ] && (
+
                     <p className="review-message">
                       {
                         reviewMessages[
@@ -524,17 +552,21 @@ function MyApplications() {
                         ]
                       }
                     </p>
+
                   )}
 
                 </div>
+
               )}
 
             </div>
+
           ))}
 
         </div>
 
       </div>
+
     </main>
   );
 }
