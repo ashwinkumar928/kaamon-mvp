@@ -352,6 +352,13 @@ async function handleSubmitReview(applicationId) {
 
       <div className="hirer-contact-actions">
 
+        <Link
+             to={`/applications/${application.application_id}/chat`}
+             className="contact-action-btn"
+        >
+         💬 Chat
+      </Link>
+
     {application.poster_phone && (
       <a
         href={`tel:${application.poster_phone}`}

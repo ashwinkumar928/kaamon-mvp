@@ -19,6 +19,7 @@ import Applicants from "./pages/Applicants.jsx";
 import MyApplications from "./pages/MyApplications.jsx";
 import Profile from "./pages/Profile.jsx";
 import UserProfile from "./pages/UserProfile.jsx";
+import Chat from "./pages/Chat";
 
 
 function App() {
@@ -102,6 +103,11 @@ function App() {
         <Route
               path="/users/:userId"
                element={<UserProfile />}
+        />
+
+        <Route
+               path="/applications/:applicationId/chat"
+                element={<Chat />}
         />
         
 

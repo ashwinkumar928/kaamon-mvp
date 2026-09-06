@@ -1560,6 +1560,208 @@ app.get(
 );
 
 // ==============================
+// GET CHAT MESSAGES
+// ==============================
+
+app.get(
+  "/api/applications/:id/messages",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const applicationId = req.params.id;
+      const currentUserId = req.user.id;
+
+      // Check application and who is involved
+      const applicationResult = await pool.query(
+        `
+        SELECT
+          applications.id,
+          applications.applicant_id,
+          applications.status,
+          jobs.posted_by_id
+        FROM applications
+        JOIN jobs
+          ON jobs.id = applications.job_id
+        WHERE applications.id = $1
+        `,
+        [applicationId]
+      );
+
+      if (applicationResult.rows.length === 0) {
+        return res.status(404).json({
+          message: "Application not found.",
+        });
+      }
+
+      const application =
+        applicationResult.rows[0];
+
+      const isWorker =
+        String(application.applicant_id) ===
+        String(currentUserId);
+
+      const isHirer =
+        String(application.posted_by_id) ===
+        String(currentUserId);
+
+      if (!isWorker && !isHirer) {
+        return res.status(403).json({
+          message: "You cannot access this chat.",
+        });
+      }
+
+      if (
+        application.status !== "accepted" &&
+        application.status !== "completed"
+      ) {
+        return res.status(403).json({
+          message:
+            "Chat is available only after the application is accepted.",
+        });
+      }
+
+      const messagesResult = await pool.query(
+        `
+        SELECT
+          messages.id,
+          messages.sender_id,
+          messages.message,
+          messages.created_at,
+          users.name AS sender_name
+        FROM messages
+        JOIN users
+          ON users.id = messages.sender_id
+        WHERE messages.application_id = $1
+        ORDER BY messages.created_at ASC
+        `,
+        [applicationId]
+      );
+
+      res.json(messagesResult.rows);
+
+    } catch (error) {
+      console.error(
+        "Load messages error:",
+        error
+      );
+
+      res.status(500).json({
+        message: "Could not load chat messages.",
+      });
+    }
+  }
+);
+
+// ==============================
+// SEND CHAT MESSAGE
+// ==============================
+
+app.post(
+  "/api/applications/:id/messages",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const applicationId = req.params.id;
+      const currentUserId = req.user.id;
+      const { message } = req.body;
+
+      if (!message || !message.trim()) {
+        return res.status(400).json({
+          message: "Message cannot be empty.",
+        });
+      }
+
+      const applicationResult = await pool.query(
+        `
+        SELECT
+          applications.id,
+          applications.applicant_id,
+          applications.status,
+          jobs.posted_by_id
+        FROM applications
+        JOIN jobs
+          ON jobs.id = applications.job_id
+        WHERE applications.id = $1
+        `,
+        [applicationId]
+      );
+
+      if (applicationResult.rows.length === 0) {
+        return res.status(404).json({
+          message: "Application not found.",
+        });
+      }
+
+      const application =
+        applicationResult.rows[0];
+
+      const isWorker =
+        String(application.applicant_id) ===
+        String(currentUserId);
+
+      const isHirer =
+        String(application.posted_by_id) ===
+        String(currentUserId);
+
+      if (!isWorker && !isHirer) {
+        return res.status(403).json({
+          message: "You cannot send messages in this chat.",
+        });
+      }
+
+      if (
+        application.status !== "accepted" &&
+        application.status !== "completed"
+      ) {
+        return res.status(403).json({
+          message:
+            "Chat is available only after the application is accepted.",
+        });
+      }
+
+      const result = await pool.query(
+        `
+        INSERT INTO messages
+        (
+          application_id,
+          sender_id,
+          message
+        )
+        VALUES ($1, $2, $3)
+        RETURNING
+          id,
+          application_id,
+          sender_id,
+          message,
+          created_at
+        `,
+        [
+          applicationId,
+          currentUserId,
+          message.trim(),
+        ]
+      );
+
+      res.status(201).json({
+        message: "Message sent.",
+        chatMessage: result.rows[0],
+      });
+
+    } catch (error) {
+      console.error(
+        "Send message error:",
+        error
+      );
+
+      res.status(500).json({
+        message: "Could not send message.",
+      });
+    }
+  }
+);
+
+
+// ==============================
 // START SERVER
 // ==============================
 

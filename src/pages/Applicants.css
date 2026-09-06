@@ -213,6 +213,8 @@
   font-size: 12px;
   font-weight: 700;
   cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
 }
 
 .complete-btn:hover {

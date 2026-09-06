@@ -507,6 +507,12 @@ function Applicants() {
                     "accepted" && (
 
                     <div className="applicant-actions">
+                       <Link
+                           to={`/applications/${applicant.application_id}/chat`}
+                           className="complete-btn"
+                      >
+                          💬 Chat
+                       </Link>
 
                       <button
                         className="complete-btn"
@@ -522,6 +528,19 @@ function Applicants() {
 
                     </div>
                   )}
+
+                  {applicant.status === "completed" && (
+                     <div className="applicant-actions">
+
+                 <Link
+                    to={`/applications/${applicant.application_id}/chat`}
+                    className="complete-btn"
+                 >
+                  💬 Chat
+               </Link>
+
+            </div>
+          )}
 
                 </div>
 
