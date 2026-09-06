@@ -10,12 +10,17 @@ function MyApplications() {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [reviewRatings, setReviewRatings] = useState({});
-const [reviewComments, setReviewComments] = useState({});
-const [reviewedApplications, setReviewedApplications] = useState({});
-const [reviewMessages, setReviewMessages] = useState({});
-const [reviewSubmitting, setReviewSubmitting] = useState({});
 
+  const [reviewRatings, setReviewRatings] = useState({});
+  const [reviewComments, setReviewComments] = useState({});
+  const [reviewedApplications, setReviewedApplications] =
+    useState({});
+  const [reviewMessages, setReviewMessages] = useState({});
+  const [reviewSubmitting, setReviewSubmitting] = useState({});
+
+  // ==============================
+  // LOAD MY APPLICATIONS
+  // ==============================
 
   useEffect(() => {
     async function loadApplications() {
@@ -40,7 +45,6 @@ const [reviewSubmitting, setReviewSubmitting] = useState({});
         }
 
         setApplications(data);
-
       } catch (error) {
         console.error(
           "My applications error:",
@@ -50,160 +54,179 @@ const [reviewSubmitting, setReviewSubmitting] = useState({});
         setError(
           "Could not connect to KaamON server."
         );
-
       } finally {
         setLoading(false);
       }
     }
-
 
     if (token) {
       loadApplications();
     } else {
       setLoading(false);
     }
-
   }, [token]);
 
+  // ==============================
+  // CHECK EXISTING REVIEWS
+  // ==============================
+
   useEffect(() => {
-  async function checkReviews() {
-    const completedApplications = applications.filter(
-      (application) =>
-        application.status === "completed"
-    );
+    async function checkReviews() {
+      const completedApplications =
+        applications.filter(
+          (application) =>
+            application.status === "completed"
+        );
 
-    for (const application of completedApplications) {
-      try {
-        const response = await fetch(
-          `${API_URL}/api/applications/${application.application_id}/my-review`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+      for (const application of completedApplications) {
+        try {
+          const response = await fetch(
+            `${API_URL}/api/applications/${application.application_id}/my-review`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (!response.ok) {
+            setReviewedApplications((current) => ({
+              ...current,
+              [application.application_id]: "error",
+            }));
+
+            continue;
           }
-        );
 
-        if (!response.ok) {
-          continue;
+          const data = await response.json();
+
+          setReviewedApplications((current) => ({
+            ...current,
+            [application.application_id]:
+              data.reviewed,
+          }));
+        } catch (error) {
+          console.error(
+            "Could not check review:",
+            error
+          );
+
+          setReviewedApplications((current) => ({
+            ...current,
+            [application.application_id]: "error",
+          }));
         }
-
-        const data = await response.json();
-
-        setReviewedApplications((current) => ({
-          ...current,
-          [application.application_id]: data.reviewed,
-        }));
-
-      } catch (error) {
-        console.error(
-          "Could not check review:",
-          error
-        );
       }
     }
-  }
 
-  if (token && applications.length > 0) {
-    checkReviews();
-  }
+    if (token && applications.length > 0) {
+      checkReviews();
+    }
+  }, [applications, token]);
 
-}, [applications, token]);
+  // ==============================
+  // SUBMIT REVIEW
+  // ==============================
 
-async function handleSubmitReview(applicationId) {
-  const rating =
-    reviewRatings[applicationId];
+  async function handleSubmitReview(applicationId) {
+    const rating =
+      reviewRatings[applicationId];
 
-  const comment =
-    reviewComments[applicationId] || "";
+    const comment =
+      reviewComments[applicationId] || "";
 
-  if (!rating) {
-    setReviewMessages((current) => ({
-      ...current,
-      [applicationId]:
-        "Please select a rating.",
-    }));
-
-    return;
-  }
-
-  try {
-    setReviewSubmitting((current) => ({
-      ...current,
-      [applicationId]: true,
-    }));
-
-    setReviewMessages((current) => ({
-      ...current,
-      [applicationId]: "",
-    }));
-
-    const response = await fetch(
-      `${API_URL}/api/reviews`,
-      {
-        method: "POST",
-
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-
-        body: JSON.stringify({
-          applicationId,
-          rating,
-          comment,
-        }),
-      }
-    );
-
-    const data = await response.json();
-
-    if (!response.ok) {
+    if (!rating) {
       setReviewMessages((current) => ({
         ...current,
         [applicationId]:
-          data.message ||
-          "Could not submit review.",
+          "Please select a rating.",
       }));
 
       return;
     }
 
-    setReviewedApplications((current) => ({
-      ...current,
-      [applicationId]: true,
-    }));
+    try {
+      setReviewSubmitting((current) => ({
+        ...current,
+        [applicationId]: true,
+      }));
 
-    setReviewMessages((current) => ({
-      ...current,
-      [applicationId]:
-        "Review submitted successfully.",
-    }));
+      setReviewMessages((current) => ({
+        ...current,
+        [applicationId]: "",
+      }));
 
-  } catch (error) {
-    console.error(
-      "Submit review error:",
-      error
-    );
+      const response = await fetch(
+        `${API_URL}/api/reviews`,
+        {
+          method: "POST",
 
-    setReviewMessages((current) => ({
-      ...current,
-      [applicationId]:
-        "Could not connect to KaamON server.",
-    }));
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
 
-  } finally {
-    setReviewSubmitting((current) => ({
-      ...current,
-      [applicationId]: false,
-    }));
+          body: JSON.stringify({
+            applicationId,
+            rating,
+            comment,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setReviewMessages((current) => ({
+          ...current,
+          [applicationId]:
+            data.message ||
+            "Could not submit review.",
+        }));
+
+        return;
+      }
+
+      setReviewedApplications((current) => ({
+        ...current,
+        [applicationId]: true,
+      }));
+
+      setReviewMessages((current) => ({
+        ...current,
+        [applicationId]:
+          "Review submitted successfully.",
+      }));
+    } catch (error) {
+      console.error(
+        "Submit review error:",
+        error
+      );
+
+      setReviewMessages((current) => ({
+        ...current,
+        [applicationId]:
+          "Could not connect to KaamON server.",
+      }));
+    } finally {
+      setReviewSubmitting((current) => ({
+        ...current,
+        [applicationId]: false,
+      }));
+    }
   }
-}
 
+  // ==============================
+  // AUTH CHECK
+  // ==============================
 
   if (!token) {
     return <Navigate to="/login" />;
   }
 
+  // ==============================
+  // LOADING
+  // ==============================
 
   if (loading) {
     return (
@@ -215,10 +238,8 @@ async function handleSubmitReview(applicationId) {
     );
   }
 
-
   return (
     <main className="my-applications-page">
-
       <div className="my-applications-container">
 
         <Link
@@ -228,9 +249,7 @@ async function handleSubmitReview(applicationId) {
           ← Back to Dashboard
         </Link>
 
-
         <div className="my-applications-heading">
-
           <span>YOUR APPLICATIONS</span>
 
           <h1>My Applications</h1>
@@ -238,9 +257,7 @@ async function handleSubmitReview(applicationId) {
           <p>
             Track the work opportunities you have applied for.
           </p>
-
         </div>
-
 
         {error && (
           <p className="my-applications-error">
@@ -248,11 +265,9 @@ async function handleSubmitReview(applicationId) {
           </p>
         )}
 
-
         {!error &&
           applications.length === 0 && (
             <div className="no-applications">
-
               <h2>No applications yet</h2>
 
               <p>
@@ -262,19 +277,18 @@ async function handleSubmitReview(applicationId) {
               <Link to="/">
                 Find Work →
               </Link>
-
             </div>
           )}
-
 
         <div className="applications-list">
 
           {applications.map((application) => (
-
             <div
               className="application-card"
               key={application.application_id}
             >
+
+              {/* JOB INFO */}
 
               <div className="application-main">
 
@@ -282,9 +296,7 @@ async function handleSubmitReview(applicationId) {
                   {application.icon || "💼"}
                 </div>
 
-
                 <div>
-
                   <span className="application-category">
                     {application.category}
                   </span>
@@ -296,11 +308,11 @@ async function handleSubmitReview(applicationId) {
                   <p>
                     📍 {application.location}
                   </p>
-
                 </div>
 
               </div>
 
+              {/* PAYMENT + STATUS */}
 
               <div className="application-info">
 
@@ -315,9 +327,7 @@ async function handleSubmitReview(applicationId) {
                   </strong>
                 </div>
 
-
                 <div className="application-status-area">
-
                   <small>Status</small>
 
                   <span
@@ -325,183 +335,206 @@ async function handleSubmitReview(applicationId) {
                   >
                     {application.status}
                   </span>
-
                 </div>
 
               </div>
 
+              {/* CONTACT HIRER */}
+
               {application.status === "accepted" ||
-               application.status === "completed" ? (
-                   <div className="hirer-contact">
-                     <h3>Contact Hirer</h3>
+              application.status === "completed" ? (
+                <div className="hirer-contact">
 
-               <p>
-                 <strong>Name:</strong>{" "}
-                 {application.posted_by_name || "Not available"}
-             </p>
+                  <h3>Contact Hirer</h3>
 
-         <p>
-             <strong>Phone:</strong>{" "}
-             {application.poster_phone || "Not added yet"}
-        </p>
+                  <p>
+                    <strong>Name:</strong>{" "}
+                    {application.posted_by_name ||
+                      "Not available"}
+                  </p>
 
-     <p>
-        <strong>Email:</strong>{" "}
-        {application.poster_email || "Not added yet"}
-    </p>
+                  <p>
+                    <strong>Phone:</strong>{" "}
+                    {application.poster_phone ||
+                      "Not added yet"}
+                  </p>
 
-      <div className="hirer-contact-actions">
+                  <p>
+                    <strong>Email:</strong>{" "}
+                    {application.poster_email ||
+                      "Not added yet"}
+                  </p>
 
-        <Link
-             to={`/applications/${application.application_id}/chat`}
-             className="contact-action-btn"
-        >
-         💬 Chat
-      </Link>
+                  <div className="hirer-contact-actions">
 
-    {application.poster_phone && (
-      <a
-        href={`tel:${application.poster_phone}`}
-        className="contact-action-btn"
-      >
-        📞 Call
-      </a>
-    )}
+                    <Link
+                      to={`/applications/${application.application_id}/chat`}
+                      className="contact-action-btn"
+                    >
+                      💬 Chat
+                    </Link>
 
-    {application.poster_email && (
-      <a
-           href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
-          application.poster_email
-         )}`}
-             target="_blank"
-             rel="noreferrer"
-              className="contact-action-btn"
-          >
-               ✉️ Email
-           </a>
-     )}
+                    {application.poster_phone && (
+                      <a
+                        href={`tel:${application.poster_phone}`}
+                        className="contact-action-btn"
+                      >
+                        📞 Call
+                      </a>
+                    )}
 
-  </div>
-</div>
-     
+                    {application.poster_email && (
+                      <a
+                        href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
+                          application.poster_email
+                        )}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="contact-action-btn"
+                      >
+                        ✉️ Email
+                      </a>
+                    )}
+
+                  </div>
+
+                </div>
               ) : (
-              <div className="hirer-contact locked-contact">
-              <p>
-                🔒 Contact details will be available after your
-                application is accepted.
-            </p>
-        </div>
-      )}
+                <div className="hirer-contact locked-contact">
+                  <p>
+                    🔒 Contact details will be available after
+                    your application is accepted.
+                  </p>
+                </div>
+              )}
 
-      {application.status === "completed" && (
-  <div className="review-section">
+              {/* REVIEW SECTION */}
 
-    {reviewedApplications[
-      application.application_id
-    ] ? (
-      <div className="review-submitted">
-        ⭐ Review Submitted
-      </div>
-    ) : (
-      <>
-        <h3>Rate Hirer</h3>
+              {application.status === "completed" && (
+                <div className="review-section">
 
-        <p>
-          How was your experience working with{" "}
-          {application.posted_by_name}?
-        </p>
+                  {reviewedApplications[
+                    application.application_id
+                  ] === undefined ? (
+                    <div className="review-submitted">
+                      Checking review...
+                    </div>
+                  ) : reviewedApplications[
+                      application.application_id
+                    ] === "error" ? (
+                    <div className="review-message">
+                      Could not check review status.
+                    </div>
+                  ) : reviewedApplications[
+                      application.application_id
+                    ] ? (
+                    <div className="review-submitted">
+                      ⭐ Review Submitted
+                    </div>
+                  ) : (
+                    <>
+                      <h3>Rate Hirer</h3>
 
-        <div className="review-stars">
+                      <p>
+                        How was your experience working with{" "}
+                        {application.posted_by_name}?
+                      </p>
 
-          {[1, 2, 3, 4, 5].map((star) => (
-            <button
-              key={star}
-              type="button"
-              className={
-                star <=
-                (reviewRatings[
-                  application.application_id
-                ] || 0)
-                  ? "review-star selected"
-                  : "review-star"
-              }
-              onClick={() =>
-                setReviewRatings((current) => ({
-                  ...current,
-                  [application.application_id]:
-                    star,
-                }))
-              }
-            >
-              ★
-            </button>
-          ))}
+                      <div className="review-stars">
 
-        </div>
+                        {[1, 2, 3, 4, 5].map(
+                          (star) => (
+                            <button
+                              key={star}
+                              type="button"
+                              className={
+                                star <=
+                                (reviewRatings[
+                                  application.application_id
+                                ] || 0)
+                                  ? "review-star selected"
+                                  : "review-star"
+                              }
+                              onClick={() =>
+                                setReviewRatings(
+                                  (current) => ({
+                                    ...current,
+                                    [application.application_id]:
+                                      star,
+                                  })
+                                )
+                              }
+                            >
+                              ★
+                            </button>
+                          )
+                        )}
 
-        <textarea
-          className="review-comment"
-          placeholder="Write a short review (optional)"
-          value={
-            reviewComments[
-              application.application_id
-            ] || ""
-          }
-          onChange={(event) =>
-            setReviewComments((current) => ({
-              ...current,
-              [application.application_id]:
-                event.target.value,
-            }))
-          }
-        />
+                      </div>
 
-        <button
-          type="button"
-          className="submit-review-btn"
-          disabled={
-            reviewSubmitting[
-              application.application_id
-            ]
-          }
-          onClick={() =>
-            handleSubmitReview(
-              application.application_id
-            )
-          }
-        >
-          {reviewSubmitting[
-            application.application_id
-          ]
-            ? "Submitting..."
-            : "Submit Review"}
-        </button>
-      </>
-    )}
+                      <textarea
+                        className="review-comment"
+                        placeholder="Write a short review (optional)"
+                        value={
+                          reviewComments[
+                            application.application_id
+                          ] || ""
+                        }
+                        onChange={(event) =>
+                          setReviewComments(
+                            (current) => ({
+                              ...current,
+                              [application.application_id]:
+                                event.target.value,
+                            })
+                          )
+                        }
+                      />
 
-    {reviewMessages[
-      application.application_id
-    ] && (
-      <p className="review-message">
-        {
-          reviewMessages[
-            application.application_id
-          ]
-        }
-      </p>
-    )}
+                      <button
+                        type="button"
+                        className="submit-review-btn"
+                        disabled={
+                          reviewSubmitting[
+                            application.application_id
+                          ]
+                        }
+                        onClick={() =>
+                          handleSubmitReview(
+                            application.application_id
+                          )
+                        }
+                      >
+                        {reviewSubmitting[
+                          application.application_id
+                        ]
+                          ? "Submitting..."
+                          : "Submit Review"}
+                      </button>
+                    </>
+                  )}
 
-  </div>
-)}
+                  {reviewMessages[
+                    application.application_id
+                  ] && (
+                    <p className="review-message">
+                      {
+                        reviewMessages[
+                          application.application_id
+                        ]
+                      }
+                    </p>
+                  )}
+
+                </div>
+              )}
 
             </div>
-
           ))}
 
         </div>
 
       </div>
-
     </main>
   );
 }
