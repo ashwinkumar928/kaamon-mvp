@@ -45,12 +45,15 @@ function Applicants() {
 
 
   // ==============================
-  // LOAD APPLICANTS
+  // LOAD APPLICANTS + REVIEW STATUS
   // ==============================
 
   useEffect(() => {
     async function loadApplicants() {
       try {
+        setLoading(true);
+        setError("");
+
         const response = await fetch(
           `${API_URL}/api/jobs/${jobId}/applicants`,
           {
@@ -72,6 +75,73 @@ function Applicants() {
           return;
         }
 
+
+        // Store review status here
+        // before showing the page
+        const reviewStatus = {};
+
+
+        // Only completed applications
+        // can already have reviews
+        const completedApplicants =
+          data.filter(
+            (applicant) =>
+              applicant.status === "completed"
+          );
+
+
+        // Check each completed application
+        // for an existing review
+        for (
+          const applicant
+          of completedApplicants
+        ) {
+          try {
+            const reviewResponse =
+              await fetch(
+                `${API_URL}/api/applications/${applicant.application_id}/my-review`,
+                {
+                  headers: {
+                    Authorization:
+                      `Bearer ${token}`,
+                  },
+                }
+              );
+
+            if (!reviewResponse.ok) {
+              reviewStatus[
+                applicant.application_id
+              ] = "error";
+
+              continue;
+            }
+
+            const reviewData =
+              await reviewResponse.json();
+
+            reviewStatus[
+              applicant.application_id
+            ] = reviewData.reviewed;
+
+          } catch (error) {
+            console.error(
+              "Could not check review:",
+              error
+            );
+
+            reviewStatus[
+              applicant.application_id
+            ] = "error";
+          }
+        }
+
+
+        // Save review information first
+        setReviewedApplications(
+          reviewStatus
+        );
+
+        // Then save applicants
         setApplicants(data);
 
       } catch (error) {
@@ -89,6 +159,7 @@ function Applicants() {
       }
     }
 
+
     if (token) {
       loadApplicants();
     } else {
@@ -96,63 +167,6 @@ function Applicants() {
     }
 
   }, [jobId, token]);
-
-
-  // ==============================
-  // CHECK EXISTING REVIEWS
-  // ==============================
-
-  useEffect(() => {
-    async function checkReviews() {
-      const completedApplicants =
-        applicants.filter(
-          (applicant) =>
-            applicant.status === "completed"
-        );
-
-      for (const applicant of completedApplicants) {
-        try {
-          const response = await fetch(
-            `${API_URL}/api/applications/${applicant.application_id}/my-review`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-
-          if (!response.ok) {
-            continue;
-          }
-
-          const data =
-            await response.json();
-
-          setReviewedApplications(
-            (current) => ({
-              ...current,
-              [applicant.application_id]:
-                data.reviewed,
-            })
-          );
-
-        } catch (error) {
-          console.error(
-            "Could not check review:",
-            error
-          );
-        }
-      }
-    }
-
-    if (
-      token &&
-      applicants.length > 0
-    ) {
-      checkReviews();
-    }
-
-  }, [applicants, token]);
 
 
   // ==============================
@@ -170,7 +184,9 @@ function Applicants() {
           method: "PATCH",
 
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization:
+              `Bearer ${token}`,
+
             "Content-Type":
               "application/json",
           },
@@ -193,6 +209,7 @@ function Applicants() {
         return;
       }
 
+
       setApplicants(
         (currentApplicants) =>
           currentApplicants.map(
@@ -206,6 +223,18 @@ function Applicants() {
                 : applicant
           )
       );
+
+
+      // If hirer just marks work completed,
+      // show the review form immediately
+      if (newStatus === "completed") {
+        setReviewedApplications(
+          (current) => ({
+            ...current,
+            [applicationId]: false,
+          })
+        );
+      }
 
     } catch (error) {
       console.error(
@@ -245,6 +274,7 @@ function Applicants() {
       return;
     }
 
+
     try {
       setReviewSubmitting(
         (current) => ({
@@ -253,6 +283,7 @@ function Applicants() {
         })
       );
 
+
       setReviewMessages(
         (current) => ({
           ...current,
@@ -260,13 +291,16 @@ function Applicants() {
         })
       );
 
+
       const response = await fetch(
         `${API_URL}/api/reviews`,
         {
           method: "POST",
 
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization:
+              `Bearer ${token}`,
+
             "Content-Type":
               "application/json",
           },
@@ -279,8 +313,10 @@ function Applicants() {
         }
       );
 
+
       const data =
         await response.json();
+
 
       if (!response.ok) {
         setReviewMessages(
@@ -295,12 +331,14 @@ function Applicants() {
         return;
       }
 
+
       setReviewedApplications(
         (current) => ({
           ...current,
           [applicationId]: true,
         })
       );
+
 
       setReviewMessages(
         (current) => ({
@@ -315,6 +353,7 @@ function Applicants() {
         "Submit review error:",
         error
       );
+
 
       setReviewMessages(
         (current) => ({
@@ -347,11 +386,15 @@ function Applicants() {
   if (loading) {
     return (
       <main className="applicants-page">
+
         <div className="applicants-container">
+
           <h2>
             Loading applicants...
           </h2>
+
         </div>
+
       </main>
     );
   }
@@ -376,7 +419,9 @@ function Applicants() {
             JOB APPLICANTS
           </span>
 
-          <h1>Applicants</h1>
+          <h1>
+            Applicants
+          </h1>
 
           <p>
             Review people who applied
@@ -395,6 +440,7 @@ function Applicants() {
 
         {!error &&
           applicants.length === 0 && (
+
             <div className="no-applicants">
 
               <h2>
@@ -422,15 +468,20 @@ function Applicants() {
                 }
               >
 
+                {/* ========================= */}
                 {/* APPLICANT PROFILE */}
+                {/* ========================= */}
 
                 <div className="applicant-profile">
 
                   <div className="applicant-avatar">
+
                     {applicant.name
                       ?.charAt(0)
                       .toUpperCase()}
+
                   </div>
+
 
                   <div>
 
@@ -438,10 +489,12 @@ function Applicants() {
                       {applicant.name}
                     </h2>
 
+
                     <p>
                       {applicant.email ||
                         "Contact available after acceptance"}
                     </p>
+
 
                     <Link
                       to={`/users/${applicant.applicant_id}?jobId=${jobId}`}
@@ -455,7 +508,9 @@ function Applicants() {
                 </div>
 
 
+                {/* ========================= */}
                 {/* STATUS */}
+                {/* ========================= */}
 
                 <div className="applicant-status">
 
@@ -475,6 +530,7 @@ function Applicants() {
 
                       <button
                         className="accept-btn"
+
                         onClick={() =>
                           handleStatusChange(
                             applicant.application_id,
@@ -485,8 +541,10 @@ function Applicants() {
                         ✓ Accept
                       </button>
 
+
                       <button
                         className="reject-btn"
+
                         onClick={() =>
                           handleStatusChange(
                             applicant.application_id,
@@ -501,21 +559,24 @@ function Applicants() {
                   )}
 
 
-                  {/* COMPLETE */}
+                  {/* ACCEPTED */}
 
                   {applicant.status ===
                     "accepted" && (
 
                     <div className="applicant-actions">
-                       <Link
-                           to={`/applications/${applicant.application_id}/chat`}
-                           className="complete-btn"
+
+                      <Link
+                        to={`/applications/${applicant.application_id}/chat`}
+                        className="complete-btn"
                       >
-                          💬 Chat
-                       </Link>
+                        💬 Chat
+                      </Link>
+
 
                       <button
                         className="complete-btn"
+
                         onClick={() =>
                           handleStatusChange(
                             applicant.application_id,
@@ -529,32 +590,48 @@ function Applicants() {
                     </div>
                   )}
 
-                  {applicant.status === "completed" && (
-                     <div className="applicant-actions">
 
-                 <Link
-                    to={`/applications/${applicant.application_id}/chat`}
-                    className="complete-btn"
-                 >
-                  💬 Chat
-               </Link>
+                  {/* COMPLETED */}
 
-            </div>
-          )}
+                  {applicant.status ===
+                    "completed" && (
+
+                    <div className="applicant-actions">
+
+                      <Link
+                        to={`/applications/${applicant.application_id}/chat`}
+                        className="complete-btn"
+                      >
+                        💬 Chat
+                      </Link>
+
+                    </div>
+                  )}
 
                 </div>
 
 
+                {/* ========================= */}
                 {/* HIRER → WORKER REVIEW */}
+                {/* ========================= */}
 
                 {applicant.status ===
                   "completed" && (
 
                   <div className="applicant-review-section">
 
+
                     {reviewedApplications[
                       applicant.application_id
-                    ] ? (
+                    ] === "error" ? (
+
+                      <div className="applicant-review-message">
+                        Could not check review status.
+                      </div>
+
+                    ) : reviewedApplications[
+                        applicant.application_id
+                      ] ? (
 
                       <div className="applicant-review-submitted">
                         ⭐ Review Submitted
@@ -567,6 +644,7 @@ function Applicants() {
                         <h3>
                           Rate Worker
                         </h3>
+
 
                         <p>
                           How was your
@@ -584,19 +662,21 @@ function Applicants() {
                               <button
                                 key={star}
                                 type="button"
+
                                 className={
                                   star <=
                                   (reviewRatings[
-                                    applicant
-                                      .application_id
+                                    applicant.application_id
                                   ] || 0)
                                     ? "applicant-review-star selected"
                                     : "applicant-review-star"
                                 }
+
                                 onClick={() =>
                                   setReviewRatings(
                                     (current) => ({
                                       ...current,
+
                                       [applicant.application_id]:
                                         star,
                                     })
@@ -614,17 +694,20 @@ function Applicants() {
 
                         <textarea
                           className="applicant-review-comment"
+
                           placeholder="Write a short review (optional)"
+
                           value={
                             reviewComments[
-                              applicant
-                                .application_id
+                              applicant.application_id
                             ] || ""
                           }
+
                           onChange={(event) =>
                             setReviewComments(
                               (current) => ({
                                 ...current,
+
                                 [applicant.application_id]:
                                   event.target.value,
                               })
@@ -635,26 +718,28 @@ function Applicants() {
 
                         <button
                           type="button"
+
                           className="applicant-submit-review-btn"
+
                           disabled={
                             reviewSubmitting[
-                              applicant
-                                .application_id
+                              applicant.application_id
                             ]
                           }
+
                           onClick={() =>
                             handleSubmitReview(
-                              applicant
-                                .application_id
+                              applicant.application_id
                             )
                           }
                         >
+
                           {reviewSubmitting[
-                            applicant
-                              .application_id
+                            applicant.application_id
                           ]
                             ? "Submitting..."
                             : "Submit Review"}
+
                         </button>
 
                       </>
@@ -666,21 +751,20 @@ function Applicants() {
                     ] && (
 
                       <p className="applicant-review-message">
+
                         {
                           reviewMessages[
-                            applicant
-                              .application_id
+                            applicant.application_id
                           ]
                         }
-                      </p>
 
+                      </p>
                     )}
 
                   </div>
                 )}
 
               </div>
-
             )
           )}
 
