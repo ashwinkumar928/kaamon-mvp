@@ -192,24 +192,33 @@ function MyJobs() {
                   </strong>
                 </div>
 
+<div className="applicant-area">
 
-                <div className="applicant-area">
+  <span className="applicant-count">
+    {job.applicant_count}{" "}
+    {job.applicant_count === 1
+      ? "Applicant"
+      : "Applicants"}
+  </span>
 
-                  <span className="applicant-count">
-                    {job.applicant_count}{" "}
-                    {job.applicant_count === 1
-                      ? "Applicant"
-                      : "Applicants"}
-                  </span>
+  {job.job_status === "available" && (
+    <Link
+      to={`/my-jobs/${job.id}/edit`}
+      className="view-applicants-btn"
+    >
+      ✏️ Edit Work
+    </Link>
+  )}
 
-                  <Link
-                    to={`/jobs/${job.id}/applicants`}
-                    className="view-applicants-btn"
-                  >
-                    View Applicants →
-                  </Link>
+  <Link
+    to={`/jobs/${job.id}/applicants`}
+    className="view-applicants-btn"
+  >
+    View Applicants →
+  </Link>
 
-                </div>
+</div>
+                
 
               </div>
 

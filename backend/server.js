@@ -136,7 +136,8 @@ app.get("/api/jobs", async (req, res) => {
 // GET ONE JOB
 // ==============================
 
-app.get("/api/jobs/:id", async (req, res) => {
+app.get("/api/jobs/:id",
+  async (req, res) => {
   try {
     const result = await pool.query(
       `
@@ -779,6 +780,266 @@ app.get(
 
       res.status(500).json({
         message: "Could not load your jobs.",
+      });
+    }
+  }
+);
+
+app.get(
+  "/api/my-jobs/:id",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const jobId = req.params.id;
+      const userId = req.user.id;
+
+      const result = await pool.query(
+        `
+        SELECT *
+        FROM jobs
+        WHERE id = $1
+        AND posted_by_id = $2::text
+        `,
+        [jobId, userId]
+      );
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({
+          message: "Job not found or you do not own this job.",
+        });
+      }
+
+      const job = result.rows[0];
+
+      res.json({
+        id: job.id,
+        title: job.title,
+        category: job.category,
+        description: job.description,
+        location: job.location,
+        date: job.work_date,
+        time: job.work_time,
+        payment: job.payment,
+        icon: job.icon,
+      });
+
+    } catch (error) {
+      console.error(
+        "Load own job error:",
+        error
+      );
+
+      res.status(500).json({
+        message: "Could not load this job.",
+      });
+    }
+  }
+);
+
+app.patch(
+  "/api/my-jobs/:id",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const jobId = req.params.id;
+      const userId = req.user.id;
+
+      const {
+        title,
+        category,
+        description,
+        location,
+        date,
+        time,
+        payment,
+      } = req.body;
+
+      if (
+        !title ||
+        !category ||
+        !description ||
+        !location ||
+        !date ||
+        !time ||
+        !payment
+      ) {
+        return res.status(400).json({
+          message: "Please provide all required fields.",
+        });
+      }
+
+      // Check that this job belongs
+      // to the logged-in user
+      const jobResult = await pool.query(
+        `
+        SELECT id
+        FROM jobs
+        WHERE id = $1
+        AND posted_by_id = $2::text
+        `,
+        [jobId, userId]
+      );
+
+      if (jobResult.rows.length === 0) {
+        return res.status(404).json({
+          message:
+            "Job not found or you do not own this job.",
+        });
+      }
+
+      // Do not allow editing once
+      // someone has been accepted/completed
+      const applicationResult =
+        await pool.query(
+          `
+          SELECT id
+          FROM applications
+          WHERE job_id = $1
+          AND status IN ('accepted', 'completed')
+          LIMIT 1
+          `,
+          [jobId]
+        );
+
+      if (
+        applicationResult.rows.length > 0
+      ) {
+        return res.status(400).json({
+          message:
+            "This job cannot be edited after a worker has been accepted.",
+        });
+      }
+
+      const categoryIcons = {
+        DRIVER: "🚗",
+        PAINTER: "🎨",
+        COOK: "🍳",
+        CLEANER: "🧹",
+        ELECTRICIAN: "⚡",
+        PLUMBER: "🔧",
+        "SHOP HELPER": "🏪",
+        "RESTAURANT HELPER": "🍽️",
+      };
+
+      const icon =
+        categoryIcons[category] || "💼";
+
+      const result = await pool.query(
+        `
+        UPDATE jobs
+        SET
+          title = $1,
+          category = $2,
+          description = $3,
+          location = $4,
+          work_date = $5,
+          work_time = $6,
+          payment = $7,
+          icon = $8
+        WHERE id = $9
+        AND posted_by_id = $10::text
+        RETURNING *
+        `,
+        [
+          title,
+          category,
+          description,
+          location,
+          date,
+          time,
+          Number(payment),
+          icon,
+          jobId,
+          userId,
+        ]
+      );
+
+      res.json({
+        message: "Work updated successfully.",
+        job: result.rows[0],
+      });
+
+    } catch (error) {
+      console.error(
+        "Edit job error:",
+        error
+      );
+
+      res.status(500).json({
+        message: "Could not update work.",
+      });
+    }
+  }
+);
+
+app.delete(
+  "/api/my-jobs/:id",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const jobId = req.params.id;
+      const userId = req.user.id;
+
+      // Check that the job belongs
+      // to the logged-in user
+      const jobResult = await pool.query(
+        `
+        SELECT id
+        FROM jobs
+        WHERE id = $1
+        AND posted_by_id = $2::text
+        `,
+        [jobId, userId]
+      );
+
+      if (jobResult.rows.length === 0) {
+        return res.status(404).json({
+          message:
+            "Job not found or you do not own this job.",
+        });
+      }
+
+      // For safety, do not delete a job
+      // once somebody has applied
+      const applicationResult =
+        await pool.query(
+          `
+          SELECT id
+          FROM applications
+          WHERE job_id = $1
+          LIMIT 1
+          `,
+          [jobId]
+        );
+
+      if (applicationResult.rows.length > 0) {
+        return res.status(400).json({
+          message:
+            "This job cannot be deleted because it already has applicants.",
+        });
+      }
+
+      await pool.query(
+        `
+        DELETE FROM jobs
+        WHERE id = $1
+        AND posted_by_id = $2::text
+        `,
+        [jobId, userId]
+      );
+
+      res.json({
+        message: "Work deleted successfully.",
+      });
+
+    } catch (error) {
+      console.error(
+        "Delete job error:",
+        error
+      );
+
+      res.status(500).json({
+        message: "Could not delete work.",
       });
     }
   }

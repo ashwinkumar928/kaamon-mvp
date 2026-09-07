@@ -14,6 +14,7 @@ import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import PostWork from "./pages/PostWork.jsx";
+import EditWork from "./pages/EditWork.jsx";
 import MyJobs from "./pages/MyJobs.jsx";
 import Applicants from "./pages/Applicants.jsx";
 import MyApplications from "./pages/MyApplications.jsx";
@@ -77,6 +78,12 @@ function App() {
         <Route
           path="/post-work"
           element={<PostWork />}
+        />
+
+        {/* EDIT WORK */}
+        <Route
+            path="/my-jobs/:jobId/edit"
+            element={<EditWork />}
         />
        
          {/* MY JOBS */}
