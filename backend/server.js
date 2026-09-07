@@ -1652,6 +1652,87 @@ app.get(
   }
 );
 
+app.get(
+  "/api/applications/:id/chat-info",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const applicationId = req.params.id;
+      const currentUserId = req.user.id;
+
+      const result = await pool.query(
+        `
+        SELECT
+          applications.id AS application_id,
+          applications.status,
+          jobs.title AS job_title,
+          jobs.location,
+          applications.applicant_id,
+          jobs.posted_by_id,
+          worker.name AS worker_name,
+          hirer.name AS hirer_name
+        FROM applications
+
+        JOIN jobs
+          ON jobs.id = applications.job_id
+
+        JOIN users AS worker
+          ON worker.id = applications.applicant_id
+
+        JOIN users AS hirer
+          ON hirer.id::text = jobs.posted_by_id
+
+        WHERE applications.id = $1
+        `,
+        [applicationId]
+      );
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({
+          message: "Application not found.",
+        });
+      }
+
+      const application = result.rows[0];
+
+      const isWorker =
+        String(application.applicant_id) ===
+        String(currentUserId);
+
+      const isHirer =
+        String(application.posted_by_id) ===
+        String(currentUserId);
+
+      if (!isWorker && !isHirer) {
+        return res.status(403).json({
+          message: "You cannot access this chat.",
+        });
+      }
+
+      const partnerName = isWorker
+        ? application.hirer_name
+        : application.worker_name;
+
+      res.json({
+        partnerName,
+        jobTitle: application.job_title,
+        location: application.location,
+        status: application.status,
+      });
+
+    } catch (error) {
+      console.error(
+        "Load chat info error:",
+        error
+      );
+
+      res.status(500).json({
+        message: "Could not load chat information.",
+      });
+    }
+  }
+);
+
 // ==============================
 // SEND CHAT MESSAGE
 // ==============================

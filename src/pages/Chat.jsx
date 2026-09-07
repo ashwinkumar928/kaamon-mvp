@@ -25,12 +25,11 @@ function Chat() {
   const [newMessage, setNewMessage] = useState("");
   const [loading, setLoading] = useState(true);
   const messagesEndRef = useRef(null);
+  const hasScrolledInitially = useRef(false);
 
-  const [error, setError] =
-    useState("");
-
-  const [sending, setSending] =
-    useState(false);
+  const [error, setError] = useState("");
+  const [sending, setSending] = useState(false);
+  const [chatInfo, setChatInfo] = useState(null);
 
 
   // ==============================
@@ -107,10 +106,47 @@ function Chat() {
 }, [applicationId, token]);
 
 useEffect(() => {
-  messagesEndRef.current?.scrollIntoView({
-    behavior: "smooth",
-  });
-}, [messages]);
+  async function loadChatInfo() {
+    try {
+      const response = await fetch(
+        `${API_URL}/api/applications/${applicationId}/chat-info`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setChatInfo(data);
+      }
+    } catch (error) {
+      console.error(
+        "Load chat info error:",
+        error
+      );
+    }
+  }
+
+  if (token) {
+    loadChatInfo();
+  }
+
+}, [applicationId, token]);
+
+useEffect(() => {
+  if (
+    !loading &&
+    messages.length > 0 &&
+    !hasScrolledInitially.current
+  ) {
+    messagesEndRef.current?.scrollIntoView();
+
+    hasScrolledInitially.current = true;
+  }
+}, [loading, messages]);
   
 
 
@@ -217,15 +253,20 @@ useEffect(() => {
           <div className="chat-header">
 
             <div>
-              <span>KAAMON CHAT</span>
+               <span>KAAMON CHAT</span>
 
-              <h1>Work Conversation</h1>
+            <h1>
+                 {chatInfo
+                     ? `Chat with ${chatInfo.partnerName}`
+                     : "Work Conversation"}
+            </h1>
 
-              <p>
-                Chat is available after the
-                application is accepted.
-              </p>
-            </div>
+            <p>
+              {chatInfo
+                 ? `${chatInfo.jobTitle} • ${chatInfo.location}`
+                 : "Chat is available after the application is accepted."}
+            </p>
+          </div>
 
           </div>
 
