@@ -405,7 +405,7 @@ await pool.query(
 );
 
 const { error: emailError } = await resend.emails.send({
-  from: "Karviam <onboarding@resend.dev>",
+  from: "Karviam <verify@karviam.in>",
   to: normalizedEmail,
   subject: "Verify your Karviam account",
 
