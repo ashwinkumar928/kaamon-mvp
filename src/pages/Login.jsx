@@ -66,7 +66,7 @@ function Login() {
       console.error("Login error:", error);
 
       setMessage(
-        "Could not connect to KaamON server."
+        "Could not connect to Karviam server."
       );
     }
   }
@@ -83,7 +83,7 @@ function Login() {
         <h1>Welcome back</h1>
 
         <p className="auth-subtitle">
-          Login to continue with KaamON.
+          Login to continue with Karviam.
         </p>
 
         <form onSubmit={handleLogin}>

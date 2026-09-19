@@ -151,7 +151,7 @@ function Applicants() {
         );
 
         setError(
-          "Could not connect to KaamON server."
+          "Could not connect to Karviam server."
         );
 
       } finally {
@@ -243,7 +243,7 @@ function Applicants() {
       );
 
       alert(
-        "Could not connect to KaamON server."
+        "Could not connect to Karviam server."
       );
     }
   }
@@ -359,7 +359,7 @@ function Applicants() {
         (current) => ({
           ...current,
           [applicationId]:
-            "Could not connect to KaamON server.",
+            "Could not connect to Karviam server.",
         })
       );
 

@@ -9,7 +9,7 @@ function HowItWorks() {
           <span>HOW IT WORKS</span>
           <h2>Simple. Fast. Local.</h2>
           <p>
-            One KaamON account lets you post work
+            One Karviam account lets you post work
             or find nearby work opportunities.
           </p>
         </div>
@@ -39,7 +39,7 @@ function HowItWorks() {
             <h3>Get the Work Done</h3>
             <p>
               Complete the work and manage it
-              from your KaamON dashboard.
+              from your Karviam dashboard.
             </p>
           </div>
 

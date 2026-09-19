@@ -105,7 +105,7 @@ function MyApplications() {
         );
 
         setError(
-          "Could not connect to KaamON server."
+          "Could not connect to Karviam server."
         );
 
       } finally {
@@ -204,7 +204,7 @@ function MyApplications() {
       setReviewMessages((current) => ({
         ...current,
         [applicationId]:
-          "Could not connect to KaamON server.",
+          "Could not connect to Karviam server.",
       }));
 
     } finally {

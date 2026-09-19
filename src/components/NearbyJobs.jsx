@@ -53,7 +53,7 @@ function NearbyJobs() {
       setAllJobs([]);
 
       setLoadError(
-        "Could not connect to KaamON server."
+        "Could not connect to Karviam server."
       );
     }
   }

@@ -93,7 +93,7 @@ function EditWork() {
         );
 
         setMessage(
-          "Could not connect to KaamON server."
+          "Could not connect to Karviam server."
         );
 
       } finally {
@@ -202,7 +202,7 @@ function EditWork() {
       );
 
       setMessage(
-        "Could not connect to KaamON server."
+        "Could not connect to Karviam server."
       );
 
     } finally {

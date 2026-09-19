@@ -56,7 +56,7 @@ function authenticateToken(req, res, next) {
 // ==============================
 
 app.get("/", (req, res) => {
-  res.send("KaamON Backend is running 🚀");
+  res.send("Karviam Backend is running 🚀");
 });
 
 
@@ -69,7 +69,7 @@ app.get("/api/test-db", async (req, res) => {
     const result = await pool.query("SELECT NOW()");
 
     res.json({
-      message: "KaamON database connected successfully",
+      message: "Karviam database connected successfully",
       time: result.rows[0].now,
     });
   } catch (error) {
@@ -405,9 +405,9 @@ await pool.query(
 );
 
 const { error: emailError } = await resend.emails.send({
-  from: "KaamON <onboarding@resend.dev>",
+  from: "Karviam <onboarding@resend.dev>",
   to: normalizedEmail,
-  subject: "Verify your KaamON account",
+  subject: "Verify your Karviam account",
 
   html: `
     <div style="font-family: Arial, sans-serif;">
@@ -2109,6 +2109,6 @@ app.post(
 
 app.listen(PORT, () => {
   console.log(
-    `KaamON backend running on http://localhost:${PORT}`
+    `Karviam backend running on http://localhost:${PORT}`
   );
 });

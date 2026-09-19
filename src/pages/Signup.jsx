@@ -85,7 +85,7 @@ function Signup() {
       console.error("Signup error:", error);
 
       setMessage(
-        "Could not connect to KaamON server."
+        "Could not connect to Karviam server."
       );
     }
   }
@@ -138,7 +138,7 @@ function Signup() {
       );
 
       setMessage(
-        "Could not connect to KaamON server."
+        "Could not connect to Karviam server."
       );
     }
   }

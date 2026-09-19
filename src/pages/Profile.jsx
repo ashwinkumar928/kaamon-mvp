@@ -180,7 +180,7 @@ useEffect(() => {
       );
 
       setMessage(
-        "Could not connect to KaamON server."
+        "Could not connect to Karviam server."
       );
 
     } finally {
@@ -236,7 +236,7 @@ useEffect(() => {
             </p>
 
             <span className="profile-member">
-              KaamON Member
+              Karviam Member
             </span>
 
           </div>
@@ -347,7 +347,7 @@ useEffect(() => {
               </h2>
 
               <p>
-                Your basic KaamON account details.
+                Your basic Karviam account details.
               </p>
 
             </div>
@@ -419,7 +419,7 @@ useEffect(() => {
               <h2>My Ratings & Reviews</h2>
 
               <p>
-                Ratings you received from completed KaamON work.
+                Ratings you received from completed Karviam work.
               </p>
 
             </div>
@@ -539,7 +539,7 @@ useEffect(() => {
 
                 <p>
                   Add your skills to improve
-                  your KaamON profile.
+                  your Karviam profile.
                 </p>
 
               </div>

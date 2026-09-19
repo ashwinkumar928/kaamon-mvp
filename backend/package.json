@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "KaamON Node.js backend",
+  "description": "Karviam Node.js backend",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

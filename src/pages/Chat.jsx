@@ -76,7 +76,7 @@ function Chat() {
 
       if (active) {
         setError(
-          "Could not connect to KaamON server."
+          "Could not connect to Karviam server."
         );
       }
 
@@ -210,7 +210,7 @@ useEffect(() => {
       );
 
       setError(
-        "Could not connect to KaamON server."
+        "Could not connect to Karviam server."
       );
 
     } finally {
@@ -253,7 +253,7 @@ useEffect(() => {
           <div className="chat-header">
 
             <div>
-               <span>KAAMON CHAT</span>
+               <span>KARVIAN CHAT</span>
 
             <h1>
                  {chatInfo

@@ -44,7 +44,7 @@ function MyJobs() {
         console.error("My jobs error:", error);
 
         setError(
-          "Could not connect to KaamON server."
+          "Could not connect to Karviam server."
         );
 
       } finally {
@@ -111,7 +111,7 @@ function MyJobs() {
             <h2>No jobs posted yet</h2>
 
             <p>
-              Post your first work requirement on KaamON.
+              Post your first work requirement on Karviam.
             </p>
 
             <Link to="/post-work">

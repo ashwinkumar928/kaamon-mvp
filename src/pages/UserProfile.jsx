@@ -57,7 +57,7 @@ function UserProfile() {
         );
 
         setMessage(
-          "Could not connect to KaamON server."
+          "Could not connect to Karviam server."
         );
       } finally {
         setLoading(false);
@@ -173,7 +173,7 @@ function UserProfile() {
             </p>
 
             <span className="profile-member">
-              KaamON Worker
+              Karviam Worker
             </span>
           </div>
         </section>
@@ -184,7 +184,7 @@ function UserProfile() {
             <div>
               <h2>Worker Information</h2>
               <p>
-                Details shared by this KaamON member.
+                Details shared by this Karviam member.
               </p>
             </div>
           </div>
@@ -264,7 +264,7 @@ function UserProfile() {
               <h2>Ratings & Reviews</h2>
 
               <p>
-                Feedback from completed KaamON work.
+                Feedback from completed Karviam work.
               </p>
             </div>
           </div>

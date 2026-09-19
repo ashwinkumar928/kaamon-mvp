@@ -95,7 +95,7 @@ setCompletedWork(completed.length);
       <div className="dashboard-container">
 
         <p className="dashboard-small">
-          WELCOME TO KAAMON
+          WELCOME TO KARVIAN
         </p>
 
         <h1>
@@ -145,7 +145,7 @@ setCompletedWork(completed.length);
 
             <p>
               Browse nearby work opportunities and
-              apply using the same KaamON account.
+              apply using the same Karviam account.
             </p>
 
             <Link to="/#jobs">
