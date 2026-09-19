@@ -253,7 +253,7 @@ useEffect(() => {
           <div className="chat-header">
 
             <div>
-               <span>KARVIAN CHAT</span>
+               <span>KARVIAM CHAT</span>
 
             <h1>
                  {chatInfo

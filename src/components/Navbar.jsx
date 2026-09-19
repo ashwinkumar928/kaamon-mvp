@@ -1,21 +1,32 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+} from "react-router-dom";
 
 function Navbar() {
   const navigate = useNavigate();
 
-  const [darkMode, setDarkMode] = useState(() => {
-    return localStorage.getItem("kaamonTheme") === "dark";
-  });
+  const [darkMode, setDarkMode] =
+    useState(() => {
+      return (
+        localStorage.getItem(
+          "kaamonTheme"
+        ) === "dark"
+      );
+    });
 
-  const [currentUser, setCurrentUser] = useState(() => {
-    const savedUser =
-      localStorage.getItem("kaamonCurrentUser");
+  const [currentUser, setCurrentUser] =
+    useState(() => {
+      const savedUser =
+        localStorage.getItem(
+          "kaamonCurrentUser"
+        );
 
-    return savedUser
-      ? JSON.parse(savedUser)
-      : null;
-  });
+      return savedUser
+        ? JSON.parse(savedUser)
+        : null;
+    });
 
 
   useEffect(() => {
@@ -30,43 +41,56 @@ function Navbar() {
     );
   }, [darkMode]);
 
+
   useEffect(() => {
-  function updateLoggedInUser() {
-    const savedUser =
-      localStorage.getItem("kaamonCurrentUser");
+    function updateLoggedInUser() {
+      const savedUser =
+        localStorage.getItem(
+          "kaamonCurrentUser"
+        );
 
-    if (savedUser) {
-      setCurrentUser(JSON.parse(savedUser));
-    } else {
-      setCurrentUser(null);
+      if (savedUser) {
+        setCurrentUser(
+          JSON.parse(savedUser)
+        );
+      } else {
+        setCurrentUser(null);
+      }
     }
-  }
 
-  window.addEventListener(
-    "kaamonAuthChanged",
-    updateLoggedInUser
-  );
-
-  return () => {
-    window.removeEventListener(
+    window.addEventListener(
       "kaamonAuthChanged",
       updateLoggedInUser
     );
-  };
-}, []);
 
-function handleLogout() {
-  localStorage.removeItem("kaamonToken");
-  localStorage.removeItem("kaamonCurrentUser");
+    return () => {
+      window.removeEventListener(
+        "kaamonAuthChanged",
+        updateLoggedInUser
+      );
+    };
+  }, []);
 
-  setCurrentUser(null);
 
-  window.dispatchEvent(
-    new Event("kaamonAuthChanged")
-  );
+  function handleLogout() {
+    localStorage.removeItem(
+      "kaamonToken"
+    );
 
-  navigate("/");
-}
+    localStorage.removeItem(
+      "kaamonCurrentUser"
+    );
+
+    setCurrentUser(null);
+
+    window.dispatchEvent(
+      new Event(
+        "kaamonAuthChanged"
+      )
+    );
+
+    navigate("/");
+  }
 
 
   return (
@@ -74,25 +98,48 @@ function handleLogout() {
 
       <Link
         to="/"
-        className="logo nav-logo-link"
+        className="nav-logo-link"
       >
-        Kaam<span>ON</span>
+        <img
+          src="/karviam-logo.png"
+          alt="Karviam"
+          className="karviam-navbar-logo"
+        />
       </Link>
 
 
       <div className="nav-links">
-      <Link to="/">Home</Link>
-        <a href="/#jobs">Find Work</a>
-        <a href="/#how">How It Works</a>
-        <a href="/#categories">Categories</a>
+
+        <Link to="/">
+          Home
+        </Link>
+
+        <a href="/#jobs">
+          Find Work
+        </a>
+
+        <a href="/#how">
+          How It Works
+        </a>
+
+        <a href="/#categories">
+          Categories
+        </a>
+
 
         {currentUser && (
-      <>
-         <Link to="/dashboard">Dashboard</Link>
-         <Link to="/my-jobs">My Posted Jobs</Link>
-      </>
-    )}
-       </div>
+          <>
+            <Link to="/dashboard">
+              Dashboard
+            </Link>
+
+            <Link to="/my-jobs">
+              My Posted Jobs
+            </Link>
+          </>
+        )}
+
+      </div>
 
 
       <div className="nav-actions">
@@ -101,7 +148,9 @@ function handleLogout() {
           type="button"
           className="theme-toggle"
           onClick={() =>
-            setDarkMode((current) => !current)
+            setDarkMode(
+              (current) => !current
+            )
           }
         >
           {darkMode ? "☀️" : "🌙"}
@@ -110,6 +159,7 @@ function handleLogout() {
 
         {!currentUser ? (
           <>
+
             <Link
               to="/login"
               className="login-btn nav-button-link"
@@ -123,9 +173,13 @@ function handleLogout() {
             >
               Sign Up
             </Link>
+
           </>
+
         ) : (
+
           <>
+
             <Link
               to="/profile"
               className="logged-user"
@@ -140,7 +194,9 @@ function handleLogout() {
             >
               Logout
             </button>
+
           </>
+
         )}
 
       </div>

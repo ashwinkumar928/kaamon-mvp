@@ -95,7 +95,7 @@ setCompletedWork(completed.length);
       <div className="dashboard-container">
 
         <p className="dashboard-small">
-          WELCOME TO KARVIAN
+          WELCOME TO KARVIAM
         </p>
 
         <h1>

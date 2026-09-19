@@ -5,7 +5,7 @@ function Categories() {
     <section className="categories-section" id="categories">
 
       <div className="section-title">
-        <span>EXPLORE KARVIAN</span>
+        <span>EXPLORE KARVIAM</span>
         <h2>Find What You Need</h2>
         <p>
           Explore popular local work categories around you.

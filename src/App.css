@@ -21,7 +21,7 @@ button {
 
 .navbar {
   height: 76px;
-  padding: 0 7%;
+  padding: 0 3%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -98,7 +98,7 @@ button {
   grid-template-columns: 1fr 1fr;
   align-items: center;
   gap: 60px;
-  padding: 75px 8%;
+  padding: 75px 3%;
   overflow: hidden;
   background:
     radial-gradient(circle at 10% 20%, #fff0e5 0, transparent 28%),
@@ -440,82 +440,310 @@ button {
 /* ================= CATEGORIES ================= */
 
 .categories-section {
-  padding: 90px 8%;
-  background: #f8fafc;
+  padding: 85px 4% 95px;
+
+  background:
+    radial-gradient(
+      circle at 12% 15%,
+      rgba(15, 92, 77, 0.07),
+      transparent 25%
+    ),
+    radial-gradient(
+      circle at 88% 85%,
+      rgba(255, 107, 0, 0.07),
+      transparent 25%
+    ),
+    #f8fafc;
 }
+
+
+/* ========================= */
+/* HEADING */
+/* ========================= */
 
 .section-title {
   max-width: 700px;
-  margin: 0 auto 45px;
+  margin: 0 auto 48px;
   text-align: center;
 }
 
 .section-title span {
+  display: inline-block;
+
   color: #ff6b00;
+
   font-size: 12px;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
   font-weight: 800;
+
+  margin-bottom: 8px;
 }
 
 .section-title h2 {
-  font-size: 38px;
+  font-size: 42px;
   color: #172033;
-  margin: 12px 0;
+
+  margin: 8px 0 12px;
 }
 
 .section-title p {
   color: #7a8495;
   font-size: 16px;
+  line-height: 1.6;
+
+  margin: 0;
 }
+
+
+/* ========================= */
+/* GRID */
+/* ========================= */
 
 .categories-grid {
-  max-width: 1150px;
+  max-width: 1250px;
   margin: 0 auto;
+
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 22px;
 }
+
+
+/* ========================= */
+/* CARD */
+/* ========================= */
 
 .category-box {
-  background: white;
-  border: 1px solid #e5eaf0;
-  border-radius: 16px;
-  padding: 27px;
-  cursor: pointer;
-  transition: 0.2s ease;
+  position: relative;
+  overflow: hidden;
+
+  min-height: 180px;
+
+  background:
+    rgba(255, 255, 255, 0.95);
+
+  border:
+    1px solid #e4e9ef;
+
+  border-radius: 20px;
+
+  padding: 28px;
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
 }
+
+
+/* green/orange top accent */
+
+.category-box::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 4px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #0f5c4d,
+      #ff6b00
+    );
+
+  opacity: 0;
+
+  transition:
+    opacity 0.3s ease;
+}
+
 
 .category-box:hover {
-  transform: translateY(-6px);
-  border-color: #ffc18e;
-  box-shadow: 0 15px 35px rgba(24, 35, 57, 0.08);
+  transform:
+    translateY(-7px);
+
+  border-color:
+    rgba(15, 92, 77, 0.28);
+
+  box-shadow:
+    0 20px 45px
+    rgba(23, 32, 51, 0.11);
 }
 
+
+.category-box:hover::before {
+  opacity: 1;
+}
+
+
+/* ========================= */
+/* ICON */
+/* ========================= */
+
 .category-emoji {
-  width: 50px;
-  height: 50px;
+  width: 58px;
+  height: 58px;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #fff1e7;
-  border-radius: 13px;
-  font-size: 25px;
-  margin-bottom: 18px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #fff1e7,
+      #fffaf6
+    );
+
+  border-radius: 16px;
+
+  font-size: 27px;
+
+  margin-bottom: 20px;
+
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease;
 }
 
-.category-box h3 {
-  margin: 0 0 8px;
-  color: #172033;
-  font-size: 18px;
+
+.category-box:hover
+.category-emoji {
+  transform:
+    scale(1.08) rotate(-3deg);
+
+  background: #eaf6f2;
 }
+
+
+/* Alternate icon accent */
+
+.category-box:nth-child(even)
+.category-emoji {
+  background:
+    linear-gradient(
+      145deg,
+      #eaf6f2,
+      #f7fffc
+    );
+}
+
+
+.category-box:nth-child(even):hover
+.category-emoji {
+  background: #fff1e7;
+}
+
+
+/* ========================= */
+/* TEXT */
+/* ========================= */
+
+.category-box h3 {
+  margin: 0 0 9px;
+
+  color: #172033;
+
+  font-size: 19px;
+  font-weight: 750;
+}
+
 
 .category-box p {
   margin: 0;
+
   color: #7d8797;
-  font-size: 13px;
-  line-height: 1.5;
+
+  font-size: 14px;
+  line-height: 1.55;
 }
 
+
+/* ========================= */
+/* RESPONSIVE */
+/* ========================= */
+
+@media (max-width: 1000px) {
+  .categories-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+}
+
+
+@media (max-width: 600px) {
+  .categories-section {
+    padding: 65px 20px;
+  }
+
+  .categories-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-title h2 {
+    font-size: 32px;
+  }
+}
+
+
+/* ========================= */
+/* DARK MODE */
+/* ========================= */
+
+body.dark-mode
+.categories-section {
+  background:
+    radial-gradient(
+      circle at 12% 15%,
+      rgba(15, 92, 77, 0.18),
+      transparent 25%
+    ),
+    #0f172a;
+}
+
+
+body.dark-mode
+.section-title h2 {
+  color: #f8fafc;
+}
+
+
+body.dark-mode
+.section-title p {
+  color: #94a3b8;
+}
+
+
+body.dark-mode
+.category-box {
+  background: #172033;
+  border-color: #334155;
+}
+
+
+body.dark-mode
+.category-box h3 {
+  color: #f8fafc;
+}
+
+
+body.dark-mode
+.category-box p {
+  color: #cbd5e1;
+}
+
+
+body.dark-mode
+.category-emoji {
+  background: #253044;
+}
 /* ================= NEARBY JOBS ================= */
 
 .nearby-jobs {
@@ -1013,4 +1241,18 @@ body.dark-mode .logout-btn {
 
 .apply-btn {
   text-decoration: none;
+}
+
+.nav-logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.karviam-navbar-logo {
+  height: 60px;
+  width: auto;
+  max-width: 2240px;
+  object-fit: contain;
+  display: block;
 }
