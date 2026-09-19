@@ -411,9 +411,16 @@ const { error: emailError } = await resend.emails.send({
 
   html: `
     <div style="font-family: Arial, sans-serif;">
-      <h2 style="color:#172033;">
-        Kaam<span style="color:#ff6b00;">ON</span>
-      </h2>
+      <img
+         src="https://kaamon-mvp.vercel.app/karviam-logo.png"
+         alt="Karviam"
+         style="
+                width: 180px;
+                height: auto;
+                display: block;
+                margin-bottom: 24px;
+            "
+/>
 
       <p>Your email verification code is:</p>
 
@@ -554,6 +561,324 @@ app.post("/api/auth/verify-email-otp", async (req, res) => {
 
     res.status(500).json({
       message: "Could not verify email.",
+    });
+  }
+});
+
+app.post("/api/auth/forgot-password", async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        message: "Please enter your email address.",
+      });
+    }
+
+    const normalizedEmail =
+      email.toLowerCase().trim();
+
+
+    // Check whether the account exists
+    const userResult = await pool.query(
+      `
+      SELECT id, email
+      FROM users
+      WHERE email = $1
+      `,
+      [normalizedEmail]
+    );
+
+
+    // Do not reveal whether an email
+    // is registered or not
+    if (userResult.rows.length === 0) {
+      return res.json({
+        message:
+          "If an account exists with this email, a verification code has been sent.",
+      });
+    }
+
+
+    // Generate 6-digit OTP
+    const otp = String(
+      Math.floor(
+        100000 +
+        Math.random() * 900000
+      )
+    );
+
+
+    // Hash OTP before storing
+    const otpHash =
+      await bcrypt.hash(
+        otp,
+        10
+      );
+
+
+    // OTP valid for 10 minutes
+    const expiresAt =
+      new Date(
+        Date.now() +
+        10 * 60 * 1000
+      );
+
+
+    // Save or replace previous reset OTP
+    await pool.query(
+      `
+      INSERT INTO password_reset_otps
+      (
+        email,
+        otp_hash,
+        expires_at
+      )
+      VALUES ($1, $2, $3)
+
+      ON CONFLICT (email)
+
+      DO UPDATE SET
+        otp_hash = EXCLUDED.otp_hash,
+        expires_at = EXCLUDED.expires_at,
+        created_at = NOW()
+      `,
+      [
+        normalizedEmail,
+        otpHash,
+        expiresAt,
+      ]
+    );
+
+
+    // Send password reset email
+    const { error: emailError } =
+      await resend.emails.send({
+        from:
+          "Karviam <verify@karviam.in>",
+
+        to: normalizedEmail,
+
+        subject:
+          "Reset your Karviam password",
+
+        html: `
+          <div
+            style="
+              font-family: Arial, sans-serif;
+              color: #172033;
+            "
+          >
+
+            <img
+              src="https://kaamon-mvp.vercel.app/karviam-logo.png"
+              alt="Karviam"
+              style="
+                width: 180px;
+                height: auto;
+                display: block;
+                margin-bottom: 24px;
+              "
+            />
+
+            <p>
+              Your password reset code is:
+            </p>
+
+            <h1
+              style="
+                color: #ff6b00;
+                letter-spacing: 6px;
+              "
+            >
+              ${otp}
+            </h1>
+
+            <p>
+              This code will expire in
+              <strong>10 minutes</strong>.
+            </p>
+
+            <p>
+              If you did not request a
+              password reset, you can ignore
+              this email.
+            </p>
+
+          </div>
+        `,
+      });
+
+
+    if (emailError) {
+      console.error(
+        "Password reset email error:",
+        emailError
+      );
+
+      await pool.query(
+        `
+        DELETE FROM password_reset_otps
+        WHERE email = $1
+        `,
+        [normalizedEmail]
+      );
+
+      return res.status(500).json({
+        message:
+          "Could not send password reset email.",
+      });
+    }
+
+
+    res.json({
+      message:
+        "A verification code has been sent to your email.",
+    });
+
+  } catch (error) {
+    console.error(
+      "Forgot password error:",
+      error
+    );
+
+    res.status(500).json({
+      message:
+        "Could not start password reset.",
+    });
+  }
+});
+
+app.post("/api/auth/reset-password", async (req, res) => {
+  try {
+    const {
+      email,
+      otp,
+      newPassword,
+    } = req.body;
+
+    if (
+      !email ||
+      !otp ||
+      !newPassword
+    ) {
+      return res.status(400).json({
+        message:
+          "Please enter email, verification code and new password.",
+      });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        message:
+          "Password must be at least 6 characters.",
+      });
+    }
+
+    const normalizedEmail =
+      email.toLowerCase().trim();
+
+
+    const result = await pool.query(
+      `
+      SELECT otp_hash, expires_at
+      FROM password_reset_otps
+      WHERE email = $1
+      `,
+      [normalizedEmail]
+    );
+
+
+    if (result.rows.length === 0) {
+      return res.status(400).json({
+        message:
+          "Password reset code not found.",
+      });
+    }
+
+
+    const otpRecord =
+      result.rows[0];
+
+
+    if (
+      new Date(otpRecord.expires_at) <
+      new Date()
+    ) {
+      return res.status(400).json({
+        message:
+          "Password reset code has expired.",
+      });
+    }
+
+
+    const otpMatches =
+      await bcrypt.compare(
+        String(otp),
+        otpRecord.otp_hash
+      );
+
+
+    if (!otpMatches) {
+      return res.status(400).json({
+        message:
+          "Incorrect verification code.",
+      });
+    }
+
+
+    const hashedPassword =
+      await bcrypt.hash(
+        newPassword,
+        10
+      );
+
+
+    const userResult = await pool.query(
+      `
+      UPDATE users
+      SET password = $1
+      WHERE email = $2
+      RETURNING id
+      `,
+      [
+        hashedPassword,
+        normalizedEmail,
+      ]
+    );
+
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({
+        message:
+          "Account not found.",
+      });
+    }
+
+
+    await pool.query(
+      `
+      DELETE FROM password_reset_otps
+      WHERE email = $1
+      `,
+      [normalizedEmail]
+    );
+
+
+    res.json({
+      message:
+        "Password reset successfully.",
+    });
+
+  } catch (error) {
+    console.error(
+      "Reset password error:",
+      error
+    );
+
+    res.status(500).json({
+      message:
+        "Could not reset password.",
     });
   }
 });

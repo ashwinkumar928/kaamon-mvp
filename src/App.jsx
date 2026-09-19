@@ -21,6 +21,7 @@ import MyApplications from "./pages/MyApplications.jsx";
 import Profile from "./pages/Profile.jsx";
 import UserProfile from "./pages/UserProfile.jsx";
 import Chat from "./pages/Chat";
+import ForgotPassword from "./pages/ForgotPassword.jsx";
 
 
 function App() {
@@ -58,6 +59,12 @@ function App() {
           path="/login"
           element={<Login />}
         />
+
+        {/* FORGOT PASSWORD */}
+         <Route
+            path="/forgot-password"
+            element={<ForgotPassword />}
+         />
 
 
         {/* SIGNUP */}

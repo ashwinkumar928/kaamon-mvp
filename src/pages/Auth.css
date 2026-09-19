@@ -823,3 +823,20 @@ body.dark-mode
     transform: rotate(-4deg);
   }
 }
+
+.forgot-password-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -8px;
+}
+
+.forgot-password-row a {
+  color: #0f5c4d;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.forgot-password-row a:hover {
+  color: #ff6b00;
+}

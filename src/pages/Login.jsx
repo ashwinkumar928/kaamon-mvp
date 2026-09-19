@@ -256,6 +256,12 @@ function Login() {
 
             </div>
 
+            <div className="forgot-password-row">
+            <Link to="/forgot-password">
+              Forgot password?
+              </Link>
+            </div>
+
 
             {message && (
               <div className="login-message">
