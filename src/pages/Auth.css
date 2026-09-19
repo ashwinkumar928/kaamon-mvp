@@ -146,3 +146,680 @@
 
   font-weight: 700;
 }
+
+/* ===================================== */
+/* KARVIAM LOGIN PAGE */
+/* ===================================== */
+
+.karviam-login-page {
+  min-height: calc(100vh - 76px);
+
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+
+  background: #fffdf9;
+
+  overflow: hidden;
+}
+
+
+/* ===================================== */
+/* LEFT SHOWCASE */
+/* ===================================== */
+
+.login-showcase {
+  position: relative;
+
+  min-height: calc(100vh - 76px);
+
+  display: flex;
+  align-items: center;
+
+  padding: 70px 8%;
+
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      145deg,
+      #0f5c4d 0%,
+      #0b493e 100%
+    );
+
+  color: white;
+}
+
+
+.login-showcase-content {
+  position: relative;
+
+  z-index: 2;
+
+  max-width: 520px;
+}
+
+
+.login-showcase-badge {
+  display: inline-flex;
+
+  align-items: center;
+
+  padding: 9px 14px;
+
+  margin-bottom: 30px;
+
+  background:
+    rgba(255, 255, 255, 0.1);
+
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.12);
+
+  border-radius: 30px;
+
+  color: #ccebe2;
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  letter-spacing: 2px;
+}
+
+
+.login-showcase h1 {
+  margin: 0;
+
+  font-size: clamp(
+    44px,
+    5vw,
+    72px
+  );
+
+  line-height: 1.05;
+
+  letter-spacing: -2px;
+
+  color: #ffffff;
+}
+
+
+.login-showcase h1 span {
+  color: #ff8a26;
+}
+
+
+.login-showcase-description {
+  max-width: 470px;
+
+  margin: 28px 0 32px;
+
+  color: #d4e9e3;
+
+  font-size: 17px;
+
+  line-height: 1.8;
+}
+
+
+/* BENEFITS */
+
+.login-benefits {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 14px;
+}
+
+
+.login-benefits div {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  color: #ecf8f5;
+
+  font-size: 14px;
+
+  font-weight: 600;
+}
+
+
+.login-benefits span {
+  width: 28px;
+  height: 28px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  background:
+    rgba(255, 255, 255, 0.12);
+
+  border-radius: 50%;
+
+  color: #ff9c49;
+}
+
+
+/* DECORATIVE SHAPES */
+
+.login-decoration {
+  position: absolute;
+
+  border-radius: 50%;
+
+  pointer-events: none;
+}
+
+
+.login-decoration-one {
+  width: 330px;
+  height: 330px;
+
+  right: -170px;
+  top: -100px;
+
+  border:
+    70px solid
+    rgba(255, 255, 255, 0.035);
+}
+
+
+.login-decoration-two {
+  width: 250px;
+  height: 250px;
+
+  left: -100px;
+  bottom: -120px;
+
+  background:
+    rgba(255, 107, 0, 0.08);
+}
+
+
+/* ===================================== */
+/* RIGHT LOGIN SIDE */
+/* ===================================== */
+
+.login-panel {
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  padding: 55px 7%;
+
+  background:
+    radial-gradient(
+      circle at 95% 5%,
+      rgba(255, 107, 0, 0.07),
+      transparent 26%
+    ),
+    #fffdf9;
+}
+
+
+.login-form-container {
+  width: 100%;
+
+  max-width: 570px;
+}
+
+
+/* TOP */
+
+.login-top-row {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 60px;
+}
+
+
+.login-back {
+  color: #0f5c4d;
+
+  text-decoration: none;
+
+  font-size: 14px;
+
+  font-weight: 700;
+}
+
+
+.login-back:hover {
+  color: #ff6b00;
+}
+
+
+.login-logo {
+  width: 150px;
+
+  height: auto;
+
+  display: block;
+}
+
+
+/* ===================================== */
+/* HEADING */
+/* ===================================== */
+
+.login-heading {
+  margin-bottom: 34px;
+}
+
+
+.login-heading > span {
+  color: #ff6b00;
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  letter-spacing: 2.5px;
+}
+
+
+.login-heading h2 {
+  margin: 10px 0 10px;
+
+  color: #172033;
+
+  font-size: 38px;
+
+  line-height: 1.15;
+}
+
+
+.login-heading p {
+  max-width: 500px;
+
+  margin: 0;
+
+  color: #748094;
+
+  font-size: 15px;
+
+  line-height: 1.65;
+}
+
+
+/* ===================================== */
+/* FORM */
+/* ===================================== */
+
+.karviam-login-form {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 20px;
+}
+
+
+.login-field {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+
+.login-field label {
+  color: #283347;
+
+  font-size: 13px;
+
+  font-weight: 750;
+}
+
+
+.login-field input {
+  width: 100%;
+
+  height: 58px;
+
+  padding: 0 17px;
+
+  border:
+    1px solid #dfe5ea;
+
+  border-radius: 14px;
+
+  outline: none;
+
+  background: #ffffff;
+
+  color: #172033;
+
+  font-size: 15px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+.login-field input::placeholder {
+  color: #a2aab7;
+}
+
+
+.login-field input:focus {
+  border-color: #0f5c4d;
+
+  box-shadow:
+    0 0 0 4px
+    rgba(15, 92, 77, 0.08);
+}
+
+
+/* ===================================== */
+/* ERROR MESSAGE */
+/* ===================================== */
+
+.login-message {
+  padding: 12px 14px;
+
+  background: #fff3ea;
+
+  border:
+    1px solid #ffd7ba;
+
+  border-radius: 10px;
+
+  color: #c75400;
+
+  font-size: 13px;
+}
+
+
+/* ===================================== */
+/* LOGIN BUTTON */
+/* ===================================== */
+
+.karviam-login-btn {
+  min-height: 58px;
+
+  margin-top: 5px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 13px;
+
+  border: none;
+
+  border-radius: 14px;
+
+  background:
+    #0f5c4d;
+
+  color: white;
+
+  font-size: 15px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+.karviam-login-btn span {
+  font-size: 21px;
+
+  transition:
+    transform 0.2s ease;
+}
+
+
+.karviam-login-btn:hover {
+  background: #0b493e;
+
+  transform:
+    translateY(-2px);
+
+  box-shadow:
+    0 12px 28px
+    rgba(15, 92, 77, 0.2);
+}
+
+
+.karviam-login-btn:hover span {
+  transform:
+    translateX(4px);
+}
+
+
+.karviam-login-btn:disabled {
+  opacity: 0.65;
+
+  cursor: not-allowed;
+
+  transform: none;
+}
+
+
+/* ===================================== */
+/* CREATE ACCOUNT */
+/* ===================================== */
+
+.login-create-account {
+  margin-top: 27px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  color: #7b8594;
+
+  font-size: 14px;
+}
+
+
+.login-create-account a {
+  color: #0f5c4d;
+
+  text-decoration: none;
+
+  font-weight: 800;
+}
+
+
+.login-create-account a:hover {
+  color: #ff6b00;
+}
+
+
+/* ===================================== */
+/* RESPONSIVE */
+/* ===================================== */
+
+@media (max-width: 950px) {
+
+  .karviam-login-page {
+    grid-template-columns: 1fr;
+  }
+
+
+  .login-showcase {
+    min-height: auto;
+
+    padding: 55px 7%;
+  }
+
+
+  .login-showcase h1 {
+    font-size: 48px;
+  }
+
+
+  .login-panel {
+    padding: 55px 7%;
+  }
+
+
+  .login-top-row {
+    margin-bottom: 40px;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .login-showcase {
+    display: none;
+  }
+
+
+  .karviam-login-page {
+    min-height:
+      calc(100vh - 76px);
+  }
+
+
+  .login-panel {
+    align-items: flex-start;
+
+    padding:
+      35px 22px 50px;
+  }
+
+
+  .login-top-row {
+    margin-bottom: 45px;
+  }
+
+
+  .login-logo {
+    width: 135px;
+  }
+
+
+  .login-heading h2 {
+    font-size: 31px;
+  }
+
+
+  .login-create-account {
+    flex-direction: column;
+
+    gap: 5px;
+  }
+
+}
+
+
+/* ===================================== */
+/* DARK MODE */
+/* ===================================== */
+
+body.dark-mode
+.login-panel {
+  background:
+    #0f172a;
+}
+
+
+body.dark-mode
+.login-heading h2 {
+  color: #f8fafc;
+}
+
+
+body.dark-mode
+.login-heading p {
+  color: #94a3b8;
+}
+
+
+body.dark-mode
+.login-field label {
+  color: #e2e8f0;
+}
+
+
+body.dark-mode
+.login-field input {
+  background: #172033;
+
+  border-color: #334155;
+
+  color: #f8fafc;
+}
+
+
+body.dark-mode
+.login-field input::placeholder {
+  color: #64748b;
+}
+
+
+body.dark-mode
+.login-create-account {
+  color: #94a3b8;
+}
+
+.login-greeting {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  margin-bottom: 8px;
+
+  color: #0f5c4d;
+
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.login-greeting span {
+  display: inline-block;
+  font-size: 20px;
+
+  animation: wave-hand 1.8s ease-in-out infinite;
+  transform-origin: 70% 70%;
+}
+
+@keyframes wave-hand {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  20% {
+    transform: rotate(18deg);
+  }
+
+  40% {
+    transform: rotate(-8deg);
+  }
+
+  60% {
+    transform: rotate(14deg);
+  }
+
+  80% {
+    transform: rotate(-4deg);
+  }
+}

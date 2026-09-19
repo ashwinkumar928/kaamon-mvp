@@ -1,31 +1,52 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+} from "react-router-dom";
+
 import API_URL from "../api";
 import "./Auth.css";
+
 
 function Login() {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+  const [email, setEmail] =
+    useState("");
+
+  const [password, setPassword] =
+    useState("");
+
+  const [message, setMessage] =
+    useState("");
+
+  const [loading, setLoading] =
+    useState(false);
+
 
   async function handleLogin(event) {
     event.preventDefault();
 
     if (!email || !password) {
-      setMessage("Please enter email and password.");
+      setMessage(
+        "Please enter email and password."
+      );
+
       return;
     }
 
     try {
+      setLoading(true);
+      setMessage("");
+
       const response = await fetch(
         `${API_URL}/api/auth/login`,
         {
           method: "POST",
 
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type":
+              "application/json",
           },
 
           body: JSON.stringify({
@@ -35,15 +56,20 @@ function Login() {
         }
       );
 
-      const data = await response.json();
+      const data =
+        await response.json();
 
       if (!response.ok) {
         setMessage(
-          data.message || "Invalid email or password."
+          data.message ||
+            "Invalid email or password."
         );
+
         return;
       }
 
+      // Keep existing storage names
+      // so old login sessions still work
       localStorage.setItem(
         "kaamonToken",
         data.token
@@ -55,87 +81,228 @@ function Login() {
       );
 
       window.dispatchEvent(
-  new Event("kaamonAuthChanged")
-);
-
-      setMessage("");
+        new Event(
+          "kaamonAuthChanged"
+        )
+      );
 
       navigate("/dashboard");
 
     } catch (error) {
-      console.error("Login error:", error);
+      console.error(
+        "Login error:",
+        error
+      );
 
       setMessage(
         "Could not connect to Karviam server."
       );
+
+    } finally {
+      setLoading(false);
     }
   }
 
+
   return (
-    <main className="auth-page">
+    <main className="karviam-login-page">
 
-      <div className="auth-card">
+      {/* LEFT SIDE */}
 
-        <div className="auth-brand">
-          Kaam<span>ON</span>
+      <section className="login-showcase">
+
+        <div className="login-showcase-content">
+
+          <div className="login-showcase-badge">
+            KARVIAM MARKETPLACE
+          </div>
+
+          <h1>
+            Local work.
+            <br />
+
+            Real people.
+            <br />
+
+            <span>
+              One account.
+            </span>
+          </h1>
+
+          <p className="login-showcase-description">
+            Hire trusted people nearby or
+            discover short-term work
+            opportunities around you.
+          </p>
+
+
+          <div className="login-benefits">
+
+            <div>
+              <span>✓</span>
+              Hire people nearby
+            </div>
+
+            <div>
+              <span>✓</span>
+              Find local work
+            </div>
+
+            <div>
+              <span>✓</span>
+              Manage everything in one place
+            </div>
+
+          </div>
+
         </div>
 
-        <h1>Welcome back</h1>
 
-        <p className="auth-subtitle">
-          Login to continue with Karviam.
-        </p>
+        <div className="login-decoration login-decoration-one" />
+        <div className="login-decoration login-decoration-two" />
 
-        <form onSubmit={handleLogin}>
+      </section>
 
-          <label>Email</label>
 
-          <input
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(event) =>
-              setEmail(event.target.value)
-            }
-          />
+      {/* RIGHT SIDE */}
 
-          <label>Password</label>
+      <section className="login-panel">
 
-          <input
-            type="password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={(event) =>
-              setPassword(event.target.value)
-            }
-          />
+        <div className="login-form-container">
 
-          {message && (
-            <p className="auth-message">
-              {message}
+          <div className="login-top-row">
+
+            <Link
+              to="/"
+              className="login-back"
+            >
+              ← Back to home
+            </Link>
+
+            <Link to="/">
+              <img
+                src="/karviam-logo.png"
+                alt="Karviam"
+                className="login-logo"
+              />
+            </Link>
+
+          </div>
+
+
+          <div className="login-heading">
+
+             <div className="login-greeting">
+               Hey <span>👋</span>
+            </div>
+
+            <h2>
+              Welcome back
+            </h2>
+
+            <p>
+              <p>
+              <p>
+                Continue hiring, applying and
+                managing your Karviam activity.
+              </p>
+              </p>
             </p>
-          )}
 
-          <button
-            type="submit"
-            className="auth-main-btn"
+          </div>
+
+
+          <form
+            className="karviam-login-form"
+            onSubmit={handleLogin}
           >
-            Login
-          </button>
 
-        </form>
+            <div className="login-field">
 
-        <p className="auth-switch">
-          Don't have an account?{" "}
-          <Link to="/signup">
-            Sign Up
-          </Link>
-        </p>
+              <label>
+                Email address
+              </label>
 
-      </div>
+              <input
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(event) =>
+                  setEmail(
+                    event.target.value
+                  )
+                }
+              />
+
+            </div>
+
+
+            <div className="login-field">
+
+              <label>
+                Password
+              </label>
+
+              <input
+                type="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(event) =>
+                  setPassword(
+                    event.target.value
+                  )
+                }
+              />
+
+            </div>
+
+
+            {message && (
+              <div className="login-message">
+                {message}
+              </div>
+            )}
+
+
+            <button
+              type="submit"
+              className="karviam-login-btn"
+              disabled={loading}
+            >
+
+              {loading
+                ? "Logging in..."
+                : (
+                  <>
+                    Log in
+                    <span>→</span>
+                  </>
+                )}
+
+            </button>
+
+          </form>
+
+
+          <div className="login-create-account">
+
+            <span>
+              New to Karviam?
+            </span>
+
+            <Link to="/signup">
+              Create an account →
+            </Link>
+
+          </div>
+
+        </div>
+
+      </section>
 
     </main>
   );
 }
+
 
 export default Login;
