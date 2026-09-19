@@ -412,7 +412,7 @@ const { error: emailError } = await resend.emails.send({
   html: `
     <div style="font-family: Arial, sans-serif;">
       <img
-         src="https://kaamon-mvp.vercel.app/karviam-logo.png"
+         src="https://karviam.in/karviam-logo.png"
          alt="Karviam"
          style="
                 width: 180px;
@@ -671,7 +671,7 @@ app.post("/api/auth/forgot-password", async (req, res) => {
           >
 
             <img
-              src="https://kaamon-mvp.vercel.app/karviam-logo.png"
+              src="https://karviam.in/karviam-logo.png"
               alt="Karviam"
               style="
                 width: 180px;
