@@ -844,3 +844,24 @@ body.dark-mode
 .forgot-password-row a:hover {
   color: #ff6b00;
 }
+/* Password recovery only; Login and Signup retain their existing design. */
+.karviam-reset-page .login-showcase { padding-block: 48px; }
+.karviam-reset-page .login-showcase h1 { font-size: clamp(42px, 4.5vw, 62px); }
+.karviam-reset-page .login-panel { padding-block: 36px; }
+.karviam-reset-page .login-form-container { max-width: 480px; }
+.karviam-reset-page .login-top-row { margin-bottom: 30px; gap: 16px; flex-wrap: wrap; }
+.karviam-reset-page .login-logo { display: block; width: 132px; }
+.karviam-reset-page .login-heading { margin-bottom: 24px; }
+.karviam-reset-page .login-heading h2 { font-size: clamp(28px, 3vw, 36px); letter-spacing: -.8px; }
+.karviam-reset-page .login-heading p { overflow-wrap: anywhere; }
+.karviam-reset-page .login-greeting span { animation: none; }
+.karviam-reset-page .karviam-login-form { gap: 16px; }
+.karviam-reset-page .login-field input { height: 48px; border-radius: 11px; }
+.karviam-reset-page .karviam-login-btn { min-height: 48px; border-radius: 11px; }
+.karviam-reset-page :is(button,a,input):focus-visible { outline: 3px solid #84bea9; outline-offset: 3px; }
+@media (max-width: 600px) {
+  .karviam-reset-page .login-panel { padding: 28px 20px; }
+  .karviam-reset-page .login-logo { width: 112px; }
+  .karviam-reset-page .login-field input { font-size: 16px; }
+}
+@media (prefers-reduced-motion: reduce) { .karviam-reset-page *, .karviam-reset-page *::before { transition: none !important; animation: none !important; } }

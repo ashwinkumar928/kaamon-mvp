@@ -91,22 +91,22 @@ function Navbar() {
 
         <Link to="/">
           Home
-          <span className="nav-hover-arrow" aria-hidden="true">?</span>
+          <span className="nav-hover-arrow" aria-hidden="true"></span>
         </Link>
 
         <a href="/#jobs">
           Find Work
-          <span className="nav-hover-arrow" aria-hidden="true">?</span>
+          <span className="nav-hover-arrow" aria-hidden="true"></span>
         </a>
 
         <a href="/#how">
           How It Works
-          <span className="nav-hover-arrow" aria-hidden="true">?</span>
+          <span className="nav-hover-arrow" aria-hidden="true"></span>
         </a>
 
         <a href="/#categories">
           Categories
-          <span className="nav-hover-arrow" aria-hidden="true">?</span>
+          <span className="nav-hover-arrow" aria-hidden="true"></span>
         </a>
 
 
@@ -114,12 +114,12 @@ function Navbar() {
           <>
             <Link to="/dashboard">
               Dashboard
-              <span className="nav-hover-arrow" aria-hidden="true">?</span>
+              <span className="nav-hover-arrow" aria-hidden="true"></span>
             </Link>
 
             <Link to="/my-jobs">
               My Posted Jobs
-              <span className="nav-hover-arrow" aria-hidden="true">?</span>
+              <span className="nav-hover-arrow" aria-hidden="true"></span>
             </Link>
           </>
         )}

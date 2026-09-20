@@ -88,7 +88,7 @@ function Dashboard() {
             </p>
 
             <h1>
-              Good to see you,{" "}
+              Good to see you,<br />
               <span className="dashboard-name">
                 {currentUser.name}
               </span>{" "}
@@ -96,9 +96,7 @@ function Dashboard() {
             </h1>
 
             <p className="dashboard-subtitle">
-              Manage hiring, work applications and
-              local opportunities from one premium
-              workspace.
+              Manage hiring, applications and local work from one place.
             </p>
           </div>
 
@@ -107,20 +105,20 @@ function Dashboard() {
               to="/post-work"
               className="dashboard-solid-btn"
             >
-              + New Post
+              + Post Work
             </Link>
 
-            <Link
-              to="/#jobs"
+            <a
+              href="/#jobs"
               className="dashboard-outline-btn"
             >
-              Explore Work
-            </Link>
+              Explore Work &rarr;
+            </a>
           </div>
         </section>
 
         {/* STAT STRIP */}
-        <section className="dashboard-stats-strip">
+        <section className="dashboard-stats-strip" aria-label="Your work statistics">
           <div className="stats-pill">
             <span className="stats-pill-icon">📌</span>
             <div>
@@ -184,9 +182,7 @@ function Dashboard() {
                   </p>
                   <h3>I Need Someone</h3>
                   <p className="action-description">
-                    Post your requirement, discover
-                    nearby people and manage applicants
-                    easily.
+                    Post your requirement, review applicants and choose someone nearby.
                   </p>
 
                   <div className="action-tags">
@@ -226,9 +222,7 @@ function Dashboard() {
                   </p>
                   <h3>I Want to Work</h3>
                   <p className="action-description">
-                    Explore nearby work, apply quickly
-                    and track every application from one
-                    place.
+                    Explore nearby work, apply quickly and track your applications.
                   </p>
 
                   <div className="action-tags">
@@ -237,12 +231,12 @@ function Dashboard() {
                   </div>
 
                   <div className="action-links">
-                    <Link
-                      to="/#jobs"
+                    <a
+                      href="/#jobs"
                       className="action-primary-btn"
                     >
                       Find Work →
-                    </Link>
+                    </a>
 
                     <Link
                       to="/my-applications"
@@ -255,42 +249,6 @@ function Dashboard() {
               </div>
             </div>
 
-            <div className="dashboard-panel">
-              <div className="panel-header">
-                <div>
-                  <p className="panel-kicker">
-                    OVERVIEW
-                  </p>
-                  <h2>Performance snapshot</h2>
-                </div>
-              </div>
-
-              <div className="performance-grid">
-                <div className="mini-card">
-                  <span>📝</span>
-                  <h4>{jobsPosted}</h4>
-                  <p>Work posts created by you</p>
-                </div>
-
-                <div className="mini-card">
-                  <span>📨</span>
-                  <h4>{applicationsCount}</h4>
-                  <p>Jobs you have applied for</p>
-                </div>
-
-                <div className="mini-card">
-                  <span>🤝</span>
-                  <h4>{acceptedWork}</h4>
-                  <p>Applications accepted</p>
-                </div>
-
-                <div className="mini-card">
-                  <span>🏁</span>
-                  <h4>{completedWork}</h4>
-                  <p>Completed work count</p>
-                </div>
-              </div>
-            </div>
           </div>
 
           {/* RIGHT SIDEBAR */}
@@ -303,18 +261,18 @@ function Dashboard() {
               <h3>{totalActivity}</h3>
 
               <p className="side-summary-text">
-                Total jobs posted and applications sent
+                Total activity
               </p>
 
               <div className="side-summary-grid">
                 <div>
                   <strong>{acceptedWork}</strong>
-                  <span>Active work</span>
+                  <span>Active Work</span>
                 </div>
 
                 <div>
                   <strong>{completedWork}</strong>
-                  <span>Completed</span>
+                  <span>Completed Work</span>
                 </div>
               </div>
             </div>
@@ -328,35 +286,23 @@ function Dashboard() {
 
               <div className="shortcut-list">
                 <Link to="/post-work">
-                  Create a new work post
+                  <span aria-hidden="true">+</span> Create a new work post
                 </Link>
 
                 <Link to="/my-jobs">
-                  Manage my posted jobs
+                  <span aria-hidden="true">&rarr;</span> Manage my posted jobs
                 </Link>
 
                 <Link to="/my-applications">
-                  Track my applications
+                  <span aria-hidden="true">&rarr;</span> Track my applications
                 </Link>
 
-                <Link to="/#jobs">
-                  Explore nearby jobs
-                </Link>
+                <a href="/#jobs">
+                  <span aria-hidden="true">&rarr;</span> Explore nearby work
+                </a>
               </div>
             </div>
 
-            <div className="dashboard-side-card">
-              <p className="panel-kicker">
-                ACCOUNT MODE
-              </p>
-
-              <h4>One account, two roles</h4>
-              <p className="side-paragraph">
-                Karviam lets you hire people and also
-                earn by applying for work using the same
-                account.
-              </p>
-            </div>
           </aside>
         </section>
       </div>

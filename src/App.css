@@ -69,9 +69,9 @@ button {
   left: 0;
   right: 0;
   bottom: -7px;
-  height: 2px;
+  height: 3px;
   border-radius: 2px;
-  background: #ff6b00;
+  background: #0f6b57;
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.25s ease;
@@ -1332,4 +1332,12 @@ body.dark-mode .logout-btn {
     justify-content: center;
   }
 
+}
+
+/* Keep the existing navbar controls within narrow mobile viewports. */
+@media (max-width: 550px) {
+  .navbar { min-height: 76px; height: auto; flex-wrap: wrap; padding-block: 8px; }
+  .navbar .karviam-navbar-logo { width: clamp(96px, 30vw, 160px); height: auto; }
+  .navbar .nav-actions { min-width: 0; flex-wrap: wrap; }
+  .navbar .logged-user { max-width: 160px; overflow-wrap: anywhere; }
 }

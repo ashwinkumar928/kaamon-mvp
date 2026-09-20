@@ -3,10 +3,12 @@ import { Link, Navigate } from "react-router-dom";
 
 import API_URL from "../api";
 import "./MyApplications.css";
+import "./InternalPages.css";
 
 function MyApplications() {
   const token = localStorage.getItem("kaamonToken");
 
+  const [statusFilter, setStatusFilter] = useState("all");
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -229,7 +231,7 @@ function MyApplications() {
 
   if (loading) {
     return (
-      <main className="my-applications-page">
+      <main className="my-applications-page karviam-internal">
         <div className="my-applications-container">
           <h2>Loading your applications...</h2>
         </div>
@@ -238,7 +240,7 @@ function MyApplications() {
   }
 
   return (
-    <main className="my-applications-page">
+    <main className="my-applications-page karviam-internal">
 
       <div className="my-applications-container">
 
@@ -253,7 +255,7 @@ function MyApplications() {
 
           <span>YOUR APPLICATIONS</span>
 
-          <h1>My Applications</h1>
+          <h1>Track your work</h1>
 
           <p>
             Track the work opportunities you have
@@ -272,6 +274,7 @@ function MyApplications() {
           applications.length === 0 && (
             <div className="no-applications">
 
+              <span className="internal-empty-icon" aria-hidden="true">&nearr;</span>
               <h2>No applications yet</h2>
 
               <p>
@@ -286,9 +289,17 @@ function MyApplications() {
             </div>
           )}
 
+        <div className="internal-filter-tabs" role="group" aria-label="Filter applications by status">
+          {["all", "pending", "accepted", "completed", "rejected"].map((status) => (
+            <button type="button" key={status} aria-pressed={statusFilter === status} onClick={() => setStatusFilter(status)}>{status}</button>
+          ))}
+        </div>
+        {!error && applications.length > 0 && !applications.some(a => statusFilter === "all" || a.status === statusFilter) && (
+          <div className="no-applications"><h2>No {statusFilter} applications</h2><p>Choose another status to see your work.</p><button type="button" className="internal-primary" onClick={() => setStatusFilter("all")}>Show all applications</button></div>
+        )}
         <div className="applications-list">
 
-          {applications.map((application) => (
+          {applications.filter(application => statusFilter === "all" || application.status === statusFilter).map((application) => (
 
             <div
               className="application-card"
@@ -469,6 +480,7 @@ function MyApplications() {
 
                             <button
                               key={star}
+                              aria-label={star + " stars"}
                               type="button"
                               className={
                                 star <=
@@ -498,7 +510,7 @@ function MyApplications() {
                       </div>
 
                       <textarea
-                        className="review-comment"
+                        className="review-comment" aria-label="Review comment"
                         placeholder="Write a short review (optional)"
                         value={
                           reviewComments[

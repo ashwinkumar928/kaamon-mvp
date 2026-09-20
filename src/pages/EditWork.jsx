@@ -4,6 +4,7 @@ import {
 } from "react";
 
 import {
+  Link,
   Navigate,
   useNavigate,
   useParams,
@@ -11,6 +12,7 @@ import {
 
 import API_URL from "../api";
 import "./PostWork.css";
+import "./InternalPages.css";
 
 function EditWork() {
   const { jobId } = useParams();
@@ -222,7 +224,7 @@ function EditWork() {
 
   if (loading) {
     return (
-      <main className="post-work-page">
+      <main className="post-work-page karviam-internal">
 
         <div className="post-work-container">
 
@@ -238,10 +240,11 @@ function EditWork() {
 
 
   return (
-    <main className="post-work-page">
+    <main className="post-work-page karviam-internal">
 
       <div className="post-work-container">
 
+        <Link className="internal-back" to="/dashboard">&larr; Back to Dashboard</Link>
         <div className="post-work-heading">
 
           <span>
@@ -249,7 +252,7 @@ function EditWork() {
           </span>
 
           <h1>
-            Update your work post
+            Update your requirement
           </h1>
 
           <p>
@@ -260,193 +263,24 @@ function EditWork() {
         </div>
 
 
-        <form
-          className="post-work-form"
-          onSubmit={handleSubmit}
-        >
-
-          <div className="form-group">
-
-            <label>
-              Work Title
-            </label>
-
-            <input
-              type="text"
-              name="title"
-              placeholder="Example: Need a driver for one day"
-              value={formData.title}
-              onChange={handleChange}
-            />
-
-          </div>
-
-
-          <div className="form-group">
-
-            <label>
-              Category
-            </label>
-
-            <select
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
-            >
-
-              <option value="DRIVER">
-                Driver
-              </option>
-
-              <option value="PAINTER">
-                Painter
-              </option>
-
-              <option value="COOK">
-                Cook
-              </option>
-
-              <option value="CLEANER">
-                Cleaner
-              </option>
-
-              <option value="ELECTRICIAN">
-                Electrician
-              </option>
-
-              <option value="PLUMBER">
-                Plumber
-              </option>
-
-              <option value="SHOP HELPER">
-                Shop Helper
-              </option>
-
-              <option value="RESTAURANT HELPER">
-                Restaurant Helper
-              </option>
-
-            </select>
-
-          </div>
-
-
-          <div className="form-group full-width">
-
-            <label>
-              Description
-            </label>
-
-            <textarea
-              name="description"
-              placeholder="Explain what work needs to be done..."
-              value={
-                formData.description
-              }
-              onChange={handleChange}
-            />
-
-          </div>
-
-
-          <div className="form-row">
-
-            <div className="form-group">
-
-              <label>
-                Location
-              </label>
-
-              <input
-                type="text"
-                name="location"
-                placeholder="Example: Patna"
-                value={
-                  formData.location
-                }
-                onChange={handleChange}
-              />
-
+        <form className="post-work-form" onSubmit={handleSubmit}>
+          <fieldset><legend>Work details</legend>
+            <div className="form-row">
+              <div className="form-group"><label htmlFor="work-category">Category</label><select id="work-category" name="category" value={formData.category} onChange={handleChange}>
+                {["Driver", "Painter", "Cook", "Cleaner", "Electrician", "Plumber", "Shop Helper", "Restaurant Helper"].map(category => <option key={category} value={category.toUpperCase()}>{category}</option>)}
+              </select></div>
+              <div className="form-group"><label htmlFor="work-title">Work title</label><input id="work-title" type="text" name="title" placeholder="Example: Need a driver for one day" value={formData.title} onChange={handleChange} /></div>
             </div>
-
-
-            <div className="form-group">
-
-              <label>
-                Date
-              </label>
-
-              <input
-                type="date"
-                name="date"
-                value={formData.date}
-                onChange={handleChange}
-              />
-
-            </div>
-
-          </div>
-
-
-          <div className="form-row">
-
-            <div className="form-group">
-
-              <label>
-                Time
-              </label>
-
-              <input
-                type="text"
-                name="time"
-                placeholder="Example: 9 AM - 6 PM"
-                value={formData.time}
-                onChange={handleChange}
-              />
-
-            </div>
-
-
-            <div className="form-group">
-
-              <label>
-                Payment (₹)
-              </label>
-
-              <input
-                type="number"
-                name="payment"
-                placeholder="Example: 1000"
-                value={
-                  formData.payment
-                }
-                onChange={handleChange}
-              />
-
-            </div>
-
-          </div>
-
-
-          {message && (
-            <p className="post-work-message">
-              {message}
-            </p>
-          )}
-
-
-          <button
-            type="submit"
-            className="post-work-submit"
-            disabled={saving}
-          >
-
-            {saving
-              ? "Saving..."
-              : "Save Changes →"}
-
-          </button>
-
+            <div className="form-group"><label htmlFor="work-description">Description</label><textarea id="work-description" name="description" placeholder="Explain what work needs to be done..." value={formData.description} onChange={handleChange} /></div>
+          </fieldset>
+          <fieldset><legend>Where &amp; when</legend><div className="form-row work-schedule">
+            <div className="form-group"><label htmlFor="work-location">Location</label><input id="work-location" type="text" name="location" placeholder="Example: Patna" value={formData.location} onChange={handleChange} /></div>
+            <div className="form-group"><label htmlFor="work-date">Date</label><input id="work-date" type="date" name="date" placeholder="" value={formData.date} onChange={handleChange} /></div>
+            <div className="form-group"><label htmlFor="work-time">Time</label><input id="work-time" type="text" name="time" placeholder="Example: 9 AM - 6 PM" value={formData.time} onChange={handleChange} /></div>
+          </div></fieldset>
+          <fieldset><legend>Payment</legend><div className="form-group"><label htmlFor="work-payment">Payment amount (INR)</label><input id="work-payment" type="number" name="payment" placeholder="Example: 1000" value={formData.payment} onChange={handleChange} /></div></fieldset>
+          {message && <p className="post-work-message" role="status">{message}</p>}
+          <div className="internal-form-actions"><button type="submit" className="post-work-submit" disabled={saving}>{saving ? "Saving..." : "Save Changes"}</button><Link className="internal-secondary" to="/my-jobs">Cancel</Link></div>
         </form>
 
       </div>

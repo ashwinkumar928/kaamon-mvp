@@ -10,6 +10,13 @@ function NearbyJobs({ filters, onFiltersChange } = {}) {
   const [localFilters, setLocalFilters] = useState({ location: "", search: "", category: "ALL" });
   const { location, search, category: selectedCategory } = filters ?? localFilters;
   const setFilters = onFiltersChange ?? setLocalFilters;
+  const filterKey = JSON.stringify([location, search, selectedCategory]);
+  const [pagination, setPagination] = useState({ key: "", limit: 6 });
+  const visibleCount = pagination.key === filterKey ? pagination.limit : 6;
+  // Reset even when revisiting a previously expanded filter combination.
+  if (pagination.key !== filterKey) {
+    setPagination({ key: filterKey, limit: 6 });
+  }
   function formatJobDate(dateValue) {
   if (!dateValue) return "";
 
@@ -95,9 +102,9 @@ function NearbyJobs({ filters, onFiltersChange } = {}) {
 
       <div className="section-title">
         <span>WORK NEAR YOU</span>
-        <h2>Nearby Opportunities</h2>
+        <h2>Nearby opportunities</h2>
         <p>
-          Find short-term work opportunities available around you.
+          Short-term work currently available around your area.
         </p>
       </div>
 
@@ -106,7 +113,11 @@ function NearbyJobs({ filters, onFiltersChange } = {}) {
 
         {(location || search || selectedCategory !== "ALL") && (
           <div className="nearby-active-filters">
-            <p>{location ? `Area: ${location}` : "All areas"}{selectedCategory !== "ALL" ? ` · ${selectedCategory}` : ""}</p>
+            <div className="nearby-filter-pills">
+              <span>{location ? `Area: ${location}` : "All areas"}</span>
+              {selectedCategory !== "ALL" && <span>{selectedCategory}</span>}
+              {search && <span>Search: {search}</span>}
+            </div>
             <button type="button" onClick={() => setFilters({ location: "", search: "", category: "ALL" })}>Clear all filters</button>
           </div>
         )}
@@ -156,8 +167,8 @@ function NearbyJobs({ filters, onFiltersChange } = {}) {
             ))}
           </div>
 
-          <div className="results-count">
-            {loading ? "Loading opportunities…" : `${filteredJobs.length} opportunities`}
+          <div className="results-count" role="status">
+            {loading ? "Loading opportunities…" : `${filteredJobs.length} ${filteredJobs.length === 1 ? "opportunity" : "opportunities"}`}
           </div>
 
         </div>
@@ -165,7 +176,7 @@ function NearbyJobs({ filters, onFiltersChange } = {}) {
       </div>
 
       {/* JOB CARDS */}
-      <div className="jobs-grid">
+      <div className="jobs-grid" id="nearby-results">
 
         {loading && <div className="no-jobs" role="status"><h3>Loading opportunities…</h3></div>}
 
@@ -177,7 +188,7 @@ function NearbyJobs({ filters, onFiltersChange } = {}) {
       )}
 
         {!loading && !loadError && filteredJobs.length > 0 ? (
-          filteredJobs.map((job) => (
+          filteredJobs.slice(0, visibleCount).map((job) => (
 
             <div className="nearby-job-card" key={job.id}>
 
@@ -208,7 +219,7 @@ function NearbyJobs({ filters, onFiltersChange } = {}) {
 
               <div className="job-details-row">
                 <span>🕘 {job.time}</span>
-                <span>📏 {job.distance}</span>
+                {job.distance && <span>📏 {job.distance}</span>}
               </div>
 
               <div className="job-bottom">
@@ -240,6 +251,17 @@ function NearbyJobs({ filters, onFiltersChange } = {}) {
 
       </div>
 
+      {!loading && !loadError && filteredJobs.length > 6 && (
+        <div className="nearby-show-more">
+          <p role="status">Showing {Math.min(visibleCount, filteredJobs.length)} of {filteredJobs.length} opportunities</p>
+          {visibleCount < filteredJobs.length && (
+            <button type="button" aria-controls="nearby-results"
+              onClick={() => setPagination({ key: filterKey, limit: visibleCount + 6 })}>
+              Show more work <span aria-hidden="true">→</span>
+            </button>
+          )}
+        </div>
+      )}
     </section>
   );
 }

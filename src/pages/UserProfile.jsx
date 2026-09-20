@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import API_URL from "../api";
 import "./Profile.css";
+import "./InternalPages.css";
 
 function UserProfile() {
   const { userId } = useParams();
@@ -111,7 +112,7 @@ function UserProfile() {
   // ==============================
   if (loading) {
     return (
-      <main className="profile-page">
+      <main className="profile-page karviam-internal">
         <div className="profile-container">
           <p>Loading profile...</p>
         </div>
@@ -124,7 +125,7 @@ function UserProfile() {
   // ==============================
   if (!user) {
     return (
-      <main className="profile-page">
+      <main className="profile-page karviam-internal">
         <div className="profile-container">
           <p>{message}</p>
 
@@ -140,7 +141,7 @@ function UserProfile() {
     user.name?.charAt(0).toUpperCase() || "U";
 
   return (
-    <main className="profile-page">
+    <main className="profile-page karviam-internal">
       <div className="profile-container">
 
         {/* BACK BUTTON */}
@@ -164,6 +165,7 @@ function UserProfile() {
           </div>
 
           <div className="profile-main-info">
+            <span className="internal-eyebrow">KARVIAM PROFILE</span>
             <h1>{user.name}</h1>
 
             <p>
@@ -172,8 +174,10 @@ function UserProfile() {
                 : "Contact available after acceptance"}
             </p>
 
+            {user.location && <p className="profile-summary-location">{user.location}</p>}
+            {user.skills && <p className="profile-summary-skills">{user.skills}</p>}
             <span className="profile-member">
-              Karviam Worker
+              Karviam Member
             </span>
           </div>
         </section>
@@ -182,7 +186,7 @@ function UserProfile() {
         <section className="profile-section">
           <div className="profile-section-heading">
             <div>
-              <h2>Worker Information</h2>
+              <h2>Profile details</h2>
               <p>
                 Details shared by this Karviam member.
               </p>
@@ -285,7 +289,7 @@ function UserProfile() {
                 </span>
               </>
             ) : (
-              <strong>⭐ New User</strong>
+              <strong>⭐ No ratings yet</strong>
             )}
 
           </div>
@@ -314,6 +318,7 @@ function UserProfile() {
                     <span>
                       — {review.reviewer_name}
                     </span>
+                  {review.created_at && <time dateTime={review.created_at}>{new Date(review.created_at).toLocaleDateString()}</time>}
 
                   </div>
                 )

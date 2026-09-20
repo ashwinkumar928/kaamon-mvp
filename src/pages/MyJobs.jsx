@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import API_URL from "../api";
 import "./MyJobs.css";
+import "./InternalPages.css";
 
 function MyJobs() {
   const token = localStorage.getItem("kaamonToken");
@@ -67,7 +68,7 @@ function MyJobs() {
 
   if (loading) {
     return (
-      <main className="my-jobs-page">
+      <main className="my-jobs-page karviam-internal">
         <div className="my-jobs-container">
           <h2>Loading your jobs...</h2>
         </div>
@@ -77,7 +78,7 @@ function MyJobs() {
 
 
   return (
-    <main className="my-jobs-page">
+    <main className="my-jobs-page karviam-internal">
 
       <div className="my-jobs-container">
 
@@ -89,12 +90,13 @@ function MyJobs() {
         </Link>
 
         <div className="my-jobs-heading">
+          <Link to="/post-work" className="internal-header-action">Post Work &rarr;</Link>
           <span>YOUR WORK POSTS</span>
 
           <h1>My Posted Jobs</h1>
 
           <p>
-            Manage the work opportunities you have posted.
+            Manage work you have posted and review applicants.
           </p>
         </div>
 
@@ -107,11 +109,11 @@ function MyJobs() {
 
 
         {!error && jobs.length === 0 && (
-          <div className="no-my-jobs">
-            <h2>No jobs posted yet</h2>
+          <div className="no-my-jobs"><span className="internal-empty-icon" aria-hidden="true">+</span>
+            <h2>No work posted yet</h2>
 
             <p>
-              Post your first work requirement on Karviam.
+              Post your first requirement to start finding nearby help.
             </p>
 
             <Link to="/post-work">

@@ -7,6 +7,7 @@ import {
 
 import API_URL from "../api";
 import "./Chat.css";
+import "./InternalPages.css";
 
 function Chat() {
   const { applicationId } = useParams();
@@ -226,7 +227,7 @@ useEffect(() => {
 
   if (loading) {
     return (
-      <main className="chat-page">
+      <main className="chat-page karviam-internal">
         <div className="chat-container">
           <p>Loading chat...</p>
         </div>
@@ -236,7 +237,7 @@ useEffect(() => {
 
 
   return (
-    <main className="chat-page">
+    <main className="chat-page karviam-internal">
 
       <div className="chat-container">
 
@@ -278,7 +279,7 @@ useEffect(() => {
           )}
 
 
-          <div className="chat-messages">
+          <div className="chat-messages" role="log" aria-label="Conversation messages">
 
             {messages.length === 0 ? (
 
@@ -350,7 +351,7 @@ useEffect(() => {
 
             <input
               type="text"
-              placeholder="Type a message..."
+              aria-label="Message" placeholder="Type a message..."
               value={newMessage}
               onChange={(event) =>
                 setNewMessage(
@@ -368,7 +369,7 @@ useEffect(() => {
             >
               {sending
                 ? "Sending..."
-                : "Send"}
+                : "Send \u2192"}
             </button>
 
           </form>

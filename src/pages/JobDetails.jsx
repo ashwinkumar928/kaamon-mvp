@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 
 import "./JobDetails.css";
+import "./InternalPages.css";
 import API_URL from "../api";
 
 function JobDetails() {
@@ -206,7 +207,7 @@ useEffect(() => {
 
   if (loading) {
     return (
-      <main className="job-details-page">
+      <main className="job-details-page karviam-internal">
         <h2>Loading job...</h2>
       </main>
     );
@@ -219,7 +220,7 @@ useEffect(() => {
 
   if (!job) {
     return (
-      <main className="job-details-page">
+      <main className="job-details-page karviam-internal">
 
         <h2>Job not found</h2>
 
@@ -241,7 +242,7 @@ useEffect(() => {
 
 
   return (
-    <main className="job-details-page">
+    <main className="job-details-page karviam-internal">
 
       <div className="job-details-container">
 
@@ -254,6 +255,7 @@ useEffect(() => {
 
 
         <div className="job-details-card">
+          <div className="listing-main">
 
           <div className="details-header">
 
@@ -319,16 +321,6 @@ useEffect(() => {
             </div>
 
 
-            <div className="detail-item">
-              <span>📏</span>
-
-              <div>
-                <small>Distance</small>
-                <strong>
-                  {job.distance}
-                </strong>
-              </div>
-            </div>
 
           </div>
 
@@ -341,7 +333,7 @@ useEffect(() => {
                 ? job.postedBy.name
                     .charAt(0)
                     .toUpperCase()
-                : "AK"}
+                : "?"}
 
             </div>
 
@@ -353,19 +345,17 @@ useEffect(() => {
 
               <strong>
                 {job.postedBy?.name ||
-                  "Amit Kumar"}
+                  "Karviam member"}
               </strong>
 
-              <p>
-                ⭐ 4.7 &nbsp; • &nbsp;
-                ✓ Phone Verified
-              </p>
 
             </div>
 
           </div>
 
 
+          </div>
+          <aside className="listing-action-panel" aria-label="Apply for this work">
           <div className="apply-section">
 
             <div>
@@ -382,14 +372,10 @@ useEffect(() => {
               </h2>
 
             </div>
+            <p className="listing-schedule">{job.location}<br />{formatJobDate(job.date)} · {job.time}</p>
 
              {isOwnJob ? (
-  <button
-    className="apply-job-btn applied"
-    disabled
-  >
-    ✓ You Posted This Job
-  </button>
+  <Link className="internal-primary" to={`/jobs/${job.id}/applicants`}>View Applicants →</Link>
 ) : (
   <button
     className={
@@ -434,6 +420,7 @@ useEffect(() => {
               {applicationMessage}
                </p>
             )}
+          </aside>
 
         </div>
 

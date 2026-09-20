@@ -200,7 +200,7 @@ function ForgotPassword() {
 
 
   return (
-    <main className="karviam-login-page">
+    <main className="karviam-login-page karviam-reset-page">
 
       {/* LEFT SIDE */}
 
@@ -225,7 +225,7 @@ function ForgotPassword() {
           </h1>
 
           <p className="login-showcase-description">
-            Hire trusted people nearby
+            Hire people nearby
             or discover short-term work
             opportunities around you.
           </p>
@@ -323,14 +323,12 @@ function ForgotPassword() {
 
                 <div className="login-field">
 
-                  <label>
-                    Email address
-                  </label>
+                  <label htmlFor="reset-email">Email address</label>
 
                   <input
                     type="email"
                     placeholder="you@example.com"
-                    value={email}
+                    id="reset-email" autoComplete="email" value={email}
                     onChange={(event) =>
                       setEmail(
                         event.target.value
@@ -342,7 +340,7 @@ function ForgotPassword() {
 
 
                 {message && (
-                  <div className="login-message">
+                  <div className="login-message" role="status">
                     {message}
                   </div>
                 )}
@@ -401,16 +399,14 @@ function ForgotPassword() {
 
                 <div className="login-field">
 
-                  <label>
-                    Verification code
-                  </label>
+                  <label htmlFor="reset-otp">Verification code</label>
 
                   <input
                     type="text"
                     inputMode="numeric"
                     placeholder="Enter 6-digit OTP"
                     maxLength={6}
-                    value={otp}
+                    id="reset-otp" autoComplete="one-time-code" value={otp}
                     onChange={(event) => {
                       const value =
                         event.target.value.replace(
@@ -427,14 +423,12 @@ function ForgotPassword() {
 
                 <div className="login-field">
 
-                  <label>
-                    New password
-                  </label>
+                  <label htmlFor="reset-password">New password</label>
 
                   <input
                     type="password"
                     placeholder="Minimum 6 characters"
-                    value={newPassword}
+                    id="reset-password" autoComplete="new-password" value={newPassword}
                     onChange={(event) =>
                       setNewPassword(
                         event.target.value
@@ -447,16 +441,12 @@ function ForgotPassword() {
 
                 <div className="login-field">
 
-                  <label>
-                    Confirm new password
-                  </label>
+                  <label htmlFor="reset-confirm">Confirm new password</label>
 
                   <input
                     type="password"
                     placeholder="Enter password again"
-                    value={
-                      confirmPassword
-                    }
+                    id="reset-confirm" autoComplete="new-password" value={confirmPassword}
                     onChange={(event) =>
                       setConfirmPassword(
                         event.target.value

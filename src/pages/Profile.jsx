@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import API_URL from "../api";
 import "./Profile.css";
+import "./InternalPages.css";
 
 function Profile() {
   const token =
@@ -204,7 +205,7 @@ useEffect(() => {
 
 
   return (
-    <main className="profile-page">
+    <main className="profile-page karviam-internal">
 
       <div className="profile-container">
 
@@ -226,6 +227,7 @@ useEffect(() => {
 
 
           <div className="profile-main-info">
+            <span className="internal-eyebrow">KARVIAM PROFILE</span>
 
             <h1>
               {displayUser.name}
@@ -235,6 +237,8 @@ useEffect(() => {
               {displayUser.email}
             </p>
 
+            {displayUser.location && <p className="profile-summary-location">{displayUser.location}</p>}
+            {displayUser.skills && <p className="profile-summary-skills">{displayUser.skills}</p>}
             <span className="profile-member">
               Karviam Member
             </span>
@@ -276,11 +280,11 @@ useEffect(() => {
             <div className="profile-edit-form">
 
               <div>
-                <label>Phone</label>
+                <label htmlFor="profile-phone">Phone</label>
 
                 <input
                   type="text"
-                  value={phone}
+                  id="profile-phone" value={phone}
                   onChange={(e) =>
                     setPhone(e.target.value)
                   }
@@ -290,11 +294,11 @@ useEffect(() => {
 
 
               <div>
-                <label>Location</label>
+                <label htmlFor="profile-location">Location</label>
 
                 <input
                   type="text"
-                  value={location}
+                  id="profile-location" value={location}
                   onChange={(e) =>
                     setLocation(e.target.value)
                   }
@@ -304,11 +308,11 @@ useEffect(() => {
 
 
               <div className="skills-input">
-                <label>Skills</label>
+                <label htmlFor="profile-skills">Skills</label>
 
                 <input
                   type="text"
-                  value={skills}
+                  id="profile-skills" value={skills}
                   onChange={(e) =>
                     setSkills(e.target.value)
                   }
@@ -343,7 +347,7 @@ useEffect(() => {
             <div>
 
               <h2>
-                Personal Information
+                Profile details
               </h2>
 
               <p>
@@ -416,7 +420,7 @@ useEffect(() => {
           <div className="profile-section-heading">
             <div>
 
-              <h2>My Ratings & Reviews</h2>
+              <h2>My reputation</h2>
 
               <p>
                 Ratings you received from completed Karviam work.
@@ -477,6 +481,7 @@ useEffect(() => {
                   <span>
                     — {review.reviewer_name}
                   </span>
+                  {review.created_at && <time dateTime={review.created_at}>{new Date(review.created_at).toLocaleDateString()}</time>}
 
                 </div>
 

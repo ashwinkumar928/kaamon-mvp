@@ -87,8 +87,8 @@ function Home() {
         <div className="home-local-scene">
           <div className="home-local-heading">
             <span>NEARBY OPPORTUNITIES</span>
-            <h2 id="local-discovery-heading">Find work <em>near you.</em></h2>
-            <p>Search local work opportunities by city, area or work category and discover jobs available around you.</p>
+            <h1 id="local-discovery-heading">Find work<br /><em>near you.</em></h1>
+            <p>Discover short-term work around Patna and nearby areas.</p>
           </div>
 
           <form className="home-local-panel" onSubmit={findNearbyWork}>
@@ -129,7 +129,7 @@ function Home() {
                 <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" /><path d="M12 2v5M12 17v5M2 12h5M17 12h5" /></svg>
               </button>
               <button className="home-local-submit" type="submit" title="Find opportunities near me" aria-label="Find opportunities near me">
-                <span aria-hidden="true">→</span>
+                Search <span aria-hidden="true">→</span>
               </button>
             </div>
           </form>
@@ -158,6 +158,12 @@ function Home() {
 
 
 
+      <section className="home-jobs-wrapper">
+
+        <NearbyJobs filters={jobFilters} onFiltersChange={setJobFilters} />
+
+      </section>
+
       {/* ===================================
           HERO
       =================================== */}
@@ -171,7 +177,7 @@ function Home() {
             LOCAL WORK. REAL PEOPLE.
           </div>
 
-          <h1>
+          <h2>
             Hire nearby help.
             <br />
 
@@ -182,7 +188,7 @@ function Home() {
             <br />
 
             One account for both.
-          </h1>
+          </h2>
 
           <p className="home-hero-description">
             Karviam connects people who need
@@ -498,6 +504,7 @@ function Home() {
               <a
                 href="#jobs"
                 className="home-category-card"
+                onClick={() => setJobFilters({ location: area, search: "", category: category.name.toUpperCase() })}
                 key={category.id}
               >
 
@@ -648,18 +655,14 @@ function Home() {
           NEARBY JOBS
       =================================== */}
 
-      <section className="home-jobs-wrapper">
 
-        <NearbyJobs filters={jobFilters} onFiltersChange={setJobFilters} />
-
-      </section>
 
 
       {/* ===================================
           TRUST SECTION
       =================================== */}
 
-      <section className="home-trust-section">
+      <section className="home-trust-section home-profile-showcase" aria-labelledby="home-profile-heading">
 
         <div className="home-trust-content">
 
@@ -667,10 +670,8 @@ function Home() {
             BUILT FOR LOCAL WORK
           </span>
 
-          <h2>
-            Work feels easier
-            when everything is
-            in one place.
+          <h2 id="home-profile-heading">
+            Work feels easier when everything is in one place.
           </h2>
 
           <p>
@@ -798,13 +799,15 @@ function Home() {
           FINAL CTA
       =================================== */}
 
-      <section className="home-trust-features" aria-labelledby="home-trust-heading">
+      <section className="home-trust-features home-trust-editorial" id="trust" aria-labelledby="home-trust-heading">
         <div className="home-trust-features-inner">
           <div className="home-trust-features-heading">
+            <div>
             <span className="home-trust-features-label">TRUST ON KARVIAM</span>
             <h2 id="home-trust-heading">
               <span>Trust</span> grows with every completed work.
             </h2>
+            </div>
             <p>
               Karviam helps people build confidence through verified email,
               completed work, ratings, reviews and direct communication.
@@ -820,7 +823,7 @@ function Home() {
                 </svg>
               </span>
               <h3>Email Verified</h3>
-              <p>Accounts verify their email using OTP.</p>
+              <p>OTP-confirmed account email</p>
             </li>
             <li>
               <span className="home-trust-feature-icon" aria-hidden="true">
@@ -830,7 +833,7 @@ function Home() {
                 </svg>
               </span>
               <h3>Ratings &amp; Reviews</h3>
-              <p>Reviews can be submitted after completed work.</p>
+              <p>Feedback after completed work</p>
             </li>
             <li>
               <span className="home-trust-feature-icon" aria-hidden="true">
@@ -840,7 +843,7 @@ function Home() {
                 </svg>
               </span>
               <h3>Completed Work</h3>
-              <p>Work history helps build reputation over time.</p>
+              <p>Build reputation over time</p>
             </li>
             <li>
               <span className="home-trust-feature-icon" aria-hidden="true">
@@ -850,72 +853,68 @@ function Home() {
                 </svg>
               </span>
               <h3>Direct Connection</h3>
-              <p>Chat and contact details become available after acceptance.</p>
+              <p>Chat and contact details after work is accepted</p>
             </li>
           </ul>
+          <p className="home-trust-statement">Built through real activity, not empty badges.</p>
         </div>
       </section>
 
-      <section className="home-final-cta">
-
-        <div>
-
-          <span>
-            READY WHEN YOU ARE
-          </span>
-
-          <h2>
-            Local work starts here.
-          </h2>
-
-          <p>
-            Create one Karviam account and
-            use it whenever you need help
-            or want to earn.
-          </p>
-
+      <footer className="home-footer">
+        <div className="home-footer-inner">
+          <div className="home-footer-top">
+            <div className="home-footer-brand">
+              <Link className="home-footer-logo" to="/" aria-label="Karviam home">
+                <img src="/karviam-logo.png" alt="Karviam" width="180" loading="lazy" />
+              </Link>
+              <p className="home-footer-tagline">People &bull; Work &bull; Near You</p>
+              <p>Local short-term work, made simpler.</p>
+              <p className="home-footer-location">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 6-8 11-8 11S4 16 4 10a8 8 0 1 1 16 0Z" /><circle cx="12" cy="10" r="2.5" /></svg>
+                Local opportunities around your city
+              </p>
+            </div>
+            <nav aria-labelledby="footer-explore-heading">
+              <h2 id="footer-explore-heading">EXPLORE</h2>
+              <a href="#jobs">Find Work</a>
+              <Link to={currentUser ? "/post-work" : "/login"}>Post Work</Link>
+              <a href="#categories">Categories</a>
+              <a href="#how">How It Works</a>
+            </nav>
+            <nav aria-labelledby="footer-account-heading">
+              <h2 id="footer-account-heading">YOUR KARVIAM</h2>
+              {currentUser ? (
+                <>
+                  <Link to="/dashboard">Dashboard</Link>
+                  <Link to="/my-jobs">My Posted Jobs</Link>
+                  <Link to="/my-applications">My Applications</Link>
+                  <Link to="/profile">Profile</Link>
+                </>
+              ) : (
+                <>
+                  <Link to="/login">Login</Link>
+                  <Link to="/signup">Sign Up</Link>
+                </>
+              )}
+            </nav>
+            <nav aria-labelledby="footer-trust-heading">
+              <h2 id="footer-trust-heading">TRUST &amp; SUPPORT</h2>
+              <a href="#trust">Email Verification</a>
+              <a href="#trust">Ratings &amp; Reviews</a>
+              <a href="#trust">Completed Work</a>
+              <a href="#trust">Direct Connection</a>
+            </nav>
+          </div>
+          <div className="home-footer-bottom">
+            <span>&copy; 2026 Karviam</span>
+            <span className="home-footer-bottom-tagline">People &bull; Work &bull; Near You</span>
+            <button className="home-footer-back-top" type="button" aria-label="Back to top"
+              onClick={() => window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" })}>
+              <span aria-hidden="true">↑</span>
+            </button>
+          </div>
         </div>
-
-
-        <div className="home-final-actions">
-
-          {!currentUser ? (
-            <>
-              <Link
-                to="/signup"
-                className="final-primary"
-              >
-                Create Account →
-              </Link>
-
-              <Link
-                to="/login"
-                className="final-secondary"
-              >
-                Login
-              </Link>
-            </>
-          ) : (
-            <>
-              <Link
-                to="/dashboard"
-                className="final-primary"
-              >
-                Open Dashboard →
-              </Link>
-
-              <a
-                href="#jobs"
-                className="final-secondary"
-              >
-                Find Work
-              </a>
-            </>
-          )}
-
-        </div>
-
-      </section>
+      </footer>
 
     </main>
   );

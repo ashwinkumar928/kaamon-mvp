@@ -1,0 +1,173 @@
+﻿/* Shared internal-page styling. Explicit scope excludes Home, Dashboard and auth pages. */
+main.karviam-internal { --ki-green: #0f6b57; --ki-ink: #172033; --ki-muted: #647184; --ki-border: #e0e8e3; --ki-surface: #fff; min-height: calc(100vh - 76px); padding: 32px 5% 56px; background: #f7faf8; color: var(--ki-ink); }
+.karviam-internal :is(.my-jobs-container,.my-applications-container,.applicants-container,.job-details-container,.profile-container) { max-width: 1200px; margin-inline: auto; }
+.karviam-internal :is(.my-jobs-back,.my-applications-back,.applicants-back,.profile-back,.back-link,.chat-back,.internal-back) { display: inline-flex; align-items: center; min-height: 36px; margin: 0 0 18px; color: var(--ki-muted); font-size: 13px; font-weight: 600; text-decoration: none; }
+.karviam-internal :is(.my-jobs-heading,.my-applications-heading,.applicants-heading,.post-work-heading) { margin-bottom: 26px; }
+.karviam-internal :is(.my-jobs-heading,.my-applications-heading,.applicants-heading,.post-work-heading) > span,
+.karviam-internal .internal-eyebrow { color: #cf5700; font-size: 11px; font-weight: 800; letter-spacing: 1.8px; }
+.karviam-internal h1 { margin: 10px 0; font-size: clamp(32px, 3vw, 42px); line-height: 1.15; letter-spacing: -1.1px; color: var(--ki-ink); overflow-wrap: anywhere; }
+.karviam-internal :is(.my-jobs-heading,.my-applications-heading,.applicants-heading,.post-work-heading) p { margin: 10px 0 0; font-size: 15px; line-height: 1.65; color: var(--ki-muted); }
+.karviam-internal :is(.my-job-card,.application-card,.applicant-card,.profile-section,.profile-header,.post-work-form,.listing-main,.listing-action-panel,.chat-card) { background: var(--ki-surface); border: 1px solid var(--ki-border); border-radius: 20px; box-shadow: 0 6px 24px #17203305; padding: 22px; min-width: 0; }
+.karviam-internal :is(p,strong,h2,h3,span,a) { overflow-wrap: anywhere; }
+.karviam-internal :is(a,button,input,select,textarea):focus-visible { outline: 3px solid #84bea9; outline-offset: 3px; }
+.karviam-internal :is(input,select,textarea) { min-width: 0; max-width: 100%; font: inherit; font-size: 15px; border: 1px solid #d7e1db; border-radius: 11px; padding: 11px 13px; color: var(--ki-ink); background: var(--ki-surface); }
+.karviam-internal :is(input,select) { min-height: 44px; }
+.karviam-internal :is(input,select,textarea):focus { border-color: var(--ki-green); box-shadow: 0 0 0 3px #0f6b5714; }
+.karviam-internal :is(button,a) { -webkit-tap-highlight-color: transparent; }
+.karviam-internal :is(.internal-primary,.internal-header-action,.view-applicants-btn,.accept-btn,.complete-btn,.contact-action-btn,.submit-review-btn,.applicant-submit-review-btn,.post-work-submit,.apply-job-btn,.profile-save-btn,.worker-contact-btn,.chat-form button,.no-my-jobs a,.no-applications a) { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 10px 15px; border: 1px solid transparent; border-radius: 11px; background: var(--ki-green); color: #fff; font-size: 13px; font-weight: 700; text-decoration: none; line-height: 1.4; cursor: pointer; transition: background .2s, border-color .2s; }
+.karviam-internal :is(.internal-primary,.internal-header-action,.view-applicants-btn,.accept-btn,.complete-btn,.contact-action-btn,.submit-review-btn,.applicant-submit-review-btn,.post-work-submit,.apply-job-btn,.profile-save-btn,.worker-contact-btn,.chat-form button,.no-my-jobs a,.no-applications a):hover { background: #0a5243; }
+.karviam-internal :is(.internal-secondary,.profile-edit-btn) { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 10px 15px; border: 1px solid #d3dfd8; border-radius: 11px; background: var(--ki-surface); color: var(--ki-ink); text-decoration: none; font-size: 13px; font-weight: 700; }
+.karviam-internal .internal-secondary:hover,.karviam-internal .profile-edit-btn:hover { background: #edf6f1; color: #0f5949; }
+.karviam-internal .reject-btn { min-height: 44px; padding: 10px 15px; border: 1px solid #f3cdcd; border-radius: 11px; background: #fff0ef; color: #a83333; }
+.karviam-internal .reject-btn:hover { background: #fbe0df; }
+.karviam-internal button:disabled { opacity: .65; cursor: not-allowed; }
+.karviam-internal :is(.my-job-status,.application-status,.applicant-status > span) { display: inline-flex; align-items: center; padding: 6px 10px; border-radius: 30px; font-size: 11px; font-weight: 700; letter-spacing: 0; text-transform: capitalize; line-height: 1.4; }
+.karviam-internal :is(.status-available,.status-accepted) { background: #e8f5ec; color: #1a694b; }
+.karviam-internal :is(.status-filled,.status-pending) { background: #fff0e3; color: #a64a0a; }
+.karviam-internal .status-completed { background: #e7eeef; color: #264952; }
+.karviam-internal .status-rejected { background: #fdeceb; color: #a83333; }
+.karviam-internal :is(.no-my-jobs,.no-applications,.no-applicants) { padding: 32px 24px; background: var(--ki-surface); border: 1px dashed #cedbd3; border-radius: 20px; text-align: center; margin-bottom: 18px; }
+.karviam-internal :is(.no-my-jobs,.no-applications,.no-applicants) h2 { margin: 12px 0 8px; font-size: 22px; }
+.karviam-internal :is(.no-my-jobs,.no-applications,.no-applicants) p { color: var(--ki-muted); font-size: 14px; line-height: 1.6; }
+.karviam-internal .internal-empty-icon { display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 13px; color: var(--ki-green); background: #edf6f1; font-size: 24px; }
+.karviam-internal .internal-header-action { float: right; margin-left: 20px; }
+/* Work management */
+.karviam-internal .my-jobs-grid { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 18px; }
+.karviam-internal .my-job-card { display: flex; flex-direction: column; }
+.karviam-internal .my-job-top { align-items: flex-start; gap: 12px; }
+.karviam-internal .my-job-top > div:nth-child(2) { flex: 1; min-width: 0; }
+.karviam-internal :is(.my-job-icon,.application-icon,.applicant-avatar,.details-icon) { flex-shrink: 0; width: 44px; height: 44px; border-radius: 13px; font-size: 21px; background: #edf6f1; color: var(--ki-green); }
+.karviam-internal .my-job-top h2 { font-size: 21px; line-height: 1.35; }
+.karviam-internal .my-job-description { margin: 16px 0; font-size: 14px; line-height: 1.6; }
+.karviam-internal .my-job-details { gap: 8px 16px; line-height: 1.6; margin-bottom: 18px; }
+.karviam-internal .my-job-bottom { margin-top: auto; padding-top: 16px; gap: 14px; flex-wrap: wrap; }
+.karviam-internal .my-job-bottom strong { color: var(--ki-green); }
+.karviam-internal .applicant-area { gap: 8px; flex-wrap: wrap; }
+.karviam-internal .applicant-count { font-size: 11px; padding: 6px 10px; }
+.karviam-internal .applicant-area a[href$='/edit'] { background: var(--ki-surface); border-color: #d3dfd8; color: var(--ki-ink); }
+/* Applicants and applications */
+.karviam-internal .internal-job-context { display: flex; align-items: center; gap: 16px 28px; flex-wrap: wrap; padding: 18px 22px; border: 1px solid var(--ki-border); background: #edf5f0; border-radius: 16px; margin-bottom: 20px; font-size: 14px; }
+.karviam-internal .internal-job-context > div { flex: 1; min-width: 200px; }
+.karviam-internal .internal-job-context small { display: block; margin-bottom: 6px; font-size: 10px; color: #476c5b; letter-spacing: 1px; }
+.karviam-internal .applicants-list { grid-template-columns: repeat(2,minmax(0,1fr)); align-items: start; }
+.karviam-internal .applicant-card { gap: 18px; align-items: flex-start; }
+.karviam-internal .applicant-profile { align-items: flex-start; min-width: 0; }
+.karviam-internal .applicant-profile > div:last-child { min-width: 0; }
+.karviam-internal .applicant-profile h2 { font-size: 21px; }
+.karviam-internal .applicant-profile p { line-height: 1.6; }
+.karviam-internal .applicant-status { width: 100%; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.karviam-internal .applicant-actions { flex-wrap: wrap; }
+.karviam-internal .view-profile-btn { min-height: 36px; display: inline-flex; align-items: center; color: var(--ki-green); }
+.karviam-internal .internal-filter-tabs { display: flex; gap: 8px; flex-wrap: wrap; padding-bottom: 20px; }
+.karviam-internal .internal-filter-tabs button { min-height: 40px; padding: 8px 16px; border: 1px solid #d9e4dc; border-radius: 30px; background: var(--ki-surface); color: var(--ki-muted); font-size: 13px; text-transform: capitalize; }
+.karviam-internal .internal-filter-tabs button[aria-pressed='true'] { background: var(--ki-green); color: #fff; border-color: var(--ki-green); }
+.karviam-internal .application-card { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: start; gap: 16px; }
+.karviam-internal .application-main { min-width: 0; align-items: flex-start; }
+.karviam-internal .application-main > div:last-child { min-width: 0; }
+.karviam-internal .application-main h2 { font-size: 22px; }
+.karviam-internal .application-info { gap: 24px; }
+.karviam-internal .hirer-contact { grid-column: 1/-1; margin: 0; padding: 16px 0 0; border: none; border-top: 1px solid var(--ki-border); border-radius: 0; background: none; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; }
+.karviam-internal .hirer-contact h3 { margin: 0; font-size: 14px; }
+.karviam-internal .hirer-contact p { margin: 0; color: var(--ki-muted); }
+.karviam-internal .hirer-contact-actions { margin: 0 0 0 auto; gap: 8px; }
+.karviam-internal :is(.review-section,.applicant-review-section) { grid-column: 1/-1; margin: 0; padding: 16px 0 0; background: none; border: none; border-top: 1px solid var(--ki-border); border-radius: 0; }
+.karviam-internal :is(.review-section,.applicant-review-section) h3 { font-size: 18px; }
+.karviam-internal :is(.review-submitted,.applicant-review-submitted) { display: inline-flex; padding: 8px 12px; border-radius: 30px; background: #eaf5ee; color: #1a694b; font-size: 12px; }
+.karviam-internal :is(.review-star,.applicant-review-star) { min-width: 40px; min-height: 44px; }
+/* Matching create/edit forms */
+.karviam-internal .post-work-container { max-width: 900px; }
+.karviam-internal .post-work-form { padding: 26px; }
+.karviam-internal .post-work-form fieldset { min-width: 0; margin: 0; padding: 20px 0 0; border: 0; border-top: 1px solid var(--ki-border); }
+.karviam-internal .post-work-form fieldset:first-child { padding-top: 0; border-top: 0; }
+.karviam-internal .post-work-form legend { padding: 0 12px 0 0; font-size: 19px; font-weight: 700; margin-bottom: 14px; }
+.karviam-internal .form-row { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; }
+.karviam-internal .work-schedule { grid-template-columns: 1.1fr .8fr 1.1fr; }
+.karviam-internal .form-group { margin-bottom: 18px; }
+.karviam-internal .form-group label { font-size: 13px; }
+.karviam-internal .form-group textarea { min-height: 100px; }
+.karviam-internal .internal-form-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+.karviam-internal .post-work-submit { width: auto; margin: 0; min-width: 160px; }
+/* Work listing */
+.karviam-internal .job-details-card { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 24px; background: none; border: none; box-shadow: none; padding: 0; align-items: start; }
+.karviam-internal .details-header { align-items: flex-start; gap: 14px; }
+.karviam-internal .details-header > div:last-child { min-width: 0; }
+.karviam-internal .details-description { margin: 24px 0; line-height: 1.75; font-size: 15px; white-space: pre-wrap; }
+.karviam-internal .details-grid { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 0; border-block: 1px solid var(--ki-border); }
+.karviam-internal .detail-item { padding: 18px 10px; background: none; border-radius: 0; align-items: flex-start; font-size: 14px; }
+.karviam-internal .detail-item small { font-size: 12px; }
+.karviam-internal .detail-item > span { font-size: 18px; }
+.karviam-internal .posted-by { padding: 20px 0 0; margin-top: 0; border: 0; }
+.karviam-internal .poster-avatar { background: #edf6f1; color: var(--ki-green); flex-shrink: 0; }
+.karviam-internal .listing-action-panel { position: sticky; top: 24px; }
+.karviam-internal .apply-section { display: flex; flex-direction: column; align-items: stretch; margin: 0; padding: 0; border: 0; gap: 16px; }
+.karviam-internal .apply-section h2 { font-size: 32px; color: var(--ki-green); margin-top: 8px; }
+.karviam-internal .listing-schedule { padding-block: 14px; border-block: 1px solid var(--ki-border); margin: 0; color: var(--ki-muted); font-size: 14px; line-height: 1.8; }
+.karviam-internal .apply-job-btn.applied { background: #eaf5ee; color: #1a694b; }
+.karviam-internal .application-message { font-size: 13px; line-height: 1.6; color: var(--ki-green); }
+/* Profile identity and reputation */
+.karviam-internal .profile-container { max-width: 1040px; }
+.karviam-internal .profile-header { gap: 20px; border-top: 3px solid #0f6b57; }
+.karviam-internal .profile-main-info { min-width: 0; }
+.karviam-internal .profile-main-info h1 { font-size: clamp(30px,3vw,40px); }
+.karviam-internal .profile-main-info p { line-height: 1.65; }
+.karviam-internal .profile-avatar { background: #edf6f1; color: var(--ki-green); margin: 0; }
+.karviam-internal .profile-member { background: #edf6f1; color: #1a694b; font-size: 11px; }
+.karviam-internal .profile-section-heading { margin-bottom: 18px; }
+.karviam-internal .profile-section-heading h2 { font-size: 26px; margin: 0 0 8px; }
+.karviam-internal .profile-section-heading p { font-size: 14px; line-height: 1.6; }
+.karviam-internal :is(.profile-details,.profile-info-grid) { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px 28px; }
+.karviam-internal :is(.profile-details strong,.profile-info-item strong) { font-size: 14px; }
+.karviam-internal :is(.profile-details span,.profile-info-item span) { font-size: 12px; color: var(--ki-muted); }
+.karviam-internal .profile-info-item { border-bottom: 1px solid var(--ki-border); padding-bottom: 12px; margin: 0; }
+.karviam-internal .profile-skills span { background: #edf6f1; color: #1a694b; font-size: 12px; }
+.karviam-internal .profile-rating-summary { background: none; border: none; padding: 0 0 16px; border-bottom: 1px solid var(--ki-border); border-radius: 0; }
+.karviam-internal .profile-reviews { grid-template-columns: repeat(2,minmax(0,1fr)); }
+.karviam-internal .profile-review { background: #f8faf9; border-color: var(--ki-border); border-radius: 14px; }
+.karviam-internal .profile-review time { display: block; color: var(--ki-muted); font-size: 11px; margin-top: 8px; }
+/* Conversation */
+.karviam-internal.chat-page { padding-block: 20px; }
+.karviam-internal .chat-container { max-width: 1000px; }
+.karviam-internal .chat-card { padding: 0; display: flex; flex-direction: column; height: min(760px, calc(100dvh - 164px)); min-height: 380px; }
+.karviam-internal .chat-header { padding: 18px 22px; flex-shrink: 0; }
+.karviam-internal .chat-header h1 { font-size: 26px; letter-spacing: -.5px; }
+.karviam-internal .chat-header p { line-height: 1.6; }
+.karviam-internal .chat-messages { flex: 1; min-height: 0; max-height: none; background: #fcfdfc; padding: 22px; overscroll-behavior: contain; }
+.karviam-internal .chat-empty { margin: 0; min-height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+.karviam-internal .chat-message { max-width: min(76%,560px); border-radius: 15px 15px 15px 4px; background: #f0f4f2; border-color: #e2eae5; padding: 10px 14px; }
+.karviam-internal .chat-message-row.own .chat-message { background: #0f6b57; border-color: #0f6b57; border-radius: 15px 15px 4px 15px; }
+.karviam-internal .chat-message p { font-size: 14px; white-space: pre-wrap; }
+.karviam-internal .chat-message small { font-size: 10px; }
+.karviam-internal .chat-message-row.own .chat-message p { color: #fff; }
+.karviam-internal .chat-message strong { color: #0f6b57; }
+.karviam-internal .chat-form { flex-shrink: 0; padding: 14px; }
+.karviam-internal .chat-form input { width: 0; min-width: 0; }
+@media (max-width: 1000px) {
+  .karviam-internal .job-details-card { grid-template-columns: minmax(0,1fr) 280px; gap: 18px; }
+  .karviam-internal .details-grid { grid-template-columns: minmax(0,1fr); }
+  .karviam-internal .my-jobs-grid { grid-template-columns: minmax(0,1fr); }
+}
+@media (max-width: 700px) {
+  main.karviam-internal { padding: 24px 16px 40px; }
+  .karviam-internal h1 { font-size: 30px; }
+  .karviam-internal :is(.applicants-list,.job-details-card,.form-row,.work-schedule,.profile-details,.profile-info-grid,.profile-edit-form,.profile-reviews) { grid-template-columns: minmax(0,1fr); }
+  .karviam-internal .listing-action-panel { position: static; }
+  .karviam-internal .internal-header-action { float: none; display: flex; width: fit-content; margin: 0 0 16px; }
+  .karviam-internal :is(.my-job-card,.application-card,.applicant-card,.profile-section,.profile-header,.post-work-form,.listing-main,.listing-action-panel) { padding: 18px; }
+  .karviam-internal .my-job-top { flex-wrap: wrap; }
+  .karviam-internal .my-job-status { margin-left: 56px; }
+  .karviam-internal .applicant-area { flex-direction: row; align-items: center; }
+  .karviam-internal .application-card { grid-template-columns: minmax(0,1fr); }
+  .karviam-internal .application-info { justify-content: space-between; }
+  .karviam-internal .hirer-contact-actions { margin-left: 0; width: 100%; }
+  .karviam-internal .profile-main-info { flex-basis: 180px; }
+  .karviam-internal .profile-header { gap: 14px; }
+  .karviam-internal .profile-edit-btn { margin-top: 0; }
+  .karviam-internal .profile-section-heading h2 { font-size: 23px; }
+  .karviam-internal.chat-page { padding: 14px 12px; }
+  .karviam-internal .chat-card { height: calc(100dvh - 146px); min-height: 360px; }
+  .karviam-internal .chat-header { padding: 16px; }
+  .karviam-internal .chat-header h1 { font-size: 23px; }
+  .karviam-internal .chat-messages { padding: 14px; }
+  .karviam-internal .chat-message { max-width: 88%; }
+}
+@media (prefers-reduced-motion: reduce) { .karviam-internal *, .karviam-internal *::before { transition: none !important; scroll-behavior: auto; } }

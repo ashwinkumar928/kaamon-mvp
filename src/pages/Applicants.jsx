@@ -7,6 +7,7 @@ import {
 
 import API_URL from "../api";
 import "./Applicants.css";
+import "./InternalPages.css";
 
 function Applicants() {
   const { jobId } = useParams();
@@ -22,6 +23,16 @@ function Applicants() {
 
   const [error, setError] =
     useState("");
+
+  const [jobContext, setJobContext] = useState(null);
+  useEffect(() => {
+    let active = true;
+    fetch(API_URL + "/api/jobs/" + jobId)
+      .then(response => response.ok ? response.json() : null)
+      .then(data => { if (active) setJobContext(data); })
+      .catch(() => { if (active) setJobContext(null); });
+    return () => { active = false; };
+  }, [jobId]);
 
   // REVIEW STATES
   const [reviewRatings, setReviewRatings] =
@@ -385,7 +396,7 @@ function Applicants() {
 
   if (loading) {
     return (
-      <main className="applicants-page">
+      <main className="applicants-page karviam-internal">
 
         <div className="applicants-container">
 
@@ -401,7 +412,7 @@ function Applicants() {
 
 
   return (
-    <main className="applicants-page">
+    <main className="applicants-page karviam-internal">
 
       <div className="applicants-container">
 
@@ -416,11 +427,11 @@ function Applicants() {
         <div className="applicants-heading">
 
           <span>
-            JOB APPLICANTS
+            APPLICANTS
           </span>
 
           <h1>
-            Applicants
+            People interested in this work
           </h1>
 
           <p>
@@ -441,10 +452,10 @@ function Applicants() {
         {!error &&
           applicants.length === 0 && (
 
-            <div className="no-applicants">
+            <div className="no-applicants"><span className="internal-empty-icon" aria-hidden="true">+</span>
 
               <h2>
-                No applicants yet
+                No one has applied yet
               </h2>
 
               <p>
@@ -456,6 +467,11 @@ function Applicants() {
           )}
 
 
+        {jobContext && <div className="internal-job-context">
+          <div><small>WORK REQUIREMENT</small><strong>{jobContext.title}</strong></div>
+          <span>{jobContext.location}</span><strong>&#8377;{Number(jobContext.payment).toLocaleString("en-IN")}</strong>
+          <span>{applicants.length} {applicants.length === 1 ? "applicant" : "applicants"}</span>
+        </div>}
         <div className="applicants-list">
 
           {applicants.map(
@@ -496,6 +512,8 @@ function Applicants() {
                     </p>
 
 
+                    {applicant.location && <p>{applicant.location}</p>}
+                    {applicant.skills && <p>{applicant.skills}</p>}
                     <Link
                       to={`/users/${applicant.applicant_id}?jobId=${jobId}`}
                       className="view-profile-btn"
@@ -661,6 +679,7 @@ function Applicants() {
 
                               <button
                                 key={star}
+                                aria-label={star + " stars"}
                                 type="button"
 
                                 className={
@@ -693,7 +712,7 @@ function Applicants() {
 
 
                         <textarea
-                          className="applicant-review-comment"
+                          className="applicant-review-comment" aria-label="Worker review comment"
 
                           placeholder="Write a short review (optional)"
 

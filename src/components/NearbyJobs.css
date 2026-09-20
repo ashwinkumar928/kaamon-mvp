@@ -810,10 +810,6 @@ body.dark-mode
 
 
 /* Balanced layouts for sparse results and long job details. */
-.nearby-jobs .jobs-grid:has(> .nearby-job-card:only-child) {
-  max-width: 760px;
-  grid-template-columns: minmax(0, 1fr);
-}
 .nearby-jobs .nearby-job-top > div:last-child { min-width: 0; }
 .nearby-jobs .job-details-row:last-of-type { padding-bottom: 8px; }
 .nearby-jobs .nearby-job-payment small {
@@ -848,3 +844,40 @@ body.dark-mode .nearby-jobs .nearby-job-payment small { color: #aebbd0; }
   .nearby-jobs .nearby-job-card:hover,
   .nearby-jobs .view-work-btn:hover { transform: none; }
 }
+
+/* Compact results, with fixed columns even when only one job matches. */
+.nearby-jobs .section-title { max-width: 1200px; text-align: left; margin-bottom: 24px; }
+.nearby-jobs .section-title h2 { font-size: clamp(30px, 3.4vw, 42px); letter-spacing: -1px; }
+.nearby-jobs .job-toolbar { padding: 16px; border-radius: 20px; margin-bottom: 22px; box-shadow: 0 6px 20px #17203305; }
+.nearby-jobs .job-search-box { min-height: 46px; }
+.nearby-jobs .job-search-box input { height: 44px; }
+.nearby-jobs .filter-row { gap: 12px; margin-top: 12px; }
+.nearby-jobs .job-filters { gap: 6px; }
+.nearby-jobs .filter-btn { padding: 8px 12px; }
+.nearby-jobs .filter-btn.active-filter { background: #0f6b57; border-color: #0f6b57; box-shadow: none; }
+.nearby-jobs .jobs-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.nearby-jobs .nearby-job-card { padding: 20px; border-radius: 22px; }
+.nearby-jobs .nearby-job-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px #17203312; }
+.nearby-jobs .nearby-job-top { gap: 10px; margin-bottom: 14px; }
+.nearby-jobs .nearby-job-icon { width: 44px; height: 44px; font-size: 22px; border-radius: 13px; }
+.nearby-jobs .nearby-job-top h3 { font-size: 20px; line-height: 1.3; }
+.nearby-jobs .job-type { font-size: 10px; letter-spacing: 1px; }
+.nearby-jobs .nearby-job-description { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.6; margin-bottom: 14px; }
+.nearby-jobs .job-details-row { margin: 0 0 8px; gap: 6px 12px; }
+.nearby-jobs .job-bottom { padding-top: 14px; gap: 10px; }
+.nearby-jobs .job-bottom strong { font-size: 22px; }
+.nearby-jobs .view-work-btn { padding: 10px 13px; min-height: 44px; border-radius: 11px; background: #0f6b57; width: auto; }
+.nearby-jobs .nearby-filter-pills { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
+.nearby-jobs .nearby-filter-pills span { padding: 6px 10px; background: #eaf5ef; color: #0f5949; border-radius: 20px; font-size: 12px; overflow-wrap: anywhere; }
+.nearby-jobs .nearby-show-more { text-align: center; margin-top: 28px; }
+.nearby-jobs .nearby-show-more p { font-size: 13px; color: #647184; }
+.nearby-jobs .nearby-show-more button { min-height: 44px; border: 1px solid #b8d3c8; border-radius: 12px; background: #fff; color: #0f6b57; padding: 12px 20px; font-size: 14px; font-weight: 700; }
+.nearby-jobs .nearby-show-more button:hover { background: #edf7f2; }
+@media (max-width: 1000px) { .nearby-jobs .jobs-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 650px) {
+  .nearby-jobs .jobs-grid { grid-template-columns: minmax(0, 1fr); }
+  .nearby-jobs .job-toolbar { padding: 12px; }
+  .nearby-jobs .job-details-row { flex-direction: row; }
+  .karviam-home .home-jobs-wrapper .nearby-jobs { padding: 48px 20px; }
+}
+@media (prefers-reduced-motion: reduce) { .nearby-jobs .nearby-job-card:hover { transform: none; } }
