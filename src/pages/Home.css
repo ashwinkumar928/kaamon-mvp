@@ -1,0 +1,2173 @@
+/* =========================================
+   KARVIAM PREMIUM HOME
+========================================= */
+
+.karviam-home {
+  overflow: hidden;
+  background: #f8faf9;
+  color: #172033;
+}
+
+
+/* =========================================
+   HERO
+========================================= */
+
+.karviam-home .home-hero {
+  min-height: 720px;
+
+  display: grid;
+  grid-template-columns:
+    minmax(0, 0.95fr)
+    minmax(0, 1.05fr);
+
+  align-items: center;
+
+  gap: 55px;
+
+  padding: 80px 6% 95px;
+
+  background:
+    radial-gradient(
+      circle at 6% 15%,
+      rgba(255, 107, 0, 0.08),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 95% 55%,
+      rgba(15, 92, 77, 0.09),
+      transparent 27%
+    ),
+    #fffdfa;
+}
+
+
+.karviam-home .home-hero-content {
+  max-width: 700px;
+}
+
+
+.karviam-home .home-hero-badge {
+  width: fit-content;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  padding: 10px 15px;
+
+  margin-bottom: 24px;
+
+  border: 1px solid #e8e2db;
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.78);
+
+  color: #0f5c4d;
+
+  font-size: 11px;
+  font-weight: 900;
+
+  letter-spacing: 1.8px;
+}
+
+.karviam-home .home-hero-badge span {
+  color: #ff6b00;
+}
+
+
+.karviam-home .home-hero h1 {
+  margin: 0;
+
+  color: #172033;
+
+  font-size:
+    clamp(48px, 5.5vw, 78px);
+
+  line-height: 1.02;
+
+  letter-spacing: -2.6px;
+}
+
+.karviam-home .home-hero h1 > span {
+  color: #0f6b57;
+}
+
+
+.karviam-home .home-hero-description {
+  max-width: 625px;
+
+  margin: 26px 0 0;
+
+  color: #687386;
+
+  font-size: 17px;
+
+  line-height: 1.75;
+}
+
+
+.karviam-home .home-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 12px;
+
+  margin-top: 32px;
+}
+
+
+.karviam-home .home-primary-btn,
+.karviam-home .home-secondary-btn {
+  min-height: 52px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 12px;
+
+  padding: 0 23px;
+
+  border-radius: 13px;
+
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  transition: 0.22s ease;
+}
+
+
+.karviam-home .home-primary-btn {
+  background: #0f5c4d;
+  color: #ffffff;
+
+  box-shadow:
+    0 12px 26px
+    rgba(15, 92, 77, 0.2);
+}
+
+
+.karviam-home .home-primary-btn:hover {
+  transform: translateY(-2px);
+
+  background: #0b4d40;
+}
+
+
+.karviam-home .home-secondary-btn {
+  border: 1px solid #d9e0e5;
+
+  background: #ffffff;
+
+  color: #172033;
+}
+
+
+.karviam-home .home-secondary-btn:hover {
+  border-color: #0f5c4d;
+
+  color: #0f5c4d;
+
+  background: #f4faf8;
+}
+
+
+.karviam-home .home-trust-row {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 18px;
+
+  margin-top: 31px;
+}
+
+
+.karviam-home .home-trust-row > div {
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+
+  color: #5f6978;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+.karviam-home .home-trust-row span {
+  width: 23px;
+  height: 23px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #e8f6f1;
+
+  color: #0f6b57;
+}
+
+
+/* =========================================
+   HERO WORKER SHOWCASE
+========================================= */
+
+.karviam-home .home-worker-showcase {
+  position: relative;
+
+  min-height: 565px;
+
+  overflow: hidden;
+
+  padding: 34px;
+
+  border: 1px solid #e2e7e5;
+
+  border-radius: 34px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #eaf4f1 0%,
+      #fff7ef 100%
+    );
+
+  box-shadow:
+    0 28px 70px
+    rgba(23, 32, 51, 0.09);
+}
+
+
+.karviam-home .home-showcase-glow {
+  position: absolute;
+
+  width: 350px;
+  height: 350px;
+
+  right: -140px;
+  top: -150px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(255, 107, 0, 0.13);
+
+  filter: blur(1px);
+}
+
+
+.karviam-home .showcase-heading {
+  position: relative;
+
+  z-index: 3;
+}
+
+
+.karviam-home .showcase-heading > span {
+  color: #ff6b00;
+
+  font-size: 10px;
+  font-weight: 900;
+
+  letter-spacing: 2px;
+}
+
+
+.karviam-home .showcase-heading p {
+  max-width: 290px;
+
+  margin: 7px 0 0;
+
+  color: #687386;
+
+  font-size: 13px;
+
+  line-height: 1.5;
+}
+
+
+.karviam-home .worker-card-stack {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  height: 415px;
+  margin-top: 30px;
+  padding-top: 12px;
+}
+
+.karviam-home .home-worker-card {
+  --card-index: 0;
+  --worker-accent: #0f5c4d;
+  --worker-tint: #edf7f4;
+  position: relative;
+  top: calc(var(--card-index) * 12px);
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 285px;
+  height: 370px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #e2e7e5;
+  border-radius: 22px;
+  background: #ffffff;
+  color: #172033;
+  box-shadow: 0 16px 35px rgba(23, 32, 51, 0.14);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.karviam-home .home-worker-card + .home-worker-card {
+  margin-left: -24px;
+}
+
+.karviam-home .home-worker-card:hover {
+  z-index: 10;
+  transform: translateY(-8px) rotate(0deg);
+  box-shadow: 0 24px 45px rgba(23, 32, 51, 0.2);
+}
+
+.karviam-home .worker-green {
+  transform: rotate(-2deg);
+}
+
+.karviam-home .worker-orange {
+  --worker-accent: #a94e07;
+  --worker-tint: #fff1e6;
+  transform: rotate(2deg);
+}
+
+.karviam-home .worker-blue {
+  --worker-accent: #172033;
+  --worker-tint: #eef1f6;
+  transform: rotate(-1deg);
+}
+
+.karviam-home .worker-photo {
+  display: block;
+  width: 100%;
+  height: 210px;
+  flex-shrink: 0;
+  object-fit: cover;
+  object-position: center 25%;
+  background: #f2f6f5;
+  border-bottom: 3px solid var(--worker-accent);
+}
+
+.karviam-home .worker-card-info {
+  padding: 17px 16px 12px;
+}
+
+.karviam-home .worker-card-info h3 {
+  margin: 0;
+  color: #172033;
+  font-size: clamp(18px, 1.6vw, 23px);
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+
+.karviam-home .worker-card-info p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 7px 0 0;
+  color: #687386;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.karviam-home .worker-card-bottom {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-start;
+  gap: 9px;
+  margin: auto 16px 16px;
+}
+
+.karviam-home .worker-card-bottom > span {
+  color: #748092;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+}
+
+.karviam-home .worker-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 9px;
+  border-radius: 999px;
+  background: var(--worker-tint);
+  color: var(--worker-accent);
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.karviam-home .worker-status::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+
+/* =========================================
+   DISCOVERY STRIP
+========================================= */
+
+.karviam-home .home-discovery {
+  max-width: 1400px;
+
+  display: grid;
+
+  grid-template-columns:
+    0.7fr 1.3fr;
+
+  align-items: center;
+
+  gap: 40px;
+
+  margin: -36px auto 0;
+
+  position: relative;
+
+  z-index: 5;
+
+  padding: 27px 31px;
+
+  border: 1px solid #e0e6e3;
+
+  border-radius: 24px;
+
+  background: white;
+
+  box-shadow:
+    0 20px 50px
+    rgba(23, 32, 51, 0.08);
+}
+
+
+.karviam-home .home-discovery-intro > span {
+  color: #ff6b00;
+
+  font-size: 9px;
+  font-weight: 900;
+
+  letter-spacing: 2px;
+}
+
+
+.karviam-home .home-discovery-intro h2 {
+  margin: 6px 0 0;
+
+  color: #172033;
+
+  font-size: 25px;
+}
+
+
+.karviam-home .home-discovery-links {
+  display: flex;
+  flex-wrap: wrap;
+
+  justify-content: flex-end;
+
+  gap: 9px;
+}
+
+
+.karviam-home .home-discovery-links a {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 8px;
+
+  padding: 10px 13px;
+
+  border: 1px solid #e3e9e6;
+
+  border-radius: 999px;
+
+  background: #fafcfb;
+
+  color: #334155;
+
+  text-decoration: none;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  transition: 0.2s ease;
+}
+
+
+.karviam-home .home-discovery-links a:hover {
+  border-color: #0f5c4d;
+
+  color: #0f5c4d;
+
+  background: #f2faf7;
+}
+
+
+/* =========================================
+   GLOBAL SECTION HEADING
+========================================= */
+
+.karviam-home .home-section-heading {
+  max-width: 670px;
+}
+
+
+.karviam-home .home-section-heading.centered {
+  margin: 0 auto 45px;
+
+  text-align: center;
+}
+
+
+.karviam-home .home-section-heading > span {
+  color: #ff6b00;
+
+  font-size: 10px;
+  font-weight: 900;
+
+  letter-spacing: 2.5px;
+}
+
+
+.karviam-home .home-section-heading h2 {
+  margin: 10px 0 0;
+
+  color: #172033;
+
+  font-size:
+    clamp(36px, 4vw, 53px);
+
+  line-height: 1.08;
+
+  letter-spacing: -1.5px;
+}
+
+
+.karviam-home .home-section-heading > p {
+  margin: 17px 0 0;
+
+  color: #6f798a;
+
+  font-size: 15px;
+
+  line-height: 1.7;
+}
+
+
+/* =========================================
+   TWO PATH CARDS
+========================================= */
+
+.karviam-home .home-path-section {
+  max-width: 1400px;
+
+  margin: 0 auto;
+
+  padding: 115px 6% 95px;
+}
+
+
+.karviam-home .home-path-section >
+.home-section-heading {
+  margin-bottom: 40px;
+}
+
+
+.karviam-home .home-path-grid {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 22px;
+}
+
+
+.karviam-home .home-path-card {
+  position: relative;
+
+  min-height: 430px;
+
+  overflow: hidden;
+
+  padding: 35px;
+
+  border-radius: 28px;
+
+  transition:
+    transform 0.28s ease,
+    box-shadow 0.28s ease;
+}
+
+
+.karviam-home .home-path-card:hover {
+  transform: translateY(-7px);
+}
+
+
+.karviam-home .home-path-hire {
+  border: 1px solid #e3e8e6;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 18px 45px
+    rgba(23, 32, 51, 0.055);
+}
+
+
+.karviam-home .home-path-work {
+  background:
+    linear-gradient(
+      145deg,
+      #0f6252,
+      #09483e
+    );
+
+  color: white;
+
+  box-shadow:
+    0 22px 55px
+    rgba(15, 92, 77, 0.17);
+}
+
+
+.karviam-home .path-number {
+  position: absolute;
+
+  top: 30px;
+  right: 30px;
+
+  min-width: 45px;
+
+  padding: 7px 10px;
+
+  border-radius: 999px;
+
+  background: #edf7f4;
+
+  color: #0f5c4d;
+
+  text-align: center;
+
+  font-size: 11px;
+  font-weight: 900;
+}
+
+
+.karviam-home .home-path-work .path-number {
+  background:
+    rgba(255, 255, 255, 0.11);
+
+  color: #ffb06b;
+}
+
+
+.karviam-home .path-icon {
+  width: 62px;
+  height: 62px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 28px;
+
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #eef8f5,
+      #fff3e9
+    );
+
+  font-size: 29px;
+}
+
+
+.karviam-home .home-path-work .path-icon {
+  background:
+    rgba(255, 255, 255, 0.12);
+}
+
+
+.karviam-home .path-label {
+  color: #ff6b00;
+
+  font-size: 10px;
+  font-weight: 900;
+
+  letter-spacing: 2px;
+}
+
+
+.karviam-home .home-path-card h3 {
+  margin: 8px 0 13px;
+
+  color: #172033;
+
+  font-size: 32px;
+}
+
+
+.karviam-home .home-path-work h3 {
+  color: white;
+}
+
+
+.karviam-home .home-path-card p {
+  max-width: 500px;
+
+  margin: 0;
+
+  color: #707b8d;
+
+  font-size: 14px;
+
+  line-height: 1.75;
+}
+
+
+.karviam-home .home-path-work p {
+  color:
+    rgba(255, 255, 255, 0.75);
+}
+
+
+.karviam-home .home-path-card > a {
+  position: absolute;
+
+  left: 35px;
+  bottom: 35px;
+
+  display: inline-flex;
+  align-items: center;
+
+  gap: 13px;
+
+  color: #0f5c4d;
+
+  text-decoration: none;
+
+  font-size: 13px;
+  font-weight: 900;
+}
+
+
+.karviam-home .home-path-work > a {
+  color: #ffffff;
+}
+
+
+/* =========================================
+   CATEGORIES
+========================================= */
+
+.karviam-home .home-categories {
+  padding: 100px 6%;
+
+  background: #f2f6f5;
+}
+
+
+.karviam-home .home-categories-grid {
+  max-width: 1300px;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 16px;
+
+  margin: 0 auto;
+}
+
+
+.karviam-home .home-category-card {
+  position: relative;
+
+  min-height: 235px;
+
+  padding: 26px;
+
+  overflow: hidden;
+
+  border: 1px solid #dfe7e3;
+
+  border-radius: 22px;
+
+  background: white;
+
+  color: inherit;
+
+  text-decoration: none;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+
+.karviam-home .home-category-card:hover {
+  transform: translateY(-6px);
+
+  border-color:
+    rgba(15, 92, 77, 0.35);
+
+  box-shadow:
+    0 18px 35px
+    rgba(23, 32, 51, 0.08);
+}
+
+
+.karviam-home .category-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+.karviam-home .category-icon {
+  width: 54px;
+  height: 54px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 16px;
+
+  font-size: 25px;
+}
+
+
+.karviam-home .category-icon.orange {
+  background: #fff1e6;
+}
+
+
+.karviam-home .category-icon.green {
+  background: #edf8f4;
+}
+
+
+.karviam-home .category-top > span {
+  color: #9ca6b4;
+
+  font-size: 10px;
+  font-weight: 900;
+
+  letter-spacing: 1px;
+}
+
+
+.karviam-home .home-category-card h3 {
+  margin: 27px 0 8px;
+
+  color: #172033;
+
+  font-size: 19px;
+}
+
+
+.karviam-home .home-category-card p {
+  margin: 0;
+
+  color: #748092;
+
+  font-size: 12px;
+
+  line-height: 1.6;
+}
+
+
+.karviam-home .category-arrow {
+  position: absolute;
+
+  right: 25px;
+  bottom: 22px;
+
+  color: #ff6b00;
+
+  font-size: 20px;
+
+  transition: 0.2s ease;
+}
+
+
+.karviam-home .home-category-card:hover
+.category-arrow {
+  transform: translateX(4px);
+}
+
+
+/* =========================================
+   HOW IT WORKS
+========================================= */
+
+.karviam-home .home-how {
+  padding: 105px 6%;
+
+  background: #ffffff;
+}
+
+
+.karviam-home .home-how-top {
+  max-width: 1300px;
+
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+
+  gap: 60px;
+
+  margin: 0 auto 42px;
+}
+
+
+.karviam-home .home-how-top > p {
+  max-width: 390px;
+
+  margin: 0;
+
+  color: #728093;
+
+  font-size: 14px;
+
+  line-height: 1.7;
+}
+
+
+.karviam-home .home-how-grid {
+  max-width: 1300px;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 18px;
+
+  margin: 0 auto;
+}
+
+
+.karviam-home .home-how-grid article {
+  position: relative;
+
+  min-height: 335px;
+
+  padding: 29px;
+
+  border: 1px solid #e2e7e5;
+
+  border-radius: 24px;
+
+  background: #fbfcfc;
+}
+
+
+.karviam-home .home-how-grid article.featured {
+  background:
+    linear-gradient(
+      145deg,
+      #0f6252,
+      #0a4c41
+    );
+
+  border-color: transparent;
+
+  color: white;
+
+  transform: translateY(-12px);
+
+  box-shadow:
+    0 25px 50px
+    rgba(15, 92, 77, 0.16);
+}
+
+
+.karviam-home .how-step {
+  position: absolute;
+
+  top: 28px;
+  right: 28px;
+
+  color: #0f5c4d;
+
+  font-size: 11px;
+  font-weight: 900;
+}
+
+
+.karviam-home .featured .how-step {
+  color: #ffb16f;
+}
+
+
+.karviam-home .how-step-icon {
+  width: 57px;
+  height: 57px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 17px;
+
+  background: #f3f8f6;
+
+  font-size: 27px;
+}
+
+
+.karviam-home .featured .how-step-icon {
+  background:
+    rgba(255, 255, 255, 0.12);
+}
+
+
+.karviam-home .home-how-grid h3 {
+  margin: 44px 0 12px;
+
+  color: #172033;
+
+  font-size: 23px;
+}
+
+
+.karviam-home .featured h3 {
+  color: white;
+}
+
+
+.karviam-home .home-how-grid p {
+  margin: 0;
+
+  color: #738093;
+
+  font-size: 13px;
+
+  line-height: 1.75;
+}
+
+
+.karviam-home .featured p {
+  color:
+    rgba(255, 255, 255, 0.76);
+}
+
+
+/* =========================================
+   NEARBY JOBS OVERRIDES
+========================================= */
+
+.karviam-home .home-jobs-wrapper {
+  background: #f8faf9;
+}
+
+
+.karviam-home .home-jobs-wrapper
+.nearby-jobs {
+  padding-top: 64px;
+  padding-bottom: 72px;
+}
+
+
+/* =========================================
+   TRUST SECTION
+========================================= */
+
+.karviam-home .home-trust-section {
+  display: grid;
+
+  grid-template-columns:
+    1fr 0.8fr;
+
+  align-items: center;
+
+  gap: 80px;
+
+  padding: 100px 8%;
+
+  background:
+    linear-gradient(
+      125deg,
+      #111a34,
+      #13233d
+    );
+
+  color: white;
+}
+
+
+.karviam-home .trust-eyebrow {
+  color: #ff9a45;
+
+  font-size: 10px;
+  font-weight: 900;
+
+  letter-spacing: 2.5px;
+}
+
+
+.karviam-home .home-trust-content h2 {
+  max-width: 690px;
+
+  margin: 14px 0 20px;
+
+  color: white;
+
+  font-size:
+    clamp(38px, 4vw, 58px);
+
+  line-height: 1.08;
+
+  letter-spacing: -1.5px;
+}
+
+
+.karviam-home .home-trust-content > p {
+  max-width: 650px;
+
+  margin: 0;
+
+  color: #adb9cd;
+
+  font-size: 15px;
+
+  line-height: 1.75;
+}
+
+
+.karviam-home .trust-points {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 13px;
+
+  margin-top: 34px;
+}
+
+
+.karviam-home .trust-points > div {
+  padding: 19px;
+
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.08);
+
+  border-radius: 17px;
+
+  background:
+    rgba(255, 255, 255, 0.05);
+}
+
+
+.karviam-home .trust-points span {
+  color: #ff9a45;
+
+  font-size: 9px;
+  font-weight: 900;
+}
+
+
+.karviam-home .trust-points strong {
+  display: block;
+
+  margin: 8px 0 5px;
+
+  color: white;
+
+  font-size: 13px;
+}
+
+
+.karviam-home .trust-points p {
+  margin: 0;
+
+  color: #9ba8bc;
+
+  font-size: 10px;
+
+  line-height: 1.5;
+}
+
+
+/* DEMO PROFILE CARD */
+
+.karviam-home .home-trust-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-width: 0;
+  padding: 28px;
+  border: 1px solid rgba(192, 242, 226, 0.22);
+  border-radius: 30px;
+  background:
+    radial-gradient(ellipse at 95% 0%, rgba(99, 215, 181, 0.23), transparent 55%),
+    radial-gradient(ellipse at 0% 100%, rgba(19, 105, 121, 0.32), transparent 65%),
+    linear-gradient(135deg, #155c59, #0c373f 75%, #102d39);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.12),
+    0 24px 55px rgba(0, 0, 0, 0.25);
+}
+
+.karviam-home .home-trust-card::before,
+.karviam-home .home-trust-card::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  width: 290px;
+  height: 290px;
+  border: 1px solid rgba(194, 244, 228, 0.07);
+  border-radius: 50%;
+}
+
+.karviam-home .home-trust-card::before {
+  top: -160px;
+  right: -80px;
+  box-shadow: 0 0 0 24px rgba(194, 244, 228, 0.025), 0 0 0 49px rgba(194, 244, 228, 0.02);
+}
+
+.karviam-home .home-trust-card::after {
+  bottom: -225px;
+  left: -85px;
+  width: 360px;
+  height: 360px;
+}
+
+.karviam-home .trust-card-top {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.karviam-home .trust-card-top img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.karviam-home .trust-card-label {
+  color: #c5ddd7;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.karviam-home .trust-demo-member {
+  margin-left: auto;
+  padding: 7px 10px;
+  border: 1px solid rgba(211, 241, 229, 0.2);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #d5eae4;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+.karviam-home .trust-profile {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin: 28px 0 25px;
+}
+
+.karviam-home .trust-avatar {
+  display: block;
+  width: 100px;
+  height: 100px;
+  flex-shrink: 0;
+  object-fit: cover;
+  object-position: center 25%;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  background: #205955;
+  box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.05), 0 10px 22px rgba(0, 0, 0, 0.2);
+}
+
+.karviam-home .trust-profile-details {
+  min-width: 0;
+}
+
+.karviam-home .trust-profile h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.7px;
+}
+
+.karviam-home .trust-profile-role {
+  margin: 6px 0 0;
+  color: #e0eee9;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.karviam-home .trust-profile-location {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 7px 0 11px;
+  color: #b8d1ca;
+  font-size: 12px;
+}
+
+.karviam-home .trust-profile-location svg,
+.karviam-home .trust-card-capabilities svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.karviam-home .trust-availability {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 9px;
+  border: 1px solid rgba(110, 231, 174, 0.18);
+  border-radius: 999px;
+  background: rgba(76, 191, 133, 0.12);
+  color: #b8f0cc;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.karviam-home .trust-availability::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #81dba6;
+}
+
+.karviam-home .trust-card-capabilities {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.5fr;
+  gap: 8px;
+  margin: 0;
+  padding: 20px 0;
+  border-top: 1px solid rgba(208, 241, 230, 0.16);
+  list-style: none;
+}
+
+.karviam-home .trust-card-capabilities li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 12px 5px;
+  border: 1px solid rgba(208, 241, 230, 0.08);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.035);
+  color: #deece7;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.karviam-home .trust-card-capabilities svg {
+  width: 19px;
+  height: 19px;
+  color: #a8d7c9;
+}
+
+.karviam-home .trust-card-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+.karviam-home .trust-card-status p {
+  margin: 0;
+  color: #b8d1ca;
+  font-size: 10px;
+}
+
+.karviam-home .trust-card-status strong {
+  margin-left: 5px;
+  color: #ffffff;
+  font-size: 12px;
+}
+
+.karviam-home .trust-demo-profile {
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 176, 107, 0.4);
+  border-radius: 999px;
+  background: #ffb06b;
+  color: #42270f;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+@media (max-width: 450px) {
+  .karviam-home .home-trust-card {
+    padding: 22px 18px;
+    border-radius: 28px;
+  }
+
+  .karviam-home .trust-card-top {
+    gap: 8px;
+  }
+
+  .karviam-home .trust-card-label {
+    font-size: 8px;
+    letter-spacing: 0.8px;
+  }
+
+  .karviam-home .trust-demo-member {
+    padding: 6px 8px;
+    font-size: 7px;
+  }
+
+  .karviam-home .trust-profile {
+    gap: 16px;
+    margin: 24px 0;
+  }
+
+  .karviam-home .trust-avatar {
+    width: 90px;
+    height: 90px;
+  }
+
+  .karviam-home .trust-profile h3 {
+    font-size: 27px;
+  }
+}
+
+
+/* =========================================
+   FINAL CTA
+========================================= */
+
+.karviam-home .home-final-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 50px;
+
+  padding: 80px 8%;
+
+  background: #fffdf9;
+}
+
+
+.karviam-home .home-final-cta > div:first-child {
+  max-width: 690px;
+}
+
+
+.karviam-home .home-final-cta span {
+  color: #ff6b00;
+
+  font-size: 10px;
+  font-weight: 900;
+
+  letter-spacing: 2.2px;
+}
+
+
+.karviam-home .home-final-cta h2 {
+  margin: 11px 0 9px;
+
+  color: #172033;
+
+  font-size:
+    clamp(38px, 4vw, 53px);
+}
+
+
+.karviam-home .home-final-cta p {
+  margin: 0;
+
+  color: #748092;
+
+  font-size: 14px;
+
+  line-height: 1.7;
+}
+
+
+.karviam-home .home-final-actions {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 11px;
+}
+
+
+.karviam-home .final-primary,
+.karviam-home .final-secondary {
+  min-height: 50px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 21px;
+
+  border-radius: 12px;
+
+  text-decoration: none;
+
+  font-size: 13px;
+  font-weight: 900;
+}
+
+
+.karviam-home .final-primary {
+  background: #0f5c4d;
+
+  color: white;
+}
+
+
+.karviam-home .final-secondary {
+  border: 1px solid #d9e0e5;
+
+  background: white;
+
+  color: #172033;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1150px) {
+
+  .karviam-home .home-hero {
+    grid-template-columns: 1fr;
+  }
+
+
+  .karviam-home .home-worker-showcase {
+    max-width: 850px;
+  }
+
+
+  .karviam-home .home-discovery {
+    margin-left: 4%;
+    margin-right: 4%;
+  }
+
+
+  .karviam-home .home-trust-section {
+    grid-template-columns: 1fr;
+  }
+
+
+  .karviam-home .home-trust-card {
+    max-width: 650px;
+  }
+
+}
+
+
+@media (max-width: 900px) {
+
+  .karviam-home .home-discovery {
+    grid-template-columns: 1fr;
+  }
+
+
+  .karviam-home .home-discovery-links {
+    justify-content: flex-start;
+  }
+
+
+  .karviam-home .home-categories-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+
+  .karviam-home .home-how-top {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 18px;
+  }
+
+
+  .karviam-home .home-how-grid {
+    grid-template-columns: 1fr;
+  }
+
+
+  .karviam-home .home-how-grid article.featured {
+    transform: none;
+  }
+
+
+  .karviam-home .home-final-cta {
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+}
+
+
+@media (max-width: 700px) {
+
+  .karviam-home .home-hero {
+    min-height: auto;
+
+    padding:
+      55px 20px 85px;
+  }
+
+
+  .karviam-home .home-hero h1 {
+    font-size: 48px;
+
+    letter-spacing: -1.8px;
+  }
+
+
+  .karviam-home .home-hero-description {
+    font-size: 15px;
+  }
+
+
+  .karviam-home .home-hero-actions {
+    flex-direction: column;
+  }
+
+
+  .karviam-home .home-primary-btn,
+  .karviam-home .home-secondary-btn {
+    width: 100%;
+  }
+
+
+  .karviam-home .home-worker-showcase {
+    min-height: auto;
+
+    padding: 24px;
+
+    border-radius: 25px;
+  }
+
+
+  .karviam-home .worker-card-stack {
+    height: auto;
+
+    display: flex;
+
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+
+    gap: 14px;
+
+    padding-bottom: 10px;
+  }
+
+
+  .karviam-home .home-worker-card {
+    position: relative;
+
+    top: auto;
+    left: auto;
+
+    width: 270px;
+    min-width: 270px;
+    flex: 0 0 270px;
+    scroll-snap-align: start;
+
+    height: 370px;
+
+    transform: none;
+  }
+
+
+  .karviam-home .home-worker-card + .home-worker-card {
+    margin-left: 0;
+  }
+
+  .karviam-home .home-path-section,
+  .karviam-home .home-categories,
+  .karviam-home .home-how {
+    padding:
+      75px 20px;
+  }
+
+
+  .karviam-home .home-path-grid {
+    grid-template-columns: 1fr;
+  }
+
+
+  .karviam-home .home-path-card {
+    min-height: 390px;
+  }
+
+
+  .karviam-home .home-categories-grid {
+    grid-template-columns: 1fr;
+  }
+
+
+  .karviam-home .home-trust-section {
+    padding:
+      75px 20px;
+  }
+
+
+  .karviam-home .trust-points {
+    grid-template-columns: 1fr;
+  }
+
+
+  .karviam-home .home-final-cta {
+    padding:
+      65px 20px;
+  }
+
+
+  .karviam-home .home-final-actions {
+    width: 100%;
+  }
+
+
+  .karviam-home .final-primary,
+  .karviam-home .final-secondary {
+    width: 100%;
+  }
+
+}
+
+
+@media (max-width: 450px) {
+
+  .karviam-home .home-hero h1 {
+    font-size: 41px;
+  }
+
+
+  .karviam-home .home-section-heading h2 {
+    font-size: 35px;
+  }
+
+
+  .karviam-home .home-discovery {
+    margin-top: -25px;
+
+    padding: 22px;
+  }
+
+}
+
+
+/* TRUST ON KARVIAM */
+.karviam-home .home-trust-features {
+  position: relative;
+  padding: 100px 6%;
+  border-top: 1px solid rgba(181, 204, 239, 0.1);
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(42, 82, 139, 0.25), transparent 65%),
+    radial-gradient(ellipse at 100% 100%, rgba(255, 107, 0, 0.045), transparent 50%),
+    #0b1426;
+  color: #ffffff;
+}
+
+.karviam-home .home-trust-features-inner {
+  max-width: 1250px;
+  margin: 0 auto;
+}
+
+.karviam-home .home-trust-features-heading {
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.karviam-home .home-trust-features-label {
+  display: inline-block;
+  color: #ff9a45;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+}
+
+.karviam-home .home-trust-features-heading h2 {
+  margin: 20px 0;
+  color: #ffffff;
+  font-size: clamp(34px, 4.3vw, 58px);
+  line-height: 1.12;
+  letter-spacing: -1.6px;
+  text-wrap: balance;
+}
+
+.karviam-home .home-trust-features-heading h2 span {
+  color: #ff8a26;
+}
+
+.karviam-home .home-trust-features-heading p {
+  max-width: 620px;
+  margin: 0 auto;
+  color: #b0bdd0;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.karviam-home .home-trust-features-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin: 48px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.karviam-home .home-trust-features-grid li {
+  padding: 28px 24px;
+  border: 1px solid rgba(181, 204, 239, 0.13);
+  border-radius: 22px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035), 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+.karviam-home .home-trust-feature-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255, 154, 69, 0.14);
+  border-radius: 14px;
+  background: rgba(255, 138, 38, 0.075);
+  color: #ffac68;
+}
+
+.karviam-home .home-trust-feature-icon svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.karviam-home .home-trust-features-grid h3 {
+  margin: 22px 0 10px;
+  color: #f4f7fc;
+  font-size: 17px;
+  line-height: 1.4;
+}
+
+.karviam-home .home-trust-features-grid p {
+  margin: 0;
+  color: #aebbd0;
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+@media (max-width: 1000px) {
+  .karviam-home .home-trust-features-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .karviam-home .home-trust-features {
+    padding: 72px 20px;
+  }
+
+  .karviam-home .home-trust-features-heading h2 {
+    letter-spacing: -0.8px;
+  }
+
+  .karviam-home .home-trust-features-heading p {
+    font-size: 14px;
+  }
+
+  .karviam-home .home-trust-features-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 32px;
+  }
+
+  .karviam-home .home-trust-features-grid li {
+    padding: 24px;
+  }
+}
+
+
+/* LOCAL WORK DISCOVERY */
+.karviam-home .home-local-discovery {
+  padding: 80px 6% 0;
+  background: #f8faf9;
+}
+
+.karviam-home .home-local-scene {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 48px clamp(22px, 5vw, 72px) 56px;
+  border: 1px solid #dfe8e2;
+  border-radius: 30px;
+  background:
+    radial-gradient(ellipse 620px 290px at 18% 10%, rgba(255, 253, 247, 0.32), transparent 85%),
+    linear-gradient(115deg, rgba(255, 253, 247, 0.46) 0%, rgba(255, 253, 247, 0.40) 55%, rgba(255, 253, 247, 0.40) 100%),
+    url("/backgrounds/patna-city.png") center 55% / cover no-repeat,
+    #faf7ef;
+  box-shadow: 0 24px 60px rgba(23, 32, 51, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.karviam-home .home-local-heading { max-width: 680px; }
+.karviam-home .home-local-heading > span {
+  color: #b34d08;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+}
+.karviam-home .home-local-heading h2 {
+  margin: 24px 0 22px;
+  color: #172033;
+  font-size: clamp(36px, 4.5vw, 60px);
+  line-height: 1.1;
+  letter-spacing: -1.8px;
+  text-wrap: balance;
+}
+.karviam-home .home-local-heading em { color: #0f5c4d; font-style: normal; }
+.karviam-home .home-local-heading p {
+  margin: 0;
+  max-width: 480px;
+  color: #354458;
+  font-size: 16px;
+  line-height: 1.85;
+}
+
+.karviam-home .home-local-panel {
+  max-width: 920px;
+  padding: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.96);
+  border-radius: 21px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 18px 40px rgba(23, 32, 51, 0.18), 0 4px 12px rgba(23, 32, 51, 0.07), inset 0 1px 0 #ffffff;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  width: 94%;
+  margin: 44px auto 0;
+}
+.karviam-home .home-local-controls {
+  display: grid;
+  grid-template-columns: minmax(140px, 170px) minmax(0, 1fr) 44px 44px;
+  align-items: center;
+  gap: 8px;
+}
+.karviam-home .home-local-controls svg {
+  width: 21px;
+  height: 21px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.karviam-home .home-local-area,
+.karviam-home .home-local-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 12px;
+  color: #0f5c4d;
+  border-radius: 10px;
+}
+.karviam-home .home-local-area {
+  border-right: 1px solid rgba(15, 92, 77, 0.15);
+  border-radius: 10px 0 0 10px;
+}
+.karviam-home .home-local-area > div { flex: 1; min-width: 0; }
+.karviam-home .home-local-area select {
+  width: 100%;
+  min-height: 44px;
+  border: none;
+  background: transparent;
+  color: #172033;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.karviam-home .home-local-search input {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  border: none;
+  background: transparent;
+  color: #172033;
+  font: inherit;
+  font-size: 15px;
+}
+.karviam-home .home-local-search input::placeholder { color: #647184; }
+.karviam-home .home-local-geolocation,
+.karviam-home .home-local-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid rgba(15, 92, 77, 0.1);
+  border-radius: 50%;
+  background: rgba(15, 92, 77, 0.06);
+  color: #0f5c4d;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+.karviam-home .home-local-geolocation:hover { background: #d5ebdf; }
+.karviam-home .home-local-geolocation:disabled { opacity: 0.55; cursor: wait; }
+.karviam-home .home-local-submit {
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 14px;
+  background: #0f5c4d;
+  color: #ffffff;
+  font-size: 24px;
+  box-shadow: 0 4px 10px rgba(15, 92, 77, 0.16);
+}
+.karviam-home .home-local-submit:hover { background: #0b493e; }
+.karviam-home .home-local-submit span { transition: transform 0.2s ease; }
+.karviam-home .home-local-submit:hover span { transform: translateX(3px); }
+.karviam-home .home-local-location-status {
+  max-width: 912px;
+  margin: 10px auto 0;
+  color: #526071;
+  font-size: 11px;
+  line-height: 1.6;
+  width: 92%;
+}
+.karviam-home .home-local-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  max-width: 920px;
+  width: 94%;
+  margin: 28px auto 0;
+}
+.karviam-home .home-local-categories button {
+  min-height: 40px;
+  padding: 8px 13px;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.44);
+  color: #253b35;
+  font-size: 12px;
+  font-weight: 600;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.karviam-home .home-local-categories button:hover,
+.karviam-home .home-local-categories button[aria-pressed="true"] {
+  background: rgba(228, 242, 233, 0.88);
+  border-color: #0f5c4d;
+  color: #0f5c4d;
+}
+.karviam-home .home-local-scene :is(button, select, input):focus-visible {
+  outline: 3px solid #ff9a45;
+  outline-offset: 2px;
+}
+.karviam-home .home-local-search:focus-within,
+.karviam-home .home-local-area:focus-within { background: rgba(230, 244, 237, 0.45); }
+
+@media (max-width: 700px) {
+  .karviam-home .home-local-controls {
+    grid-template-columns: minmax(0, 1fr) 44px 44px;
+    gap: 6px;
+  }
+  .karviam-home .home-local-area {
+    grid-column: 1 / -1;
+    border-right: none;
+    border-bottom: 1px solid rgba(15, 92, 77, 0.15);
+    border-radius: 10px 10px 0 0;
+    padding-bottom: 4px;
+  }
+  .karviam-home .home-local-search { padding: 0 6px; gap: 6px; }
+  .karviam-home .home-local-search > svg { display: none; }
+  .karviam-home .home-local-search input { font-size: 16px; }
+  .karviam-home .home-local-geolocation,
+  .karviam-home .home-local-submit { width: 44px; height: 44px; }
+  .karviam-home .home-local-categories {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 4px 3px 8px;
+    scrollbar-width: thin;
+    scrollbar-color: #7f9f91 transparent;
+  }
+  .karviam-home .home-local-categories button {
+    flex-shrink: 0;
+    min-height: 44px;
+    white-space: nowrap;
+  }
+}
+@media (max-width: 600px) {
+  .karviam-home .home-local-discovery { padding: 50px 16px 0; }
+  .karviam-home .home-local-scene { padding: 36px 18px 28px; border-radius: 26px; }
+  .karviam-home .home-local-heading h2 { letter-spacing: -1px; }
+  .karviam-home .home-local-heading p { font-size: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .karviam-home .home-local-scene *,
+  .karviam-home .home-local-submit:hover span { transition: none; transform: none; }
+}
+@media (max-width: 700px) {
+  .karviam-home .home-local-panel,
+  .karviam-home .home-local-categories { width: 100%; }
+  .karviam-home .home-local-panel { margin-top: 32px; }
+  .karviam-home .home-local-location-status { width: auto; margin-inline: 4px; }
+  .karviam-home .home-local-categories { margin-top: 24px; }
+}

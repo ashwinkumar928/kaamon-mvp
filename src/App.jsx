@@ -3,11 +3,6 @@ import "./App.css";
 import { Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar.jsx";
-import Hero from "./components/Hero.jsx";
-import Stats from "./components/Stats.jsx";
-import Categories from "./components/Categories.jsx";
-import HowItWorks from "./components/HowItWorks.jsx";
-import NearbyJobs from "./components/NearbyJobs.jsx";
 
 import JobDetails from "./pages/JobDetails.jsx";
 import Login from "./pages/Login.jsx";
@@ -22,7 +17,7 @@ import Profile from "./pages/Profile.jsx";
 import UserProfile from "./pages/UserProfile.jsx";
 import Chat from "./pages/Chat";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
-
+import Home from "./pages/Home.jsx";
 
 function App() {
   return (
@@ -35,15 +30,7 @@ function App() {
         {/* HOME PAGE */}
         <Route
           path="/"
-          element={
-            <>
-              <Hero />
-              <Stats />
-              <Categories />
-              <HowItWorks />
-              <NearbyJobs />
-            </>
-          }
+          element={<Home />}
         />
 
 

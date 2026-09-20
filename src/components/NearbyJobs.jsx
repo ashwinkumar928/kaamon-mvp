@@ -3,11 +3,13 @@ import { Link } from "react-router-dom";
 import "./NearbyJobs.css";
 import API_URL from "../api";
 
-function NearbyJobs() {
+function NearbyJobs({ filters, onFiltersChange } = {}) {
   const [allJobs, setAllJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
-  const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("ALL");
+  const [localFilters, setLocalFilters] = useState({ location: "", search: "", category: "ALL" });
+  const { location, search, category: selectedCategory } = filters ?? localFilters;
+  const setFilters = onFiltersChange ?? setLocalFilters;
   function formatJobDate(dateValue) {
   if (!dateValue) return "";
 
@@ -55,6 +57,8 @@ function NearbyJobs() {
       setLoadError(
         "Could not connect to Karviam server."
       );
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -63,28 +67,31 @@ function NearbyJobs() {
 
   const categories = [
     "ALL",
+    ...(selectedCategory !== "ALL" ? [selectedCategory] : []),
     ...new Set(
       allJobs.map((job) => job.category)
     ),
-  ];
+  ].filter((category, index, values) => values.indexOf(category) === index);
 
   const filteredJobs = allJobs.filter((job) => {
-    const searchText = search.toLowerCase();
+    const searchText = search.trim().toLowerCase();
 
     const matchesSearch =
-      job.title.toLowerCase().includes(searchText) ||
-      job.category.toLowerCase().includes(searchText) ||
-      job.location.toLowerCase().includes(searchText);
+      String(job.title ?? "").toLowerCase().includes(searchText) ||
+      String(job.category ?? "").toLowerCase().includes(searchText) ||
+      String(job.location ?? "").toLowerCase().includes(searchText);
 
     const matchesCategory =
       selectedCategory === "ALL" ||
-      job.category === selectedCategory;
+      String(job.category ?? "").toUpperCase() === selectedCategory.toUpperCase();
 
-    return matchesSearch && matchesCategory;
+    const matchesLocation = String(job.location ?? "").toLowerCase().includes(location.trim().toLowerCase());
+
+    return matchesSearch && matchesCategory && matchesLocation;
   });
 
   return (
-    <section className="nearby-jobs" id="jobs">
+    <section className="nearby-jobs" id="jobs" aria-busy={loading}>
 
       <div className="section-title">
         <span>WORK NEAR YOU</span>
@@ -97,20 +104,29 @@ function NearbyJobs() {
       {/* SEARCH + FILTER */}
       <div className="job-toolbar">
 
+        {(location || search || selectedCategory !== "ALL") && (
+          <div className="nearby-active-filters">
+            <p>{location ? `Area: ${location}` : "All areas"}{selectedCategory !== "ALL" ? ` · ${selectedCategory}` : ""}</p>
+            <button type="button" onClick={() => setFilters({ location: "", search: "", category: "ALL" })}>Clear all filters</button>
+          </div>
+        )}
+
         <div className="job-search-box">
           <span className="search-icon">🔍</span>
 
           <input
             type="text"
             placeholder="Search work or location..."
+            aria-label="Search jobs by work or location"
             value={search}
-            onChange={(event) => setSearch(event.target.value)}
+            onChange={(event) => setFilters((current) => ({ ...current, search: event.target.value }))}
           />
 
           {search && (
             <button
               className="clear-search"
-              onClick={() => setSearch("")}
+              aria-label="Clear search"
+              onClick={() => setFilters((current) => ({ ...current, search: "" }))}
             >
               ✕
             </button>
@@ -128,7 +144,12 @@ function NearbyJobs() {
                     ? "filter-btn active-filter"
                     : "filter-btn"
                 }
-                onClick={() => setSelectedCategory(category)}
+                aria-pressed={selectedCategory === category}
+                onClick={() => setFilters((current) => ({
+                  ...current,
+                  category,
+                  search: current.search.trim().toUpperCase() === current.category ? "" : current.search,
+                }))}
               >
                 {category === "ALL" ? "All Work" : category}
               </button>
@@ -136,7 +157,7 @@ function NearbyJobs() {
           </div>
 
           <div className="results-count">
-            {filteredJobs.length} opportunities
+            {loading ? "Loading opportunities…" : `${filteredJobs.length} opportunities`}
           </div>
 
         </div>
@@ -146,6 +167,8 @@ function NearbyJobs() {
       {/* JOB CARDS */}
       <div className="jobs-grid">
 
+        {loading && <div className="no-jobs" role="status"><h3>Loading opportunities…</h3></div>}
+
         {loadError && (
           <div className="no-jobs">
           <h3>Could not load opportunities</h3>
@@ -153,7 +176,7 @@ function NearbyJobs() {
         </div>
       )}
 
-        {!loadError && filteredJobs.length > 0 ? (
+        {!loading && !loadError && filteredJobs.length > 0 ? (
           filteredJobs.map((job) => (
 
             <div className="nearby-job-card" key={job.id}>
@@ -189,9 +212,12 @@ function NearbyJobs() {
               </div>
 
               <div className="job-bottom">
+                <div className="nearby-job-payment">
+                  <small>Payment</small>
                 <strong>
                      ₹{Number(job.payment).toLocaleString("en-IN")}
                 </strong>
+                </div>
                 <Link
                     to={`/jobs/${job.id}`}
                     className="view-work-btn"
@@ -203,10 +229,10 @@ function NearbyJobs() {
             </div>
 
           ))
-        ) : !loadError ? (
+        ) : !loading && !loadError ? (
 
   <div className="no-jobs">
-    <h3>No opportunities found</h3>
+    <h3>No nearby opportunities match your search yet.</h3>
     <p>Try another work type or location.</p>
   </div>
 
