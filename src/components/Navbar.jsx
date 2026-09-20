@@ -7,14 +7,6 @@ import {
 function Navbar() {
   const navigate = useNavigate();
 
-  const [darkMode, setDarkMode] =
-    useState(() => {
-      return (
-        localStorage.getItem(
-          "kaamonTheme"
-        ) === "dark"
-      );
-    });
 
   const [currentUser, setCurrentUser] =
     useState(() => {
@@ -27,19 +19,6 @@ function Navbar() {
         ? JSON.parse(savedUser)
         : null;
     });
-
-
-  useEffect(() => {
-    document.body.classList.toggle(
-      "dark-mode",
-      darkMode
-    );
-
-    localStorage.setItem(
-      "kaamonTheme",
-      darkMode ? "dark" : "light"
-    );
-  }, [darkMode]);
 
 
   useEffect(() => {
@@ -143,19 +122,6 @@ function Navbar() {
 
 
       <div className="nav-actions">
-
-        <button
-          type="button"
-          className="theme-toggle"
-          onClick={() =>
-            setDarkMode(
-              (current) => !current
-            )
-          }
-        >
-          {darkMode ? "☀️" : "🌙"}
-        </button>
-
 
         {!currentUser ? (
           <>

@@ -201,12 +201,8 @@ function Login() {
             </h2>
 
             <p>
-              <p>
-              <p>
                 Continue hiring, applying and
                 managing your Karviam activity.
-              </p>
-              </p>
             </p>
 
           </div>

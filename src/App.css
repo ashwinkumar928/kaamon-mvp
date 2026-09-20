@@ -1256,3 +1256,30 @@ body.dark-mode .logout-btn {
   object-fit: contain;
   display: block;
 }
+
+@media (max-width: 600px) {
+
+  .navbar {
+    padding: 0 12px;
+    gap: 8px;
+  }
+
+  .nav-actions {
+    gap: 8px;
+  }
+
+  .login-btn,
+  .signup-btn {
+    white-space: nowrap;
+    padding: 10px 14px;
+    font-size: 14px;
+    min-width: auto;
+  }
+
+  .signup-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+}
