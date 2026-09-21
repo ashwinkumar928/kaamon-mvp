@@ -2199,6 +2199,19 @@
 .karviam-home .home-local-controls { grid-template-columns: minmax(140px, 170px) minmax(0, 1fr) 44px 112px; }
 .karviam-home .home-local-submit { width: 100%; font-size: 14px; gap: 10px; background: var(--home-green); }
 .karviam-home .home-local-location-status { color: #eef5f1; width: auto; margin: 10px 4px 0; max-width: 700px; font-size: 12px; }
+.karviam-home .home-location-pill {
+  display: inline-flex; align-items: center; gap: 7px; max-width: 100%;
+  padding: 7px 12px; border: 1px solid #ffffffa6; border-radius: 24px;
+  background: #ffffffe0; backdrop-filter: blur(12px); color: #174b40;
+  font-size: 13px; line-height: 1.5; box-shadow: 0 3px 12px #102b3414;
+}
+.karviam-home .home-location-pill svg { flex: 0 0 15px; width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+.karviam-home .home-location-detail { max-width: 330px; margin-top: 6px; padding: 7px 12px; border-radius: 12px; background: #fffffff0; color: #174b40; line-height: 1.6; }
+.karviam-home .home-location-detail summary { cursor: pointer; }
+.karviam-home .home-location-detail p { margin: 6px 0 0; }
+.karviam-home .home-location-spinner { width: 18px; height: 18px; border: 2px solid #0f594940; border-top-color: #0f5949; border-radius: 50%; animation: home-location-spin .8s linear infinite; }
+@keyframes home-location-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .karviam-home .home-location-spinner { animation: none; } }
 .karviam-home .home-local-categories { margin: 16px 0 0; width: 100%; gap: 8px; }
 .karviam-home .home-local-categories button { background: #102c2bc9; border-color: #ffffff45; color: #fff; min-height: 40px; }
 .karviam-home .home-local-categories button:hover,

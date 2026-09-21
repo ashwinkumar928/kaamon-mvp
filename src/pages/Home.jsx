@@ -1,8 +1,9 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import categories from "../data/categories";
 import NearbyJobs from "../components/NearbyJobs";
 import "./Home.css";
+import { nearestSupportedArea, supportedAreas } from "../data/supportedAreas";
 
 function Home() {
   const [area, setArea] = useState("Patna");
@@ -11,8 +12,20 @@ function Home() {
   const [jobFilters, setJobFilters] = useState({ location: "", search: "", category: "ALL" });
   const [locationMessage, setLocationMessage] = useState("");
   const [locating, setLocating] = useState(false);
-  // Coordinates stay in memory; city selection remains manual without geocoding.
-  const coordinates = useRef(null);
+  const [locationDetail, setLocationDetail] = useState("");
+  const requestId = useRef(0);
+  const pending = useRef(false);
+  useEffect(() => () => { requestId.current += 1; }, []);
+
+  function changeArea(value) {
+    requestId.current += 1;
+    pending.current = false;
+    setLocating(false);
+    setArea(value);
+    setLocationMessage("");
+    setLocationDetail("");
+    setJobFilters((current) => ({ ...current, location: value }));
+  }
 
   function findNearbyWork(event) {
     event.preventDefault();
@@ -24,26 +37,45 @@ function Home() {
   }
 
   function useMyLocation() {
+    if (pending.current) return;
+    const request = ++requestId.current;
+    const fail = (error) => {
+      if (request !== requestId.current) return;
+      pending.current = false;
+      setLocating(false);
+      setLocationMessage("Choose your area manually");
+      setLocationDetail(error?.code === 1
+        ? "Location access was not allowed. Choose your area manually."
+        : "Couldn’t detect your location. Choose your area manually.");
+    };
     if (!navigator.geolocation) {
-      setLocationMessage("Location isn't available in this browser. Please choose your area manually.");
+      fail();
       return;
     }
+    pending.current = true;
     setLocating(true);
     setLocationMessage("Finding your location…");
+    setLocationDetail("");
+    try {
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
-        coordinates.current = { latitude: coords.latitude, longitude: coords.longitude };
+        if (request !== requestId.current) return;
+        pending.current = false;
         setLocating(false);
-        setLocationMessage("Location received. We can't identify your city automatically yet—please choose your area manually.");
+        const nearest = nearestSupportedArea(coords.latitude, coords.longitude);
+        if (!nearest) {
+          setLocationMessage("Area not supported yet");
+          setLocationDetail("Karviam isn’t available in your area yet. Choose another area to explore available work.");
+          return;
+        }
+        setArea(nearest.name);
+        setJobFilters((current) => ({ ...current, location: nearest.name }));
+        setLocationMessage(`Location detected • ${nearest.name}`);
       },
-      (error) => {
-        setLocating(false);
-        setLocationMessage(error.code === 1
-          ? "Location permission wasn't granted. You can still choose your area manually."
-          : "We couldn't find your location. Please choose your area manually.");
-      },
+      fail,
       { timeout: 10000, maximumAge: 60000, enableHighAccuracy: false }
     );
+    } catch { fail(); }
   }
 
   const currentUser = JSON.parse(
@@ -96,8 +128,8 @@ function Home() {
               <div className="home-local-area">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 6-8 11-8 11S4 16 4 10a8 8 0 1 1 16 0Z" /><circle cx="12" cy="10" r="2.5" /></svg>
                 <div>
-                  <select id="local-area" aria-label="Your area" value={area} onChange={(event) => setArea(event.target.value)}>
-                    {["Patna", "Danapur", "Khagaul", "Phulwari", "Gorgawan", "Bokaro"].map((city) => (
+                  <select id="local-area" aria-label="Your area" value={area} onChange={(event) => changeArea(event.target.value)}>
+                    {supportedAreas.map(({ name: city }) => (
                       <option key={city} value={city}>{city}</option>
                     ))}
                   </select>
@@ -113,6 +145,7 @@ function Home() {
                   onChange={(event) => {
                     setWorkSearch(event.target.value);
                     setWorkCategory("ALL");
+                    setJobFilters((current) => ({ ...current, search: event.target.value.trim(), category: "ALL" }));
                   }}
                 />
               </div>
@@ -126,16 +159,20 @@ function Home() {
                 aria-busy={locating}
                 aria-describedby="local-location-status"
               >
-                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" /><path d="M12 2v5M12 17v5M2 12h5M17 12h5" /></svg>
+                {locating ? <span className="home-location-spinner" aria-hidden="true" /> : <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" /><path d="M12 2v5M12 17v5M2 12h5M17 12h5" /></svg>}
               </button>
               <button className="home-local-submit" type="submit" title="Find opportunities near me" aria-label="Find opportunities near me">
                 Search <span aria-hidden="true">→</span>
               </button>
             </div>
           </form>
-          <p className="home-local-location-status" id="local-location-status" role="status">
-            {locationMessage || `Searching around ${area}`}
-          </p>
+          <div className="home-local-location-status" id="local-location-status" role="status" aria-atomic="true">
+            <span className="home-location-pill">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 6-8 11-8 11S4 16 4 10a8 8 0 1 1 16 0Z" /><circle cx="12" cy="10" r="2.5" /></svg>
+              {locationMessage || `Searching around ${area}`}
+            </span>
+            {locationDetail && <details className="home-location-detail"><summary>Location details</summary><p>{locationDetail}</p></details>}
+          </div>
 
           <div className="home-local-categories" role="group" aria-label="Choose a work category">
             {categories.map((category) => (
@@ -147,6 +184,7 @@ function Home() {
                   const isSelected = workCategory === category.name.toUpperCase();
                   setWorkCategory(isSelected ? "ALL" : category.name.toUpperCase());
                   setWorkSearch(isSelected ? "" : category.name);
+                  setJobFilters((current) => ({ ...current, search: isSelected ? "" : category.name, category: isSelected ? "ALL" : category.name.toUpperCase() }));
                 }}
               >
                 {category.name}

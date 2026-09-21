@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import API_URL from "../api";
+import { requestArray } from "../api/requestArray";
 import "./MyJobs.css";
 import "./InternalPages.css";
 
@@ -11,6 +11,9 @@ function MyJobs() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const [attempt, setAttempt] = useState(0);
+  const [authError, setAuthError] = useState(false);
+
   function formatJobDate(dateValue) {
   if (!dateValue) return "";
 
@@ -18,47 +21,26 @@ function MyJobs() {
 }
 
   useEffect(() => {
+    const controller = new AbortController();
     async function loadMyJobs() {
+      setLoading(true);
+      setError("");
+      setAuthError(false);
       try {
-        const response = await fetch(
-          `${API_URL}/api/my-jobs`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        const data = await response.json();
-        console.error("My jobs error:", error);
-
-        if (!response.ok) {
-          setError(
-            data.message || "Could not load your jobs."
-          );
-          return;
-        }
-
-        setJobs(data);
-
+        if (!token) return;
+        const data = await requestArray("/api/my-jobs", { token, signal: controller.signal });
+        if (!controller.signal.aborted) setJobs(data);
       } catch (error) {
-        console.error("My jobs error:", error);
-
-        setError(
-          "Could not connect to Karviam server."
-        );
-
+        if (controller.signal.aborted) return;
+        setError(error.message);
+        setAuthError(error.status === 401 || error.status === 403);
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) setLoading(false);
       }
     }
-
-    if (token) {
-      loadMyJobs();
-    } else {
-      setLoading(false);
-    }
-  }, [token]);
+    loadMyJobs();
+    return () => controller.abort();
+  }, [token, attempt]);
 
 
   if (!token) {
@@ -102,9 +84,11 @@ function MyJobs() {
 
 
         {error && (
-          <p className="my-jobs-error">
-            {error}
-          </p>
+          <div className="my-jobs-error" role="alert">
+            <p>{error}</p>
+            <button type="button" className="view-applicants-btn" onClick={() => setAttempt((value) => value + 1)}>Retry</button>
+            {authError && <Link to="/login" className="view-applicants-btn">Log in</Link>}
+          </div>
         )}
 
 
@@ -125,7 +109,7 @@ function MyJobs() {
 
         <div className="my-jobs-grid">
 
-          {jobs.map((job) => (
+          {!error && jobs.map((job) => (
 
             <div
               className="my-job-card"

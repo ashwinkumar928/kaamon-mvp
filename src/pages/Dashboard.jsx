@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import API_URL from "../api";
+import { requestArray } from "../api/requestArray";
 import "./Dashboard.css";
 
 function Dashboard() {
   const savedUser = localStorage.getItem("kaamonCurrentUser");
   const currentUser = useMemo(
-    () => JSON.parse(savedUser),
+    () => { try { return JSON.parse(savedUser); } catch { return null; } },
     [savedUser]
   );
 
@@ -15,61 +15,41 @@ function Dashboard() {
   const [acceptedWork, setAcceptedWork] = useState(0);
   const [completedWork, setCompletedWork] = useState(0);
 
+  const token = localStorage.getItem("kaamonToken");
+  const userId = currentUser?.id;
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [authError, setAuthError] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+
   useEffect(() => {
+    const controller = new AbortController();
     async function loadDashboardData() {
-      if (!currentUser) return;
-
+      setLoading(true);
+      setError("");
+      setAuthError(false);
       try {
-        const token = localStorage.getItem("kaamonToken");
-
-        const [myJobsResponse, applicationsResponse] =
-          await Promise.all([
-            fetch(`${API_URL}/api/my-jobs`, {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }),
-            fetch(`${API_URL}/api/my-applications`, {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }),
-          ]);
-
-        if (myJobsResponse.ok) {
-          const myJobs = await myJobsResponse.json();
-          setJobsPosted(myJobs.length);
-        }
-
-        if (applicationsResponse.ok) {
-          const applications =
-            await applicationsResponse.json();
-
-          setApplicationsCount(applications.length);
-
-          const accepted = applications.filter(
-            (application) =>
-              application.status === "accepted"
-          );
-
-          const completed = applications.filter(
-            (application) =>
-              application.status === "completed"
-          );
-
-          setAcceptedWork(accepted.length);
-          setCompletedWork(completed.length);
-        }
+        if (!token) throw Object.assign(new Error("Please log in to load your workspace."), { status: 401 });
+        const [myJobs, applications] = await Promise.all([
+          requestArray("/api/my-jobs", { token, signal: controller.signal }),
+          requestArray("/api/my-applications", { token, signal: controller.signal }),
+        ]);
+        if (controller.signal.aborted) return;
+        setJobsPosted(myJobs.length);
+        setApplicationsCount(applications.length);
+        setAcceptedWork(applications.filter((application) => application.status === "accepted").length);
+        setCompletedWork(applications.filter((application) => application.status === "completed").length);
       } catch (error) {
-        console.error(
-          "Could not load dashboard data:",
-          error
-        );
+        if (controller.signal.aborted) return;
+        setError(error.message);
+        setAuthError(error.status === 401 || error.status === 403);
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
       }
     }
-
     loadDashboardData();
-  }, [currentUser]);
+    return () => controller.abort();
+  }, [token, userId, attempt]);
 
   if (!currentUser) {
     return <Navigate to="/login" />;
@@ -117,12 +97,18 @@ function Dashboard() {
           </div>
         </section>
 
+        {loading && <p role="status">Loading your workspace...</p>}
+        {!loading && error && <div role="alert">
+          <p>{error}</p>
+          <button type="button" className="dashboard-outline-btn" onClick={() => setAttempt((value) => value + 1)}>Retry</button>
+          {authError && <Link to="/login" className="dashboard-outline-btn">Log in</Link>}
+        </div>}
         {/* STAT STRIP */}
-        <section className="dashboard-stats-strip" aria-label="Your work statistics">
+        <section className="dashboard-stats-strip" aria-label="Your work statistics" aria-busy={loading}>
           <div className="stats-pill">
             <span className="stats-pill-icon">📌</span>
             <div>
-              <strong>{jobsPosted}</strong>
+              <strong>{loading || error ? "\u2014" : jobsPosted}</strong>
               <p>Jobs Posted</p>
             </div>
           </div>
@@ -130,7 +116,7 @@ function Dashboard() {
           <div className="stats-pill">
             <span className="stats-pill-icon">📨</span>
             <div>
-              <strong>{applicationsCount}</strong>
+              <strong>{loading || error ? "\u2014" : applicationsCount}</strong>
               <p>Applications Sent</p>
             </div>
           </div>
@@ -138,7 +124,7 @@ function Dashboard() {
           <div className="stats-pill">
             <span className="stats-pill-icon">🤝</span>
             <div>
-              <strong>{acceptedWork}</strong>
+              <strong>{loading || error ? "\u2014" : acceptedWork}</strong>
               <p>Accepted Work</p>
             </div>
           </div>
@@ -146,7 +132,7 @@ function Dashboard() {
           <div className="stats-pill">
             <span className="stats-pill-icon">✅</span>
             <div>
-              <strong>{completedWork}</strong>
+              <strong>{loading || error ? "\u2014" : completedWork}</strong>
               <p>Completed Work</p>
             </div>
           </div>
@@ -258,7 +244,7 @@ function Dashboard() {
                 WORKSPACE SUMMARY
               </p>
 
-              <h3>{totalActivity}</h3>
+              <h3>{loading || error ? "\u2014" : totalActivity}</h3>
 
               <p className="side-summary-text">
                 Total activity
@@ -266,12 +252,12 @@ function Dashboard() {
 
               <div className="side-summary-grid">
                 <div>
-                  <strong>{acceptedWork}</strong>
+                  <strong>{loading || error ? "\u2014" : acceptedWork}</strong>
                   <span>Active Work</span>
                 </div>
 
                 <div>
-                  <strong>{completedWork}</strong>
+                  <strong>{loading || error ? "\u2014" : completedWork}</strong>
                   <span>Completed Work</span>
                 </div>
               </div>

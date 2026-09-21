@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./NearbyJobs.css";
-import API_URL from "../api";
+import { requestArray } from "../api/requestArray";
 
 function NearbyJobs({ filters, onFiltersChange } = {}) {
   const [allJobs, setAllJobs] = useState([]);
@@ -17,6 +17,8 @@ function NearbyJobs({ filters, onFiltersChange } = {}) {
   if (pagination.key !== filterKey) {
     setPagination({ key: filterKey, limit: 6 });
   }
+  const [attempt, setAttempt] = useState(0);
+
   function formatJobDate(dateValue) {
   if (!dateValue) return "";
 
@@ -24,53 +26,26 @@ function NearbyJobs({ filters, onFiltersChange } = {}) {
 }
 
  useEffect(() => {
-  async function loadJobs() {
-    try {
+    const controller = new AbortController();
+    async function loadJobs() {
+      setLoading(true);
       setLoadError("");
 
-      const response = await fetch(
-        `${API_URL}/api/jobs`
-      );
+      try {
 
-      const data = await response.json();
+        const data = await requestArray("/api/jobs", { signal: controller.signal });
+        if (!controller.signal.aborted) setAllJobs(data);
+      } catch (error) {
+        if (controller.signal.aborted) return;
+        setLoadError(error.message);
 
-      if (!response.ok) {
-        setAllJobs([]);
-        setLoadError(
-          data.message ||
-            "Could not load work opportunities."
-        );
-        return;
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
       }
-
-      if (!Array.isArray(data)) {
-        setAllJobs([]);
-        setLoadError(
-          "Could not load work opportunities."
-        );
-        return;
-      }
-
-      setAllJobs(data);
-
-    } catch (error) {
-      console.error(
-        "Could not load jobs:",
-        error
-      );
-
-      setAllJobs([]);
-
-      setLoadError(
-        "Could not connect to Karviam server."
-      );
-    } finally {
-      setLoading(false);
     }
-  }
-
-  loadJobs();
-}, []);
+    loadJobs();
+    return () => controller.abort();
+  }, [attempt]);
 
   const categories = [
     "ALL",
@@ -168,7 +143,7 @@ function NearbyJobs({ filters, onFiltersChange } = {}) {
           </div>
 
           <div className="results-count" role="status">
-            {loading ? "Loading opportunities…" : `${filteredJobs.length} ${filteredJobs.length === 1 ? "opportunity" : "opportunities"}`}
+            {loading ? "Loading opportunities…" : loadError ? "Opportunities unavailable" : `${filteredJobs.length} ${filteredJobs.length === 1 ? "opportunity" : "opportunities"}`}
           </div>
 
         </div>
@@ -180,10 +155,11 @@ function NearbyJobs({ filters, onFiltersChange } = {}) {
 
         {loading && <div className="no-jobs" role="status"><h3>Loading opportunities…</h3></div>}
 
-        {loadError && (
+        {!loading && loadError && (
           <div className="no-jobs">
-          <h3>Could not load opportunities</h3>
+          <h3>Couldn't load opportunities</h3>
           <p>{loadError}</p>
+          <button type="button" className="filter-btn" onClick={() => setAttempt((value) => value + 1)}>Try Again</button>
         </div>
       )}
 
@@ -243,7 +219,7 @@ function NearbyJobs({ filters, onFiltersChange } = {}) {
         ) : !loading && !loadError ? (
 
   <div className="no-jobs">
-    <h3>No nearby opportunities match your search yet.</h3>
+    <h3>No opportunities found nearby</h3>
     <p>Try another work type or location.</p>
   </div>
 
