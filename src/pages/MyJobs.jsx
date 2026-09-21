@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { requestArray } from "../api/requestArray";
+import API_URL from "../api";
 import "./MyJobs.css";
 import "./InternalPages.css";
 
@@ -13,6 +14,7 @@ function MyJobs() {
 
   const [attempt, setAttempt] = useState(0);
   const [authError, setAuthError] = useState(false);
+  const [cancelJob, setCancelJob] = useState(null);
 
   function formatJobDate(dateValue) {
   if (!dateValue) return "";
@@ -134,7 +136,9 @@ function MyJobs() {
   <span
     className={`my-job-status status-${job.job_status}`}
   >
-    {job.job_status === "filled"
+    {job.job_status === "cancelled"
+      ? "Cancelled"
+      : job.job_status === "filled"
       ? "Filled"
       : job.job_status === "completed"
       ? "Completed"
@@ -203,6 +207,12 @@ function MyJobs() {
     View Applicants →
   </Link>
 
+  {job.job_status === "available" && (
+    <button type="button" className="cancel-work-btn" onClick={() => setCancelJob(job)}>
+      Cancel Work
+    </button>
+  )}
+
 </div>
                 
 
@@ -216,8 +226,85 @@ function MyJobs() {
 
       </div>
 
+      {cancelJob && <CancelWorkDialog
+        job={cancelJob}
+        token={token}
+        onClose={() => setCancelJob(null)}
+        onCancelled={() => {
+          setJobs((current) => current.map((job) => job.id === cancelJob.id
+            ? { ...job, cancelled: true, job_status: "cancelled" } : job));
+          setCancelJob(null);
+        }}
+      />}
     </main>
   );
+}
+
+function CancelWorkDialog({ job, token, onClose, onCancelled }) {
+  const dialog = useRef(null);
+  const request = useRef(null);
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState("");
+  const [authError, setAuthError] = useState(false);
+
+  useEffect(() => {
+    const element = dialog.current;
+    element.showModal();
+    return () => {
+      request.current?.abort();
+      element.close();
+    };
+  }, []);
+
+  async function cancelWork() {
+    if (request.current) return;
+    const controller = new AbortController();
+    request.current = controller;
+    setBusy(true);
+    setMessage("");
+    setAuthError(false);
+    const timer = setTimeout(() => controller.abort(), 60000);
+    try {
+      const response = await fetch(`${API_URL}/api/jobs/${job.id}/cancel`, {
+        method: "PATCH",
+        headers: { Authorization: `Bearer ${token}` },
+        signal: controller.signal,
+      });
+      if (response.status === 401) {
+        setAuthError(true);
+        throw new Error("Your session has expired. Please log in again.");
+      }
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        throw new Error([400, 403, 404].includes(response.status) && data?.message
+          ? data.message : "Could not cancel work. Please try again.");
+      }
+      onCancelled();
+    } catch (error) {
+      setMessage(error.name === "AbortError"
+        ? "The request timed out. Please retry to confirm the work’s status."
+        : error instanceof TypeError ? "Could not connect to Karviam. Please try again." : error.message);
+    } finally {
+      clearTimeout(timer);
+      request.current = null;
+      setBusy(false);
+    }
+  }
+
+  return <dialog ref={dialog} className="cancel-work-dialog" aria-labelledby="cancel-work-title"
+    aria-describedby="cancel-work-description" aria-busy={busy}
+    onCancel={(event) => { event.preventDefault(); if (!busy) onClose(); }}>
+    <h2 id="cancel-work-title">Cancel this work?</h2>
+    <p id="cancel-work-description">This work will be removed from nearby opportunities. Pending applications will also be closed.</p>
+    <p className="cancel-work-name">{job.title}</p>
+    {message && <p className="cancel-work-error" role="alert">{message} {authError && <Link to="/login">Log in</Link>}</p>}
+    <div className="cancel-work-actions">
+      <button type="button" className="keep-work-btn" disabled={busy} onClick={onClose} autoFocus>Keep Work</button>
+      <button type="button" className="cancel-work-btn" disabled={busy} onClick={cancelWork}>
+        {busy ? "Cancelling..." : "Cancel Work"}
+      </button>
+    </div>
+  </dialog>;
 }
 
 export default MyJobs;

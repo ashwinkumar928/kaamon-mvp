@@ -336,3 +336,23 @@ body.dark-mode .my-job-status.status-completed {
   background: #334155;
   color: #e2e8f0;
 }
+
+.my-jobs-page .my-job-status.status-cancelled { background: #f3eded; color: #885252; }
+.my-jobs-page .cancel-work-btn,
+.cancel-work-dialog .keep-work-btn {
+  min-height: 44px; padding: 10px 15px; border: 1px solid #ddc5c5; border-radius: 11px;
+  background: #fffafa; color: #984c4c; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer;
+}
+.my-jobs-page .cancel-work-btn:hover { background: #f8eded; border-color: #bd9696; }
+.cancel-work-dialog { width: min(440px, calc(100% - 32px)); box-sizing: border-box; padding: 28px; border: 1px solid #dfe5e1; border-radius: 20px; background: #fff; color: #172033; box-shadow: 0 24px 80px #17203333; }
+.cancel-work-dialog::backdrop { background: #142c2859; backdrop-filter: blur(3px); }
+.cancel-work-dialog h2 { margin: 0 0 12px; font-size: 23px; }
+.cancel-work-dialog p { font-size: 14px; line-height: 1.65; color: #667085; }
+.cancel-work-dialog .cancel-work-name { font-weight: 600; color: #172033; overflow-wrap: anywhere; }
+.cancel-work-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+.cancel-work-dialog .keep-work-btn { background: #fff; border-color: #d3dfd8; color: #244b40; }
+.cancel-work-dialog button:disabled { opacity: .6; cursor: wait; }
+.cancel-work-dialog .cancel-work-error { color: #984c4c; }
+.cancel-work-dialog button:focus-visible { outline: 2px solid #317e68; outline-offset: 3px; }
+body.dark-mode .cancel-work-dialog { background: #172033; border-color: #334155; color: #f8fafc; }
+body.dark-mode .cancel-work-dialog p { color: #cbd5e1; }

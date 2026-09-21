@@ -91,7 +91,8 @@ app.get("/api/jobs", async (req, res) => {
   SELECT jobs.*
   FROM jobs
 
-  WHERE jobs.work_date >= CURRENT_DATE
+  WHERE jobs.cancelled = FALSE
+  AND jobs.work_date >= CURRENT_DATE
 
   AND NOT EXISTS (
     SELECT 1
@@ -959,16 +960,71 @@ app.post("/api/auth/login", async (req, res) => {
   }
 });
 
+app.patch(
+  "/api/jobs/:id/cancel",
+  authenticateToken,
+  async (req, res) => {
+    let client;
+    let committed = false;
+    try {
+      client = await pool.connect();
+      await client.query("BEGIN");
+      const result = await client.query(
+        "SELECT id, posted_by_id, cancelled FROM jobs WHERE id = $1 FOR UPDATE",
+        [req.params.id]
+      );
+      const job = result.rows[0];
+      if (!job) return res.status(404).json({ message: "Work not found." });
+      if (String(job.posted_by_id) !== String(req.user.id)) {
+        return res.status(403).json({ message: "You can only cancel work you posted." });
+      }
+      const protectedApplications = await client.query(
+        "SELECT id FROM applications WHERE job_id = $1 AND status IN ('accepted', 'completed') LIMIT 1",
+        [job.id]
+      );
+      if (protectedApplications.rows.length) {
+        return res.status(400).json({
+          message: "This work cannot be cancelled because it has already been accepted or completed.",
+        });
+      }
+      // Idempotent: retrying after a lost response does not remove history.
+      await client.query("UPDATE jobs SET cancelled = TRUE WHERE id = $1", [job.id]);
+      await client.query(
+        "UPDATE applications SET status = 'rejected' WHERE job_id = $1 AND status = 'pending'",
+        [job.id]
+      );
+      await client.query("COMMIT");
+      committed = true;
+      res.json({ message: "Work cancelled successfully.", job: { id: job.id, cancelled: true, job_status: "cancelled" } });
+    } catch (error) {
+      console.error("Cancel work error:", error);
+      res.status(500).json({ message: "Could not cancel work. Please try again." });
+    } finally {
+      if (client) {
+        try {
+          if (!committed) await client.query("ROLLBACK");
+        } finally {
+          client.release();
+        }
+      }
+    }
+  }
+);
+
 app.post(
   "/api/jobs/:id/apply",
   authenticateToken,
   async (req, res) => {
+    let client;
+    let committed = false;
     try {
+      client = await pool.connect();
+      await client.query("BEGIN");
       const jobId = req.params.id;
       const applicantId = req.user.id;
 
-      const jobResult = await pool.query(
-        "SELECT * FROM jobs WHERE id = $1",
+      const jobResult = await client.query(
+        "SELECT * FROM jobs WHERE id = $1 FOR UPDATE",
         [jobId]
       );
 
@@ -978,8 +1034,11 @@ app.post(
         });
       }
       const job = jobResult.rows[0];
+      if (job.cancelled) {
+        return res.status(400).json({ message: "This work is no longer available." });
+      }
 
-const filledResult = await pool.query(
+const filledResult = await client.query(
   `
   SELECT id
   FROM applications
@@ -1005,7 +1064,7 @@ if (filledResult.rows.length > 0) {
       }
 
       const existingApplication =
-        await pool.query(
+        await client.query(
           `
           SELECT id
           FROM applications
@@ -1021,7 +1080,7 @@ if (filledResult.rows.length > 0) {
         });
       }
 
-      const result = await pool.query(
+      const result = await client.query(
         `
         INSERT INTO applications
         (
@@ -1035,6 +1094,8 @@ if (filledResult.rows.length > 0) {
         [jobId, applicantId]
       );
 
+      await client.query("COMMIT");
+      committed = true;
       res.status(201).json({
         message: "Application sent successfully.",
         application: result.rows[0],
@@ -1046,6 +1107,14 @@ if (filledResult.rows.length > 0) {
       res.status(500).json({
         message: "Could not send application.",
       });
+    } finally {
+      if (client) {
+        try {
+          if (!committed) await client.query("ROLLBACK");
+        } finally {
+          client.release();
+        }
+      }
     }
   }
 );
@@ -1069,6 +1138,7 @@ app.get(
     COUNT(applications.id)::int AS applicant_count,
 
     CASE
+      WHEN jobs.cancelled = TRUE THEN 'cancelled'
       WHEN COUNT(applications.id)
         FILTER (
           WHERE applications.status = 'completed'
@@ -1165,7 +1235,11 @@ app.patch(
   "/api/my-jobs/:id",
   authenticateToken,
   async (req, res) => {
+    let client;
+    let committed = false;
     try {
+      client = await pool.connect();
+      await client.query("BEGIN");
       const jobId = req.params.id;
       const userId = req.user.id;
 
@@ -1195,12 +1269,13 @@ app.patch(
 
       // Check that this job belongs
       // to the logged-in user
-      const jobResult = await pool.query(
+      const jobResult = await client.query(
         `
-        SELECT id
+        SELECT id, cancelled
         FROM jobs
         WHERE id = $1
         AND posted_by_id = $2::text
+        FOR UPDATE
         `,
         [jobId, userId]
       );
@@ -1212,10 +1287,14 @@ app.patch(
         });
       }
 
+      if (jobResult.rows[0].cancelled) {
+        return res.status(400).json({ message: "Cancelled work cannot be edited." });
+      }
+
       // Do not allow editing once
       // someone has been accepted/completed
       const applicationResult =
-        await pool.query(
+        await client.query(
           `
           SELECT id
           FROM applications
@@ -1249,7 +1328,7 @@ app.patch(
       const icon =
         categoryIcons[category] || "💼";
 
-      const result = await pool.query(
+      const result = await client.query(
         `
         UPDATE jobs
         SET
@@ -1279,6 +1358,8 @@ app.patch(
         ]
       );
 
+      await client.query("COMMIT");
+      committed = true;
       res.json({
         message: "Work updated successfully.",
         job: result.rows[0],
@@ -1293,6 +1374,14 @@ app.patch(
       res.status(500).json({
         message: "Could not update work.",
       });
+    } finally {
+      if (client) {
+        try {
+          if (!committed) await client.query("ROLLBACK");
+        } finally {
+          client.release();
+        }
+      }
     }
   }
 );
@@ -1309,7 +1398,7 @@ app.delete(
       // to the logged-in user
       const jobResult = await pool.query(
         `
-        SELECT id
+        SELECT id, cancelled
         FROM jobs
         WHERE id = $1
         AND posted_by_id = $2::text
@@ -1322,6 +1411,10 @@ app.delete(
           message:
             "Job not found or you do not own this job.",
         });
+      }
+
+      if (jobResult.rows[0].cancelled) {
+        return res.status(400).json({ message: "Cancelled work is kept in your history and cannot be deleted." });
       }
 
       // For safety, do not delete a job
@@ -1344,14 +1437,20 @@ app.delete(
         });
       }
 
-      await pool.query(
+      const deleted = await pool.query(
         `
         DELETE FROM jobs
         WHERE id = $1
         AND posted_by_id = $2::text
+        AND cancelled = FALSE
+        RETURNING id
         `,
         [jobId, userId]
       );
+
+      if (!deleted.rows.length) {
+        return res.status(400).json({ message: "This work can no longer be deleted." });
+      }
 
       res.json({
         message: "Work deleted successfully.",
@@ -1461,7 +1560,11 @@ app.patch(
   "/api/applications/:id/status",
   authenticateToken,
   async (req, res) => {
+    let client;
+    let committed = false;
     try {
+      client = await pool.connect();
+      await client.query("BEGIN");
       const applicationId = req.params.id;
       const userId = req.user.id;
       const { status } = req.body;
@@ -1474,8 +1577,25 @@ app.patch(
       });
     }
 
+      // All job mutations lock the job first, then read current application state.
+      const lockedJob = await client.query(
+        `SELECT jobs.id, jobs.cancelled, jobs.posted_by_id
+         FROM jobs JOIN applications ON applications.job_id = jobs.id
+         WHERE applications.id = $1 FOR UPDATE OF jobs`,
+        [applicationId]
+      );
+      if (lockedJob.rows.length === 0) {
+        return res.status(404).json({ message: "Application not found." });
+      }
+      if (String(lockedJob.rows[0].posted_by_id) !== String(userId)) {
+        return res.status(403).json({ message: "You cannot update this application." });
+      }
+      if (lockedJob.rows[0].cancelled) {
+        return res.status(400).json({ message: "This work is no longer available." });
+      }
+
       // Find application and its job
-      const applicationResult = await pool.query(
+      const applicationResult = await client.query(
         `
         SELECT
           applications.*,
@@ -1519,7 +1639,7 @@ app.patch(
         });
       }
 
-      const result = await pool.query(
+      const result = await client.query(
         `
         UPDATE applications
 
@@ -1532,6 +1652,8 @@ app.patch(
         [status, applicationId]
       );
 
+      await client.query("COMMIT");
+      committed = true;
       res.json({
         message: `Application ${status} successfully.`,
         application: result.rows[0],
@@ -1547,6 +1669,14 @@ app.patch(
         message:
           "Could not update application.",
       });
+    } finally {
+      if (client) {
+        try {
+          if (!committed) await client.query("ROLLBACK");
+        } finally {
+          client.release();
+        }
+      }
     }
   }
 );
