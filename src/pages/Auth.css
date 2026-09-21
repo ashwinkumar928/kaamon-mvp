@@ -828,6 +828,75 @@ body.dark-mode
   }
 }
 
+/* Compact Login/Signup layout; password recovery uses its existing styles. */
+.karviam-auth-page {
+  height: calc(100vh - 76px);
+  height: calc(100dvh - 76px);
+  min-height: 0;
+  grid-template-rows: minmax(0, 1fr);
+}
+.karviam-auth-page .login-showcase {
+  min-height: 0;
+  padding-block: 28px;
+}
+.karviam-auth-page .login-showcase h1 { font-size: clamp(40px, 4.5vw, 64px); }
+.karviam-auth-page .login-showcase-badge { margin-bottom: 22px; }
+.karviam-auth-page .login-showcase-description { margin: 22px 0; line-height: 1.6; }
+.karviam-auth-page .login-panel {
+  min-width: 0;
+  min-height: 0;
+  align-items: flex-start;
+  padding: 24px 7%;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scrollbar-gutter: stable;
+}
+.karviam-auth-page .login-form-container { max-width: 500px; min-width: 0; }
+.karviam-auth-page .login-top-row { margin-bottom: 18px; gap: 12px; }
+.karviam-auth-page .login-logo { width: 120px; }
+.karviam-auth-page .login-heading { margin-bottom: 18px; }
+.karviam-auth-page .login-heading h2 { margin: 6px 0 8px; font-size: clamp(28px, 2.6vw, 34px); }
+.karviam-auth-page .login-heading p { line-height: 1.5; }
+.karviam-auth-page .login-greeting { margin-bottom: 4px; }
+.karviam-auth-page .karviam-login-form { gap: 14px; }
+.karviam-auth-page .login-field { gap: 6px; }
+.karviam-auth-page .login-field input { height: 48px; border-radius: 11px; }
+.karviam-auth-page .karviam-login-btn { min-height: 48px; margin-top: 0; border-radius: 11px; }
+.karviam-auth-page .google-auth { margin-bottom: 18px; }
+.karviam-auth-page .auth-divider { margin-top: 14px; }
+.karviam-auth-page .login-create-account { margin-top: 18px; flex-wrap: wrap; }
+.karviam-auth-page .login-create-account a:hover { color: #0b493e; text-decoration: underline; }
+.karviam-auth-page :is(a, button):focus-visible { outline: 3px solid #84bea9; outline-offset: 3px; }
+body.dark-mode .karviam-auth-page :is(.login-create-account a, .login-back, .forgot-password-row a) { color: #a9d9ca; }
+
+@media (min-width: 951px) and (max-height: 650px) {
+  .karviam-auth-page .login-showcase h1 { font-size: clamp(32px, 7vh, 48px); }
+  .karviam-auth-page .login-showcase-description { margin: 16px 0; font-size: 15px; }
+  .karviam-auth-page .login-benefits { gap: 8px; }
+}
+
+@media (max-width: 950px) {
+  .karviam-auth-page { height: auto; min-height: calc(100dvh - 76px); grid-template-rows: auto; }
+  .karviam-auth-page .login-showcase { display: none; }
+  .karviam-auth-page .login-panel { overflow: visible; padding: 24px; scrollbar-gutter: auto; }
+}
+@media (max-width: 600px) {
+  .karviam-auth-page .login-panel { padding: 20px 20px 28px; }
+  .karviam-auth-page .login-top-row { margin-bottom: 18px; }
+  .karviam-auth-page .login-field input { font-size: 16px; }
+  .karviam-auth-page .login-create-account { flex-direction: row; gap: 6px; font-size: 13px; }
+}
+
+.google-auth { margin-bottom: 22px; }
+.google-auth-button { width: 100%; max-width: 400px; min-height: 44px; margin-inline: auto; }
+.google-auth-button[aria-busy="true"] { opacity: .65; }
+.google-auth-status { color: #64748b; font-size: 13px; line-height: 1.5; text-align: center; }
+.google-auth-status:not(:empty) { margin-top: 10px; }
+.auth-divider { display: flex; align-items: center; gap: 12px; margin-top: 22px; color: #64748b; font-size: 12px; }
+.auth-divider::before, .auth-divider::after { content: ""; flex: 1; height: 1px; background: #e2e8f0; }
+body.dark-mode .google-auth-status, body.dark-mode .auth-divider { color: #94a3b8; }
+body.dark-mode .auth-divider::before, body.dark-mode .auth-divider::after { background: #334155; }
+
 .forgot-password-row {
   display: flex;
   justify-content: flex-end;

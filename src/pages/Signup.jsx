@@ -6,6 +6,7 @@ import {
 
 import "./Auth.css";
 import API_URL from "../api";
+import GoogleAuthButton from "../components/GoogleAuthButton";
 
 function Signup() {
   const navigate = useNavigate();
@@ -210,7 +211,7 @@ function Signup() {
 
 
   return (
-    <main className="karviam-login-page">
+    <main className="karviam-login-page karviam-auth-page">
 
       {/* ========================= */}
       {/* LEFT SIDE */}
@@ -346,6 +347,8 @@ function Signup() {
               {/* SIGNUP FORM */}
               {/* ================= */}
 
+              <GoogleAuthButton mode="signup" />
+
               <form
                 className="karviam-login-form"
                 onSubmit={handleSubmit}
@@ -448,7 +451,7 @@ function Signup() {
                 </span>
 
                 <Link to="/login">
-                  Log in →
+                  Login →
                 </Link>
 
               </div>

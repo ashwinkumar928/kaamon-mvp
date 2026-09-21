@@ -2,8 +2,8 @@ import "./App.css";
 
 import { Routes, Route } from "react-router-dom";
 
+import Home from "./pages/Home.jsx";
 import Navbar from "./components/Navbar.jsx";
-
 import JobDetails from "./pages/JobDetails.jsx";
 import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
@@ -17,7 +17,6 @@ import Profile from "./pages/Profile.jsx";
 import UserProfile from "./pages/UserProfile.jsx";
 import Chat from "./pages/Chat";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
-import Home from "./pages/Home.jsx";
 
 function App() {
   return (
@@ -28,10 +27,7 @@ function App() {
       <Routes>
 
         {/* HOME PAGE */}
-        <Route
-          path="/"
-          element={<Home />}
-        />
+       <Route path="/" element={<Home />} />
 
 
         {/* JOB DETAILS PAGE */}

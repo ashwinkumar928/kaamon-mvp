@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
 import {
   Link,
+  NavLink,
+  useLocation,
   useNavigate,
 } from "react-router-dom";
 
 function Navbar() {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const isAuthPage = pathname === "/login" || pathname === "/signup";
 
 
   const [currentUser, setCurrentUser] =
@@ -127,24 +131,24 @@ function Navbar() {
       </div>
 
 
-      <div className="nav-actions">
+      <div className={`nav-actions${isAuthPage ? " nav-auth-page" : ""}`}>
 
         {!currentUser ? (
           <>
 
-            <Link
+            <NavLink
               to="/login"
-              className="login-btn nav-button-link"
+              className={({ isActive }) => `login-btn nav-button-link${isActive ? " auth-active" : ""}`}
             >
               Login
-            </Link>
+            </NavLink>
 
-            <Link
+            <NavLink
               to="/signup"
-              className="signup-btn nav-button-link"
+              className={({ isActive }) => `signup-btn nav-button-link${isActive ? " auth-active" : ""}`}
             >
               Sign Up
-            </Link>
+            </NavLink>
 
           </>
 

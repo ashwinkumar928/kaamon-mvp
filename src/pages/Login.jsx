@@ -5,6 +5,7 @@ import {
 } from "react-router-dom";
 
 import API_URL from "../api";
+import GoogleAuthButton from "../components/GoogleAuthButton";
 import "./Auth.css";
 
 
@@ -105,7 +106,7 @@ function Login() {
 
 
   return (
-    <main className="karviam-login-page">
+    <main className="karviam-login-page karviam-auth-page">
 
       {/* LEFT SIDE */}
 
@@ -208,6 +209,8 @@ function Login() {
           </div>
 
 
+          <GoogleAuthButton mode="login" />
+
           <form
             className="karviam-login-form"
             onSubmit={handleLogin}
@@ -289,11 +292,11 @@ function Login() {
           <div className="login-create-account">
 
             <span>
-              New to Karviam?
+              Don't have an account?
             </span>
 
             <Link to="/signup">
-              Create an account →
+              Sign Up →
             </Link>
 
           </div>

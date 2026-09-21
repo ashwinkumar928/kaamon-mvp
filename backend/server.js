@@ -6,6 +6,7 @@ const pool = require("./db");
 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { createGoogleAuthHandler } = require("./google-auth");
 const { Resend } = require("resend");
 
 const app = express();
@@ -888,6 +889,20 @@ app.post("/api/auth/reset-password", async (req, res) => {
 // LOGIN USER
 // ==============================
 
+function createAuthSession(user) {
+  return {
+    message: "Login successful",
+    token: jwt.sign(
+      { id: user.id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    ),
+    user: { id: user.id, name: user.name, email: user.email },
+  };
+}
+
+app.post("/api/auth/google", createGoogleAuthHandler({ pool, createSession: createAuthSession }));
+
 app.post("/api/auth/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -911,6 +926,12 @@ app.post("/api/auth/login", async (req, res) => {
 
     const user = result.rows[0];
 
+    if (!user.password) {
+      return res.status(401).json({
+        message: "This account uses Google sign-in. Continue with Google instead.",
+      });
+    }
+
     const passwordMatches = await bcrypt.compare(
       password,
       user.password
@@ -928,28 +949,7 @@ app.post("/api/auth/login", async (req, res) => {
   });
 }
 
-    const token = jwt.sign(
-      {
-        id: user.id,
-        email: user.email,
-      },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "7d",
-      }
-    );
-
-    res.json({
-      message: "Login successful",
-
-      token,
-
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-      },
-    });
+    res.json(createAuthSession(user));
 
   } catch (error) {
     console.error("Login error:", error);

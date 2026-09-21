@@ -142,6 +142,35 @@ button {
 
 /* ================= HERO ================= */
 
+.nav-actions.nav-auth-page .nav-button-link {
+  background: transparent;
+  color: #0f5c4d;
+  border: 1px solid #b8d2ca;
+  text-decoration: none;
+}
+
+.nav-actions.nav-auth-page .nav-button-link.auth-active {
+  background: #0f5c4d;
+  color: #ffffff;
+  border-color: #0f5c4d;
+  box-shadow: 0 3px 10px rgb(15 92 77 / 16%);
+}
+
+.nav-actions.nav-auth-page .nav-button-link:hover {
+  border-color: #0b493e;
+  box-shadow: 0 3px 10px rgb(15 92 77 / 16%);
+}
+
+.nav-actions.nav-auth-page .nav-button-link:focus-visible {
+  outline: 3px solid #84bea9;
+  outline-offset: 3px;
+}
+
+body.dark-mode .nav-actions.nav-auth-page .nav-button-link:not(.auth-active) {
+  color: #a9d9ca;
+  border-color: #578d7d;
+}
+
 .hero {
   min-height: 650px;
   display: grid;
