@@ -3,6 +3,8 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const pool = require("./db");
+const { notificationService } = require("./notifications");
+const { createNotification, registerRoutes: registerNotificationRoutes } = notificationService(pool);
 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -59,6 +61,8 @@ function authenticateToken(req, res, next) {
 app.get("/", (req, res) => {
   res.send("Karviam Backend is running 🚀");
 });
+
+registerNotificationRoutes(app, authenticateToken);
 
 
 // ==============================
@@ -1100,6 +1104,8 @@ if (filledResult.rows.length > 0) {
         message: "Application sent successfully.",
         application: result.rows[0],
       });
+      void createNotification(job.posted_by_id, "new_application", "New applicant",
+        `{actor} applied for ${job.title}`, `/jobs/${job.id}/applicants`, applicantId);
 
     } catch (error) {
       console.error("Apply job error:", error);
@@ -1599,7 +1605,8 @@ app.patch(
         `
         SELECT
           applications.*,
-          jobs.posted_by_id
+          jobs.posted_by_id,
+          jobs.title AS job_title
         FROM applications
 
         JOIN jobs
@@ -1658,6 +1665,15 @@ app.patch(
         message: `Application ${status} successfully.`,
         application: result.rows[0],
       });
+      if (application.status !== status) {
+        const updates = {
+          accepted: ["Application accepted", `Your application for ${application.job_title} was accepted.`],
+          rejected: ["Application update", `Your application for ${application.job_title} was not selected.`],
+          completed: ["Work completed", `${application.job_title} has been marked completed.`],
+        };
+        void createNotification(application.applicant_id, `application_${status}`,
+          ...updates[status], "/my-applications", userId);
+      }
 
     } catch (error) {
       console.error(
@@ -2134,6 +2150,8 @@ app.post(
         message: "Review submitted successfully.",
         review: result.rows[0],
       });
+      void createNotification(revieweeId, "new_review", "New review",
+        "You received a new rating and review.", "/profile", reviewerId);
 
     } catch (error) {
 
@@ -2543,6 +2561,9 @@ app.post(
         message: "Message sent.",
         chatMessage: result.rows[0],
       });
+      const recipientId = isWorker ? application.posted_by_id : application.applicant_id;
+      void createNotification(recipientId, "new_message", "New message",
+        "{actor} sent you a message.", `/applications/${applicationId}/chat`, currentUserId);
 
     } catch (error) {
       console.error(

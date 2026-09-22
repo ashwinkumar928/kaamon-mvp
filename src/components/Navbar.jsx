@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import NotificationBell from "./NotificationBell.jsx";
 import {
   Link,
   NavLink,
@@ -156,6 +157,10 @@ function Navbar() {
 
           <>
 
+            <NotificationBell
+              key={`${currentUser.id}:${localStorage.getItem("kaamonToken")}:${pathname}`}
+              token={localStorage.getItem("kaamonToken")}
+            />
             <Link
               to="/profile"
               className="logged-user"
