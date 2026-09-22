@@ -942,6 +942,24 @@ function Home() {
               <a href="#trust">Completed Work</a>
               <a href="#trust">Direct Connection</a>
             </nav>
+            <div className="home-footer-contact" role="group" aria-labelledby="footer-contact-heading">
+              <h2 id="footer-contact-heading">CONTACT</h2>
+              <div className="home-footer-contact-rows">
+                <a href="mailto:karviamofficial@gmail.com" aria-label="Email Karviam">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <rect x="3" y="5" width="18" height="14" rx="2" />
+                    <path d="m3 7 9 6 9-6" />
+                  </svg>
+                  <span>karviamofficial@gmail.com</span>
+                </a>
+                <a href="tel:+917992411134" aria-label="Call Karviam">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.2 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.69 2.79a2 2 0 0 1-.45 2.11L8.09 9.89a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.89.33 1.83.56 2.79.69A2 2 0 0 1 22 16.92Z" />
+                  </svg>
+                  <span>+91 7992411134</span>
+                </a>
+              </div>
+            </div>
           </div>
           <div className="home-footer-bottom">
             <span>&copy; 2026 Karviam</span>
