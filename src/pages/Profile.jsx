@@ -1,8 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import UserAvatar from "../components/UserAvatar.jsx";
 import { Link, Navigate } from "react-router-dom";
 import API_URL from "../api";
 import "./Profile.css";
 import "./InternalPages.css";
+
+function syncSessionPhoto(url, token) {
+  const saved = JSON.parse(localStorage.getItem("kaamonCurrentUser") || "null");
+  if (saved && localStorage.getItem("kaamonToken") === token) {
+    localStorage.setItem("kaamonCurrentUser", JSON.stringify({ ...saved, profile_picture_url: url }));
+    window.dispatchEvent(new Event("kaamonAuthChanged"));
+  }
+}
 
 function Profile() {
   const token =
@@ -16,6 +25,43 @@ function Profile() {
     : null;
 
   const [profile, setProfile] = useState(null);
+  const photoInput = useRef(null);
+  const photoBusy = useRef(false);
+  const [photoAction, setPhotoAction] = useState("");
+  const [photoMessage, setPhotoMessage] = useState("");
+
+  async function changePhoto(file, remove = false) {
+    if (photoBusy.current || saving) return;
+    if (!remove && (!file || !["image/jpeg", "image/png", "image/webp"].includes(file.type) || !file.size || file.size > 3 * 1024 * 1024)) {
+      setPhotoMessage("Please upload a JPG, PNG or WebP image under 3 MB.");
+      return;
+    }
+    photoBusy.current = true;
+    setPhotoAction(remove ? "Removing photo..." : "Uploading photo...");
+    setPhotoMessage("");
+    try {
+      const body = new FormData();
+      if (!remove) body.append("photo", file);
+      const response = await fetch(`${API_URL}/api/profile/photo`, {
+        method: remove ? "DELETE" : "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        ...(remove ? {} : { body }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        setPhotoMessage(response.status === 400 ? "Please upload a JPG, PNG or WebP image under 3 MB." : "Couldn't update profile photo. Please try again.");
+        return;
+      }
+      setProfile(previous => ({ ...(previous || currentUser), profile_picture_url: data.profile_picture_url }));
+      syncSessionPhoto(data.profile_picture_url, token);
+      setPhotoMessage(remove ? "Profile photo removed." : "Profile photo updated.");
+    } catch {
+      setPhotoMessage("Couldn't update profile photo. Please try again.");
+    } finally {
+      photoBusy.current = false;
+      setPhotoAction("");
+    }
+  }
 
   const [editing, setEditing] =
     useState(false);
@@ -66,6 +112,7 @@ function Profile() {
           await response.json();
 
         setProfile(data);
+        syncSessionPhoto(data.profile_picture_url, token);
 
         setPhone(data.phone || "");
         setLocation(data.location || "");
@@ -198,10 +245,6 @@ useEffect(() => {
   const displayUser =
     profile || currentUser;
 
-  const firstLetter =
-    displayUser.name
-      ?.charAt(0)
-      .toUpperCase() || "U";
 
 
   return (
@@ -221,8 +264,15 @@ useEffect(() => {
 
         <section className="profile-header">
 
-          <div className="profile-avatar">
-            {firstLetter}
+          <div className="profile-photo-controls">
+            <div className="profile-photo-wrap">
+              <UserAvatar name={displayUser.name} src={displayUser.profile_picture_url} size={112} />
+              <button type="button" className="profile-photo-edit" title="Change profile photo" aria-label="Change profile photo" disabled={!!photoAction || saving || !profile} onClick={() => photoInput.current?.click()}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M4 6h4l2-3h4l2 3h4v14H4z" /><circle cx="12" cy="13" r="4" /></svg>
+              </button>
+            </div>
+            <input ref={photoInput} type="file" hidden accept="image/jpeg,image/png,image/webp" onChange={event => { const file = event.target.files?.[0]; event.target.value = ""; if (file) changePhoto(file); }} />
+            {displayUser.profile_picture_url && <button type="button" className="profile-photo-remove" disabled={!!photoAction || saving || !profile} onClick={() => changePhoto(null, true)}>Remove photo</button>}
           </div>
 
 
@@ -262,6 +312,7 @@ useEffect(() => {
 
 
         {/* EDIT FORM */}
+        <p className="profile-photo-status" role="status" aria-live="polite">{photoAction || photoMessage}</p>
 
         {editing && (
 
@@ -327,7 +378,7 @@ useEffect(() => {
               type="button"
               className="profile-save-btn"
               onClick={handleSaveProfile}
-              disabled={saving}
+              disabled={saving || !!photoAction}
             >
               {saving
                 ? "Saving..."

@@ -26,13 +26,14 @@ function createGoogleAuthHandler({ pool, createSession, googleClient = new OAuth
     }
 
     const email = payload.email.trim().toLowerCase();
+    const picture = typeof payload.picture === "string" && payload.picture.startsWith("https://") ? payload.picture : null;
     // Retry a uniqueness race after rollback, then resolve the winning account normally.
     for (let attempt = 0; attempt < 2; attempt += 1) {
       let client;
       try {
         client = await pool.connect();
         await client.query("BEGIN");
-        let result = await client.query("SELECT id, name, email, google_id FROM users WHERE google_id = $1 FOR UPDATE", [payload.sub]);
+        let result = await client.query("SELECT id, name, email, google_id, profile_picture_url FROM users WHERE google_id = $1 FOR UPDATE", [payload.sub]);
         let user = result.rows[0];
         if (!user) {
           result = await client.query("SELECT id, name, email, google_id FROM users WHERE lower(btrim(email)) = $1 FOR UPDATE", [email]);
@@ -42,11 +43,11 @@ function createGoogleAuthHandler({ pool, createSession, googleClient = new OAuth
           }
           user = result.rows[0];
           if (user) {
-            result = await client.query("UPDATE users SET google_id = $1, email_verified = TRUE WHERE id = $2 RETURNING id, name, email", [payload.sub, user.id]);
+            result = await client.query("UPDATE users SET google_id = $1, email_verified = TRUE, profile_picture_url = COALESCE(profile_picture_url, $3) WHERE id = $2 RETURNING id, name, email, profile_picture_url", [payload.sub, user.id, picture]);
           } else {
             const name = typeof payload.name === "string" && payload.name.trim()
               ? payload.name.trim() : email.split("@")[0];
-            result = await client.query("INSERT INTO users (name, email, google_id, email_verified, password) VALUES ($1, $2, $3, TRUE, NULL) RETURNING id, name, email", [name, email, payload.sub]);
+            result = await client.query("INSERT INTO users (name, email, google_id, email_verified, password, profile_picture_url) VALUES ($1, $2, $3, TRUE, NULL, $4) RETURNING id, name, email, profile_picture_url", [name, email, payload.sub, picture]);
           }
           user = result.rows[0];
         }

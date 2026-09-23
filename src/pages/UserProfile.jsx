@@ -1,3 +1,4 @@
+import UserAvatar from "../components/UserAvatar.jsx";
 import { useEffect, useState } from "react";
 import {
   Link,
@@ -137,8 +138,6 @@ function UserProfile() {
     );
   }
 
-  const firstLetter =
-    user.name?.charAt(0).toUpperCase() || "U";
 
   return (
     <main className="profile-page karviam-internal">
@@ -160,9 +159,7 @@ function UserProfile() {
 
         {/* PROFILE HEADER */}
         <section className="profile-header">
-          <div className="profile-avatar">
-            {firstLetter}
-          </div>
+          <UserAvatar name={user.name} src={user.profile_picture_url} size={112} />
 
           <div className="profile-main-info">
             <span className="internal-eyebrow">KARVIAM PROFILE</span>

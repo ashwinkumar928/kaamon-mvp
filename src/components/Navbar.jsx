@@ -1,3 +1,4 @@
+import UserAvatar from "./UserAvatar.jsx";
 import { useEffect, useState } from "react";
 import NotificationBell from "./NotificationBell.jsx";
 import {
@@ -165,7 +166,7 @@ function Navbar() {
               to="/profile"
               className="logged-user"
             >
-              👤 {currentUser.name}
+              <UserAvatar name={currentUser.name} src={currentUser.profile_picture_url} /> {currentUser.name}
             </Link>
 
             <button

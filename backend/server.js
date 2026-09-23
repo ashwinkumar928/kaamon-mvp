@@ -9,6 +9,7 @@ const { createNotification, registerRoutes: registerNotificationRoutes } = notif
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { createGoogleAuthHandler } = require("./google-auth");
+const { registerPhotoRoutes } = require("./profile-photos");
 const { Resend } = require("resend");
 
 const app = express();
@@ -63,6 +64,7 @@ app.get("/", (req, res) => {
 });
 
 registerNotificationRoutes(app, authenticateToken);
+registerPhotoRoutes(app, authenticateToken, pool);
 
 
 // ==============================
@@ -901,7 +903,7 @@ function createAuthSession(user) {
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     ),
-    user: { id: user.id, name: user.name, email: user.email },
+    user: { id: user.id, name: user.name, email: user.email, profile_picture_url: user.profile_picture_url || null },
   };
 }
 
@@ -1849,7 +1851,8 @@ app.get(
           email,
           phone,
           location,
-          skills
+          skills,
+          profile_picture_url
         FROM users
         WHERE id = $1
         `,
@@ -1909,7 +1912,8 @@ app.put(
           email,
           phone,
           location,
-          skills
+          skills,
+          profile_picture_url
         `,
         [
           phone || null,
@@ -1963,7 +1967,8 @@ app.get(
           email,
           phone,
           location,
-          skills
+          skills,
+          profile_picture_url
         FROM users
         WHERE id = $1
         `,
@@ -2019,6 +2024,7 @@ app.get(
         name: user.name,
         location: user.location,
         skills: user.skills,
+        profile_picture_url: user.profile_picture_url,
 
         applicationStatus,
         canViewContact,

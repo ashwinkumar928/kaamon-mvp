@@ -591,3 +591,13 @@ body.dark-mode .worker-contact-btn:hover {
     gap: 5px;
   }
 }
+.profile-photo-controls { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.profile-photo-wrap { position: relative; }
+.profile-photo-edit { position: absolute; right: 0; bottom: 0; display: grid; place-items: center; width: 34px; height: 34px; padding: 0; border: 2px solid #fff; border-radius: 50%; background: #0f6b57; color: #fff; cursor: pointer; }
+.profile-photo-remove { border: 0; background: transparent; color: #a33f3f; font: inherit; font-size: 12px; cursor: pointer; padding: 4px; }
+.profile-photo-edit:disabled, .profile-photo-remove:disabled { opacity: .55; cursor: wait; }
+.profile-photo-edit:focus-visible, .profile-photo-remove:focus-visible { outline: 2px solid #37a88b; outline-offset: 3px; }
+.profile-photo-status { font-size: 13px; overflow-wrap: anywhere; }
+.profile-photo-status:empty { display: none; }
+body.dark-mode .profile-photo-remove { color: #ffabab; }
+body.dark-mode .profile-photo-edit { border-color: #20352d; }
