@@ -509,6 +509,42 @@
 }
 
 
+.auth-password-field {
+  position: relative;
+}
+
+.login-field .auth-password-field input {
+  padding-right: 54px;
+}
+
+.auth-password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #748094;
+  cursor: pointer;
+}
+
+.auth-password-toggle:hover,
+.auth-password-toggle:focus {
+  color: #0f5c4d;
+}
+
+body.dark-mode .auth-password-toggle:hover,
+body.dark-mode .auth-password-toggle:focus {
+  color: #a9d9ca;
+}
+
 .login-field input::placeholder {
   color: #a2aab7;
 }

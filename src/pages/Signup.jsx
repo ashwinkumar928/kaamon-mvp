@@ -21,6 +21,8 @@ function Signup() {
   const [message, setMessage] =
     useState("");
 
+  const [showPassword, setShowPassword] = useState(false);
+
   const [showOtp, setShowOtp] =
     useState(false);
 
@@ -402,17 +404,51 @@ function Signup() {
                     Password
                   </label>
 
-                  <input
-                    type="password"
-                    name="password"
-                    placeholder="Minimum 6 characters"
-                    value={
-                      formData.password
-                    }
-                    onChange={
-                      handleChange
-                    }
-                  />
+                  <div className="auth-password-field">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      autoComplete="new-password"
+                      name="password"
+                      placeholder="Minimum 6 characters"
+                      value={
+                        formData.password
+                      }
+                      onChange={
+                        handleChange
+                      }
+                    />
+                    <button
+                      type="button"
+                      className="auth-password-toggle"
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                      title={showPassword ? "Hide password" : "Show password"}
+                      onClick={() => setShowPassword((visible) => !visible)}
+                    >
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                        focusable="false"
+                      >
+                        {showPassword ? (
+                          <>
+                            <path d="m3 3 18 18M10.6 10.6a2 2 0 0 0 2.8 2.8M9.9 5.2A10.9 10.9 0 0 1 12 5c7 0 10 7 10 7a16.3 16.3 0 0 1-3 4.2M6.5 6.5A17.2 17.2 0 0 0 2 12s3 7 10 7a10.5 10.5 0 0 0 5.5-1.5" />
+                          </>
+                        ) : (
+                          <>
+                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12Z" />
+                            <circle cx="12" cy="12" r="3" />
+                          </>
+                        )}
+                      </svg>
+                    </button>
+                  </div>
 
                 </div>
 
