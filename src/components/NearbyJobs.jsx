@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./NearbyJobs.css";
-import { requestArray } from "../api/requestArray";
+import { readJobsCache, requestJobs } from "../api/requestArray";
+import workCategories from "../data/categories";
 
 function NearbyJobs({ filters, onFiltersChange } = {}) {
-  const [allJobs, setAllJobs] = useState([]);
+  const [jobs, setJobs] = useState(readJobsCache);
+  const allJobs = jobs ?? [];
+  const hasJobs = jobs !== null;
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
   const [localFilters, setLocalFilters] = useState({ location: "", search: "", category: "ALL" });
@@ -26,29 +29,30 @@ function NearbyJobs({ filters, onFiltersChange } = {}) {
 }
 
  useEffect(() => {
-    const controller = new AbortController();
+    let active = true;
     async function loadJobs() {
       setLoading(true);
       setLoadError("");
 
       try {
 
-        const data = await requestArray("/api/jobs", { signal: controller.signal });
-        if (!controller.signal.aborted) setAllJobs(data);
+        const data = await requestJobs();
+        if (active) setJobs(data);
       } catch (error) {
-        if (controller.signal.aborted) return;
+        if (!active) return;
         setLoadError(error.message);
 
       } finally {
-        if (!controller.signal.aborted) setLoading(false);
+        if (active) setLoading(false);
       }
     }
     loadJobs();
-    return () => controller.abort();
+    return () => { active = false; };
   }, [attempt]);
 
   const categories = [
     "ALL",
+    ...workCategories.map((category) => category.name.toUpperCase()),
     ...(selectedCategory !== "ALL" ? [selectedCategory] : []),
     ...new Set(
       allJobs.map((job) => job.category)
@@ -137,13 +141,22 @@ function NearbyJobs({ filters, onFiltersChange } = {}) {
                   search: current.search.trim().toUpperCase() === current.category ? "" : current.search,
                 }))}
               >
-                {category === "ALL" ? "All Work" : category}
+                {category === "ALL" ? "All Work" : workCategories.find((item) => item.name.toUpperCase() === category)?.name ?? category}
               </button>
             ))}
           </div>
 
           <div className="results-count" role="status">
-            {loading ? "Loading opportunities…" : loadError ? "Opportunities unavailable" : `${filteredJobs.length} ${filteredJobs.length === 1 ? "opportunity" : "opportunities"}`}
+            {!hasJobs && loading ? "Loading opportunities…" : !hasJobs && loadError ? "Opportunities unavailable" : `${filteredJobs.length} ${filteredJobs.length === 1 ? "opportunity" : "opportunities"}`}
+          </div>
+
+          <div className="nearby-refresh">
+            {hasJobs && loading && <span role="status">Refreshing...</span>}
+            {hasJobs && loadError && <span role="status">Couldn't refresh opportunities.</span>}
+            <button type="button" className="filter-btn" disabled={loading}
+              onClick={() => setAttempt((value) => value + 1)}>
+              {hasJobs && loadError ? "Try Again" : "Refresh"}
+            </button>
           </div>
 
         </div>
@@ -153,9 +166,13 @@ function NearbyJobs({ filters, onFiltersChange } = {}) {
       {/* JOB CARDS */}
       <div className="jobs-grid" id="nearby-results">
 
-        {loading && <div className="no-jobs" role="status"><h3>Loading opportunities…</h3></div>}
+        {!hasJobs && loading && Array.from({ length: 3 }, (_, index) => (
+          <div className="nearby-job-card nearby-job-skeleton" key={index} aria-hidden="true">
+            <div /><div /><div /><div />
+          </div>
+        ))}
 
-        {!loading && loadError && (
+        {!hasJobs && !loading && loadError && (
           <div className="no-jobs">
           <h3>Couldn't load opportunities</h3>
           <p>{loadError}</p>
@@ -163,7 +180,7 @@ function NearbyJobs({ filters, onFiltersChange } = {}) {
         </div>
       )}
 
-        {!loading && !loadError && filteredJobs.length > 0 ? (
+        {hasJobs && filteredJobs.length > 0 ? (
           filteredJobs.slice(0, visibleCount).map((job) => (
 
             <div className="nearby-job-card" key={job.id}>
@@ -216,7 +233,7 @@ function NearbyJobs({ filters, onFiltersChange } = {}) {
             </div>
 
           ))
-        ) : !loading && !loadError ? (
+        ) : hasJobs ? (
 
   <div className="no-jobs">
     <h3>No opportunities found nearby</h3>
@@ -227,7 +244,7 @@ function NearbyJobs({ filters, onFiltersChange } = {}) {
 
       </div>
 
-      {!loading && !loadError && filteredJobs.length > 6 && (
+      {hasJobs && filteredJobs.length > 6 && (
         <div className="nearby-show-more">
           <p role="status">Showing {Math.min(visibleCount, filteredJobs.length)} of {filteredJobs.length} opportunities</p>
           {visibleCount < filteredJobs.length && (

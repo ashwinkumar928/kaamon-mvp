@@ -881,3 +881,23 @@ body.dark-mode .nearby-jobs .nearby-job-payment small { color: #aebbd0; }
   .karviam-home .home-jobs-wrapper .nearby-jobs { padding: 48px 20px; }
 }
 @media (prefers-reduced-motion: reduce) { .nearby-jobs .nearby-job-card:hover { transform: none; } }
+.nearby-jobs .nearby-refresh {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 13px;
+  color: #647184;
+}
+.nearby-jobs .nearby-refresh button:disabled { opacity: .6; cursor: wait; }
+.nearby-jobs .nearby-job-skeleton { pointer-events: none; }
+.nearby-jobs .nearby-job-skeleton > div {
+  height: 14px;
+  margin-bottom: 18px;
+  border-radius: 6px;
+  background: #e5ebe8;
+}
+.nearby-jobs .nearby-job-skeleton > div:first-child { width: 65%; height: 24px; }
+.nearby-jobs .nearby-job-skeleton > div:last-child { width: 45%; margin-bottom: 0; }
+body.dark-mode .nearby-jobs .nearby-job-skeleton > div { background: #334155; }
+body.dark-mode .nearby-jobs .nearby-refresh { color: #aebbd0; }

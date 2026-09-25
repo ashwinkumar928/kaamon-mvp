@@ -16,6 +16,8 @@ const app = express();
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const PORT = process.env.PORT || 5000;
+const MIN_PAYMENT = 100;
+const MAX_PAYMENT = 50000;
 
 app.use(cors());
 app.use(express.json());
@@ -213,6 +215,15 @@ app.post(
 
       const userId = req.user.id;
 
+      const paymentNumber = Number(payment);
+      if ((typeof payment !== "number" && typeof payment !== "string") ||
+          !Number.isInteger(paymentNumber) ||
+          paymentNumber < MIN_PAYMENT || paymentNumber > MAX_PAYMENT) {
+        return res.status(400).json({
+          message: "Payment must be between ₹100 and ₹50,000.",
+        });
+      }
+
       if (
         !title ||
         !category ||
@@ -253,6 +264,7 @@ app.post(
         PLUMBER: "🔧",
         "SHOP HELPER": "🏪",
         "RESTAURANT HELPER": "🍽️",
+        TUTOR: "📚",
       };
 
       const icon = categoryIcons[category] || "💼";
@@ -285,7 +297,7 @@ app.post(
           date,
           time,
           "Nearby",
-          Number(payment),
+          paymentNumber,
           icon,
           user.id,
           user.name,
@@ -1261,6 +1273,15 @@ app.patch(
         payment,
       } = req.body;
 
+      const paymentNumber = Number(payment);
+      if ((typeof payment !== "number" && typeof payment !== "string") ||
+          !Number.isInteger(paymentNumber) ||
+          paymentNumber < MIN_PAYMENT || paymentNumber > MAX_PAYMENT) {
+        return res.status(400).json({
+          message: "Payment must be between ₹100 and ₹50,000.",
+        });
+      }
+
       if (
         !title ||
         !category ||
@@ -1331,6 +1352,7 @@ app.patch(
         PLUMBER: "🔧",
         "SHOP HELPER": "🏪",
         "RESTAURANT HELPER": "🍽️",
+        TUTOR: "📚",
       };
 
       const icon =
@@ -1359,7 +1381,7 @@ app.patch(
           location,
           date,
           time,
-          Number(payment),
+          paymentNumber,
           icon,
           jobId,
           userId,

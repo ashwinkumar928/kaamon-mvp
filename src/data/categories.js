@@ -47,6 +47,12 @@ const categories = [
     icon: "🍽️",
     description: "Restaurant & event assistance",
   },
+  {
+    id: 9,
+    name: "Tutor",
+    icon: "📚",
+    description: "Home tuition and learning support",
+  },
 ];
 
 export default categories;
