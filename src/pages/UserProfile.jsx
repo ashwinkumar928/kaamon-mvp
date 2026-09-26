@@ -1,3 +1,4 @@
+import SafetyActions from "../components/SafetyActions";
 import UserAvatar from "../components/UserAvatar.jsx";
 import { useEffect, useState } from "react";
 import {
@@ -14,6 +15,7 @@ function UserProfile() {
   const [searchParams] = useSearchParams();
   const jobId = searchParams.get("jobId");
 
+  const [profileVersion, setProfileVersion] = useState(0);
   const [user, setUser] = useState(null);
 
   const [ratingData, setRatingData] = useState({
@@ -29,6 +31,7 @@ function UserProfile() {
   // LOAD USER PROFILE
   // ==============================
   useEffect(() => {
+    let active = true;
     async function loadUserProfile() {
       const token = localStorage.getItem("kaamonToken");
 
@@ -43,8 +46,10 @@ function UserProfile() {
         );
 
         const data = await response.json();
+        if (!active) return;
 
         if (!response.ok) {
+          setUser(null);
           setMessage(
             data.message || "Could not load profile."
           );
@@ -53,6 +58,8 @@ function UserProfile() {
 
         setUser(data);
       } catch (error) {
+        if (!active) return;
+        setUser(null);
         console.error(
           "User profile error:",
           error
@@ -62,12 +69,13 @@ function UserProfile() {
           "Could not connect to Karviam server."
         );
       } finally {
-        setLoading(false);
+        if (active) setLoading(false);
       }
     }
 
     loadUserProfile();
-  }, [userId, jobId]);
+    return () => { active = false; };
+  }, [userId, jobId, profileVersion]);
 
   // ==============================
   // LOAD RATINGS AND REVIEWS
@@ -111,7 +119,7 @@ function UserProfile() {
   // ==============================
   // LOADING
   // ==============================
-  if (loading) {
+  if (loading || (user && String(user.id) !== String(userId))) {
     return (
       <main className="profile-page karviam-internal">
         <div className="profile-container">
@@ -178,6 +186,12 @@ function UserProfile() {
             </span>
           </div>
         </section>
+
+        {!user.isSelf && <SafetyActions key={userId} type="user" targetId={userId} blocked={user.blockedByMe}
+          onBlockChange={blocked => {
+            setUser(previous => ({ ...previous, blockedByMe: blocked, canViewContact: false, email: null, phone: null }));
+            setProfileVersion(value => value + 1);
+          }} />}
 
         {/* WORKER INFORMATION */}
         <section className="profile-section">

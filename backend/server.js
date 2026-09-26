@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const pool = require("./db");
+const { registerSafetyRoutes, usersBlockedBetween, lockSafetyWrites, validId } = require("./safety");
 const { notificationService } = require("./notifications");
 const { createNotification, registerRoutes: registerNotificationRoutes } = notificationService(pool);
 
@@ -67,6 +68,7 @@ app.get("/", (req, res) => {
 
 registerNotificationRoutes(app, authenticateToken);
 registerPhotoRoutes(app, authenticateToken, pool);
+registerSafetyRoutes(app, authenticateToken, pool);
 
 
 // ==============================
@@ -1038,6 +1040,7 @@ app.post(
     try {
       client = await pool.connect();
       await client.query("BEGIN");
+      await lockSafetyWrites(client);
       const jobId = req.params.id;
       const applicantId = req.user.id;
 
@@ -1052,6 +1055,9 @@ app.post(
         });
       }
       const job = jobResult.rows[0];
+      if (await usersBlockedBetween(client, applicantId, job.posted_by_id)) {
+        return res.status(403).json({ message: "This work is not available for interaction." });
+      }
       if (job.cancelled) {
         return res.status(400).json({ message: "This work is no longer available." });
       }
@@ -1551,6 +1557,9 @@ app.get(
 
           CASE
             WHEN applications.status IN ('accepted', 'completed')
+            AND NOT EXISTS (SELECT 1 FROM user_blocks b
+              WHERE (b.blocker_id = $2 AND b.blocked_user_id = users.id)
+                 OR (b.blocker_id = users.id AND b.blocked_user_id = $2))
             THEN users.email
             ELSE NULL
             END AS email
@@ -1564,7 +1573,7 @@ app.get(
 
         ORDER BY applications.created_at DESC
         `,
-        [jobId]
+        [jobId, userId]
       );
 
       res.json(result.rows);
@@ -1595,6 +1604,7 @@ app.patch(
     try {
       client = await pool.connect();
       await client.query("BEGIN");
+      await lockSafetyWrites(client);
       const applicationId = req.params.id;
       const userId = req.user.id;
       const { status } = req.body;
@@ -1649,6 +1659,10 @@ app.patch(
 
       const application =
         applicationResult.rows[0];
+
+      if (status === "accepted" && await usersBlockedBetween(client, userId, application.applicant_id)) {
+        return res.status(403).json({ message: "This work is not available for interaction." });
+      }
 
         if (
      status === "completed" && application.status !== "accepted"
@@ -1759,12 +1773,18 @@ app.get(
 
     CASE
       WHEN applications.status IN ('accepted', 'completed')
+      AND NOT EXISTS (SELECT 1 FROM user_blocks b
+        WHERE (b.blocker_id = $1 AND b.blocked_user_id = poster.id)
+           OR (b.blocker_id = poster.id AND b.blocked_user_id = $1))
       THEN poster.email
       ELSE NULL
     END AS poster_email,
 
     CASE
       WHEN applications.status IN ('accepted', 'completed')
+      AND NOT EXISTS (SELECT 1 FROM user_blocks b
+        WHERE (b.blocker_id = $1 AND b.blocked_user_id = poster.id)
+           OR (b.blocker_id = poster.id AND b.blocked_user_id = $1))
       THEN poster.phone
       ELSE NULL
     END AS poster_phone
@@ -1980,6 +2000,7 @@ app.get(
       const profileUserId = req.params.id;
       const loggedInUserId = req.user.id;
       const jobId = req.query.jobId;
+      if (!validId(profileUserId)) return res.status(400).json({ message: "Invalid user." });
 
       const userResult = await pool.query(
         `
@@ -2008,7 +2029,7 @@ app.get(
       let applicationStatus = null;
       let canViewContact = false;
 
-      if (jobId) {
+      if (validId(jobId)) {
         const applicationResult = await pool.query(
           `
           SELECT
@@ -2041,6 +2062,12 @@ app.get(
         }
       }
 
+      if (await usersBlockedBetween(pool, loggedInUserId, profileUserId)) canViewContact = false;
+      const ownBlock = await pool.query(
+        'SELECT 1 FROM user_blocks WHERE blocker_id = $1 AND blocked_user_id = $2',
+        [loggedInUserId, profileUserId]
+      );
+
       res.json({
         id: user.id,
         name: user.name,
@@ -2048,6 +2075,8 @@ app.get(
         skills: user.skills,
         profile_picture_url: user.profile_picture_url,
 
+        blockedByMe: ownBlock.rows.length > 0,
+        isSelf: String(loggedInUserId) === String(profileUserId),
         applicationStatus,
         canViewContact,
 
@@ -2476,6 +2505,7 @@ app.get(
         : application.worker_name;
 
       res.json({
+        messagingAvailable: !await usersBlockedBetween(pool, application.applicant_id, application.posted_by_id),
         partnerName,
         jobTitle: application.job_title,
         location: application.location,
@@ -2503,18 +2533,23 @@ app.post(
   "/api/applications/:id/messages",
   authenticateToken,
   async (req, res) => {
+    let client;
+    let committed = false;
     try {
+      client = await pool.connect();
+      await client.query("BEGIN");
+      await lockSafetyWrites(client);
       const applicationId = req.params.id;
       const currentUserId = req.user.id;
       const { message } = req.body;
 
-      if (!message || !message.trim()) {
+      if (typeof message !== "string" || !message.trim()) {
         return res.status(400).json({
           message: "Message cannot be empty.",
         });
       }
 
-      const applicationResult = await pool.query(
+      const applicationResult = await client.query(
         `
         SELECT
           applications.id,
@@ -2562,7 +2597,11 @@ app.post(
         });
       }
 
-      const result = await pool.query(
+      if (await usersBlockedBetween(client, application.applicant_id, application.posted_by_id)) {
+        return res.status(403).json({ message: "Messaging is unavailable for this conversation.", messagingAvailable: false });
+      }
+
+      const result = await client.query(
         `
         INSERT INTO messages
         (
@@ -2585,6 +2624,8 @@ app.post(
         ]
       );
 
+      await client.query("COMMIT");
+      committed = true;
       res.status(201).json({
         message: "Message sent.",
         chatMessage: result.rows[0],
@@ -2602,6 +2643,11 @@ app.post(
       res.status(500).json({
         message: "Could not send message.",
       });
+    } finally {
+      if (client) {
+        try { if (!committed) await client.query("ROLLBACK"); }
+        finally { client.release(); }
+      }
     }
   }
 );

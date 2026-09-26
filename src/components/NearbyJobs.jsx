@@ -1,3 +1,4 @@
+import { safetyRequest } from "../api/safety";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./NearbyJobs.css";
@@ -5,6 +6,26 @@ import { readJobsCache, requestJobs } from "../api/requestArray";
 import workCategories from "../data/categories";
 
 function NearbyJobs({ filters, onFiltersChange } = {}) {
+  const [blockedIds, setBlockedIds] = useState([]);
+  useEffect(() => {
+    let active = true;
+    async function loadBlocks() {
+      const token = localStorage.getItem('kaamonToken');
+      if (!token) { setBlockedIds([]); return; }
+      try {
+        const data = await safetyRequest('blocks');
+        if (active && token === localStorage.getItem('kaamonToken')) setBlockedIds(data.map(user => String(user.user_id)));
+      } catch { /* Browsing remains available; the backend enforces interaction restrictions. */ }
+    }
+    loadBlocks();
+    window.addEventListener('karviamBlocksChanged', loadBlocks);
+    window.addEventListener('kaamonAuthChanged', loadBlocks);
+    return () => {
+      active = false;
+      window.removeEventListener('karviamBlocksChanged', loadBlocks);
+      window.removeEventListener('kaamonAuthChanged', loadBlocks);
+    };
+  }, []);
   const [jobs, setJobs] = useState(readJobsCache);
   const allJobs = jobs ?? [];
   const hasJobs = jobs !== null;
@@ -60,6 +81,7 @@ function NearbyJobs({ filters, onFiltersChange } = {}) {
   ].filter((category, index, values) => values.indexOf(category) === index);
 
   const filteredJobs = allJobs.filter((job) => {
+    if (blockedIds.includes(String(job.postedBy?.id))) return false;
     const searchText = search.trim().toLowerCase();
 
     const matchesSearch =

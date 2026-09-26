@@ -1,3 +1,4 @@
+import SafetyActions from "../components/SafetyActions";
 import { useEffect, useState } from "react";
 import {
   Link,
@@ -354,6 +355,7 @@ useEffect(() => {
           </div>
 
 
+          {currentUser && !isOwnJob && <SafetyActions key={job.id} type="job" targetId={job.id} />}
           </div>
           <aside className="listing-action-panel" aria-label="Apply for this work">
           <div className="apply-section">

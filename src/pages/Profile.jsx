@@ -1,3 +1,4 @@
+import BlockedUsers from "../components/BlockedUsers";
 import { useEffect, useRef, useState } from "react";
 import UserAvatar from "../components/UserAvatar.jsx";
 import { Link, Navigate } from "react-router-dom";
@@ -606,6 +607,8 @@ useEffect(() => {
 
         </section>
 
+
+        <BlockedUsers />
 
         {message && (
           <p className="profile-message">

@@ -31,6 +31,7 @@ function Chat() {
   const [error, setError] = useState("");
   const [sending, setSending] = useState(false);
   const [chatInfo, setChatInfo] = useState(null);
+  const [sendError, setSendError] = useState("");
 
 
   // ==============================
@@ -102,11 +103,10 @@ function Chat() {
     };
   }
 
-  setLoading(false);
-
 }, [applicationId, token]);
 
 useEffect(() => {
+  let active = true;
   async function loadChatInfo() {
     try {
       const response = await fetch(
@@ -120,7 +120,7 @@ useEffect(() => {
 
       const data = await response.json();
 
-      if (response.ok) {
+      if (response.ok && active) {
         setChatInfo(data);
       }
     } catch (error) {
@@ -133,6 +133,8 @@ useEffect(() => {
 
   if (token) {
     loadChatInfo();
+    const interval = setInterval(loadChatInfo, 3000);
+    return () => { active = false; clearInterval(interval); };
   }
 
 }, [applicationId, token]);
@@ -158,13 +160,13 @@ useEffect(() => {
   async function handleSendMessage(event) {
     event.preventDefault();
 
-    if (!newMessage.trim()) {
+    if (chatInfo?.messagingAvailable === false || !newMessage.trim()) {
       return;
     }
 
     try {
       setSending(true);
-      setError("");
+      setSendError("");
 
       const response = await fetch(
         `${API_URL}/api/applications/${applicationId}/messages`,
@@ -186,7 +188,8 @@ useEffect(() => {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(
+        if (data.messagingAvailable === false) setChatInfo(current => ({ ...current, messagingAvailable: false }));
+        setSendError(
           data.message ||
             "Could not send message."
         );
@@ -210,7 +213,7 @@ useEffect(() => {
         error
       );
 
-      setError(
+      setSendError(
         "Could not connect to Karviam server."
       );
 
@@ -344,6 +347,7 @@ useEffect(() => {
           </div>
 
 
+          {(sendError || chatInfo?.messagingAvailable === false) && <p role="status">{sendError || "Messaging is unavailable for this conversation."}</p>}
           <form
             className="chat-form"
             onSubmit={handleSendMessage}
@@ -351,6 +355,7 @@ useEffect(() => {
 
             <input
               type="text"
+              disabled={sending || chatInfo?.messagingAvailable === false}
               aria-label="Message" placeholder="Type a message..."
               value={newMessage}
               onChange={(event) =>
@@ -364,6 +369,7 @@ useEffect(() => {
               type="submit"
               disabled={
                 sending ||
+                chatInfo?.messagingAvailable === false ||
                 !newMessage.trim()
               }
             >
